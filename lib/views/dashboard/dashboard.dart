@@ -2,11 +2,14 @@ import 'dart:math';
 
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/enum/enum.dart';
+import 'package:flowvy/models/models.dart';
 import 'package:flowvy/providers/providers.dart';
 import 'package:flowvy/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'widgets/start_button.dart';
 
@@ -56,39 +59,51 @@ class _DashboardViewState extends ConsumerState<DashboardView> with PageMixin {
     );
   }
 
-  // --- Блок actions с исправленной подсказкой ---
   @override
-  List<Widget> get actions => [
-        _buildIsEdit((isEdit) {
-          return isEdit
-              ? ValueListenableBuilder(
-                  valueListenable: _addedWidgetsNotifier,
-                  builder: (_, addedChildren, child) {
-                    if (addedChildren.isEmpty) {
-                      return Container();
-                    }
-                    return child!;
+  List<Widget> get actions {
+    return [
+      _buildIsEdit((isEdit) {
+        return isEdit
+            ? Tooltip(
+                message: appLocalizations.resetLayout,
+                child: IconButton(
+                  icon: const Icon(Icons.refresh_rounded),
+                  onPressed: _handleResetLayout,
+                ),
+              )
+            : const SizedBox.shrink();
+      }),
+      _buildIsEdit((isEdit) {
+        return isEdit
+            ? ValueListenableBuilder(
+                valueListenable: _addedWidgetsNotifier,
+                builder: (_, addedChildren, child) {
+                  if (addedChildren.isEmpty) {
+                    return Container();
+                  }
+                  return child!;
+                },
+                child: IconButton(
+                  onPressed: () {
+                    _showAddWidgetsModal();
                   },
-                  child: IconButton(
-                    onPressed: () {
-                      _showAddWidgetsModal();
-                    },
-                    icon: Icon(
-                      Icons.add_circle,
-                    ),
-                    tooltip: appLocalizations.add,
-                  ),
-                )
-              : SizedBox();
-        }),
-        _buildIsEdit((isEdit) {
-          return IconButton(
-            icon: isEdit ? const Icon(Icons.save) : const Icon(Icons.edit),
-            tooltip: isEdit ? appLocalizations.save : appLocalizations.edit,
-            onPressed: _handleUpdateIsEdit,
-          );
-        }),
-      ];
+                  icon: const Icon(Icons.add_circle_rounded),
+                  tooltip: appLocalizations.add,
+                ),
+              )
+            : const SizedBox.shrink();
+      }),
+      _buildIsEdit((isEdit) {
+        return IconButton(
+          icon: isEdit
+              ? const Icon(Icons.save_rounded)
+              : const Icon(Icons.edit_rounded),
+          tooltip: isEdit ? appLocalizations.save : appLocalizations.edit,
+          onPressed: _handleUpdateIsEdit,
+        );
+      }),
+    ];
+  }
 
   _showAddWidgetsModal() {
     showSheet(
@@ -111,6 +126,21 @@ class _DashboardViewState extends ConsumerState<DashboardView> with PageMixin {
       },
       context: context,
     );
+  }
+
+  _handleResetLayout() async {
+    ref.read(appSettingProvider.notifier).updateState(
+          (state) => state.copyWith(dashboardWidgets: defaultDashboardWidgets),
+        );
+
+    ref
+        .read(windowSettingProvider.notifier)
+        .updateState((state) => defaultWindowProps);
+        
+    await windowManager.setSize(Size(defaultWindowProps.width, defaultWindowProps.height));
+    await windowManager.center();
+
+    _isEditNotifier.value = false;
   }
 
   _handleUpdateIsEdit() {
@@ -225,7 +255,7 @@ class _AddDashboardWidgetModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return DeferredPointerHandler(
       child: SingleChildScrollView(
-        padding: EdgeInsets.all(
+        padding: const EdgeInsets.all(
           16,
         ),
         child: Grid(
@@ -288,6 +318,8 @@ class _AddedContainerState extends State<_AddedContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
+    
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -303,10 +335,15 @@ class _AddedContainerState extends State<_AddedContainer> {
               height: 24,
               child: IconButton.filled(
                 iconSize: 20,
-                padding: EdgeInsets.all(2),
+                padding: const EdgeInsets.all(2),
                 onPressed: _handleAdd,
-                icon: Icon(
-                  Icons.add,
+                icon: const Icon(
+                  Icons.add_rounded,
+                ),
+                style: IconButton.styleFrom(
+                  backgroundColor: customTheme.connectButtonBackground,
+                  foregroundColor: customTheme.connectButtonIcon,
+                  shape: const CircleBorder(),
                 ),
               ),
             ),

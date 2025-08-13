@@ -235,6 +235,9 @@ mixin _$Profile {
   DateTime? get lastUpdateDate => throw _privateConstructorUsedError;
   Duration get autoUpdateDuration => throw _privateConstructorUsedError;
   SubscriptionInfo? get subscriptionInfo => throw _privateConstructorUsedError;
+  String? get supportUrl => throw _privateConstructorUsedError;
+  int? get subscriptionRefillDate =>
+      throw _privateConstructorUsedError; // <--- ИЗМЕНЕНИЕ 1: ДОБАВЛЕНО ПОЛЕ
   bool get autoUpdate => throw _privateConstructorUsedError;
   Map<String, String> get selectedMap => throw _privateConstructorUsedError;
   Set<String> get unfoldSet => throw _privateConstructorUsedError;
@@ -265,6 +268,8 @@ abstract class $ProfileCopyWith<$Res> {
       DateTime? lastUpdateDate,
       Duration autoUpdateDuration,
       SubscriptionInfo? subscriptionInfo,
+      String? supportUrl,
+      int? subscriptionRefillDate,
       bool autoUpdate,
       Map<String, String> selectedMap,
       Set<String> unfoldSet,
@@ -298,6 +303,8 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? lastUpdateDate = freezed,
     Object? autoUpdateDuration = null,
     Object? subscriptionInfo = freezed,
+    Object? supportUrl = freezed,
+    Object? subscriptionRefillDate = freezed,
     Object? autoUpdate = null,
     Object? selectedMap = null,
     Object? unfoldSet = null,
@@ -334,6 +341,14 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.subscriptionInfo
           : subscriptionInfo // ignore: cast_nullable_to_non_nullable
               as SubscriptionInfo?,
+      supportUrl: freezed == supportUrl
+          ? _value.supportUrl
+          : supportUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      subscriptionRefillDate: freezed == subscriptionRefillDate
+          ? _value.subscriptionRefillDate
+          : subscriptionRefillDate // ignore: cast_nullable_to_non_nullable
+              as int?,
       autoUpdate: null == autoUpdate
           ? _value.autoUpdate
           : autoUpdate // ignore: cast_nullable_to_non_nullable
@@ -401,6 +416,8 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       DateTime? lastUpdateDate,
       Duration autoUpdateDuration,
       SubscriptionInfo? subscriptionInfo,
+      String? supportUrl,
+      int? subscriptionRefillDate,
       bool autoUpdate,
       Map<String, String> selectedMap,
       Set<String> unfoldSet,
@@ -434,6 +451,8 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? lastUpdateDate = freezed,
     Object? autoUpdateDuration = null,
     Object? subscriptionInfo = freezed,
+    Object? supportUrl = freezed,
+    Object? subscriptionRefillDate = freezed,
     Object? autoUpdate = null,
     Object? selectedMap = null,
     Object? unfoldSet = null,
@@ -470,6 +489,14 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value.subscriptionInfo
           : subscriptionInfo // ignore: cast_nullable_to_non_nullable
               as SubscriptionInfo?,
+      supportUrl: freezed == supportUrl
+          ? _value.supportUrl
+          : supportUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      subscriptionRefillDate: freezed == subscriptionRefillDate
+          ? _value.subscriptionRefillDate
+          : subscriptionRefillDate // ignore: cast_nullable_to_non_nullable
+              as int?,
       autoUpdate: null == autoUpdate
           ? _value.autoUpdate
           : autoUpdate // ignore: cast_nullable_to_non_nullable
@@ -509,6 +536,8 @@ class _$ProfileImpl implements _Profile {
       this.lastUpdateDate,
       required this.autoUpdateDuration,
       this.subscriptionInfo,
+      this.supportUrl,
+      this.subscriptionRefillDate,
       this.autoUpdate = true,
       final Map<String, String> selectedMap = const {},
       final Set<String> unfoldSet = const {},
@@ -537,6 +566,11 @@ class _$ProfileImpl implements _Profile {
   final Duration autoUpdateDuration;
   @override
   final SubscriptionInfo? subscriptionInfo;
+  @override
+  final String? supportUrl;
+  @override
+  final int? subscriptionRefillDate;
+// <--- ИЗМЕНЕНИЕ 1: ДОБАВЛЕНО ПОЛЕ
   @override
   @JsonKey()
   final bool autoUpdate;
@@ -569,7 +603,7 @@ class _$ProfileImpl implements _Profile {
 
   @override
   String toString() {
-    return 'Profile(id: $id, label: $label, currentGroupName: $currentGroupName, url: $url, lastUpdateDate: $lastUpdateDate, autoUpdateDuration: $autoUpdateDuration, subscriptionInfo: $subscriptionInfo, autoUpdate: $autoUpdate, selectedMap: $selectedMap, unfoldSet: $unfoldSet, overrideData: $overrideData, announce: $announce, isUpdating: $isUpdating)';
+    return 'Profile(id: $id, label: $label, currentGroupName: $currentGroupName, url: $url, lastUpdateDate: $lastUpdateDate, autoUpdateDuration: $autoUpdateDuration, subscriptionInfo: $subscriptionInfo, supportUrl: $supportUrl, subscriptionRefillDate: $subscriptionRefillDate, autoUpdate: $autoUpdate, selectedMap: $selectedMap, unfoldSet: $unfoldSet, overrideData: $overrideData, announce: $announce, isUpdating: $isUpdating)';
   }
 
   @override
@@ -588,6 +622,10 @@ class _$ProfileImpl implements _Profile {
                 other.autoUpdateDuration == autoUpdateDuration) &&
             (identical(other.subscriptionInfo, subscriptionInfo) ||
                 other.subscriptionInfo == subscriptionInfo) &&
+            (identical(other.supportUrl, supportUrl) ||
+                other.supportUrl == supportUrl) &&
+            (identical(other.subscriptionRefillDate, subscriptionRefillDate) ||
+                other.subscriptionRefillDate == subscriptionRefillDate) &&
             (identical(other.autoUpdate, autoUpdate) ||
                 other.autoUpdate == autoUpdate) &&
             const DeepCollectionEquality()
@@ -613,6 +651,8 @@ class _$ProfileImpl implements _Profile {
       lastUpdateDate,
       autoUpdateDuration,
       subscriptionInfo,
+      supportUrl,
+      subscriptionRefillDate,
       autoUpdate,
       const DeepCollectionEquality().hash(_selectedMap),
       const DeepCollectionEquality().hash(_unfoldSet),
@@ -645,6 +685,8 @@ abstract class _Profile implements Profile {
       final DateTime? lastUpdateDate,
       required final Duration autoUpdateDuration,
       final SubscriptionInfo? subscriptionInfo,
+      final String? supportUrl,
+      final int? subscriptionRefillDate,
       final bool autoUpdate,
       final Map<String, String> selectedMap,
       final Set<String> unfoldSet,
@@ -669,6 +711,10 @@ abstract class _Profile implements Profile {
   Duration get autoUpdateDuration;
   @override
   SubscriptionInfo? get subscriptionInfo;
+  @override
+  String? get supportUrl;
+  @override
+  int? get subscriptionRefillDate; // <--- ИЗМЕНЕНИЕ 1: ДОБАВЛЕНО ПОЛЕ
   @override
   bool get autoUpdate;
   @override

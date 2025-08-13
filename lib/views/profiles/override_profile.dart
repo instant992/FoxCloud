@@ -139,7 +139,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
                       title: Row(
                         spacing: 8,
                         children: [
-                          Icon(Icons.info),
+                          Icon(Icons.info_rounded),
                           Text(
                             appLocalizations.overrideInvalidTip,
                           )
@@ -257,7 +257,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
                             _handleSave(ref, newOverrideData);
                           },
                           icon: Icon(
-                            Icons.save,
+                            Icons.save_rounded,
                           ),
                         ),
                       );
@@ -282,7 +282,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
                       );
                     },
                     icon: Icon(
-                      Icons.edit,
+                      Icons.edit_rounded,
                     ),
                   ),
                 if (editCount > 0)
@@ -291,7 +291,7 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
                       _handleDelete(ref);
                     },
                     icon: Icon(
-                      Icons.delete,
+                      Icons.delete_rounded,
                     ),
                   )
               ],
@@ -362,15 +362,17 @@ class RuleTitle extends ConsumerWidget {
   _handleChangeType(WidgetRef ref, isOverrideRule) {
     ref.read(profileOverrideStateProvider.notifier).updateState(
           (state) => state.copyWith.overrideData!.rule(
-            type: isOverrideRule
-                ? OverrideRuleType.added
-                : OverrideRuleType.override,
-          ),
+                type: isOverrideRule
+                    ? OverrideRuleType.added
+                    : OverrideRuleType.override,
+              ),
         );
   }
 
   @override
   Widget build(BuildContext context, ref) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final vm3 = ref.watch(
       profileOverrideStateProvider.select(
         (state) {
@@ -388,80 +390,112 @@ class RuleTitle extends ConsumerWidget {
     final isEdit = vm3.a;
     final isSelectAll = vm3.b;
     final isOverrideRule = vm3.c;
-    return FilledButtonTheme(
-      data: FilledButtonThemeData(
-        style: ButtonStyle(
-          padding: WidgetStatePropertyAll(EdgeInsets.symmetric(
-            horizontal: 8,
-          )),
-          visualDensity: VisualDensity.compact,
+
+    final baseButtonStyle = ButtonStyle(
+      elevation: const WidgetStatePropertyAll(0),
+      minimumSize: const WidgetStatePropertyAll(Size(0, 34)),
+      maximumSize: const WidgetStatePropertyAll(Size(double.infinity, 34)),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      splashFactory: NoSplash.splashFactory,
+      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.hovered)) {
+          return colorScheme.secondaryContainer;
+        }
+        return colorScheme.outline;
+      }),
+    );
+
+    final iconButtonStyle = baseButtonStyle.copyWith(
+      padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+      fixedSize: const WidgetStatePropertyAll(Size.square(34)),
+      shape: const WidgetStatePropertyAll(CircleBorder()),
+    );
+
+    // В ЭТОМ СТИЛЕ ТЕПЕРЬ НЕТ ОТСТУПОВ
+    final textButtonStyle = baseButtonStyle.copyWith(
+      foregroundColor: WidgetStatePropertyAll(colorScheme.onSurface),
+      padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+      shape: WidgetStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
-      child: IconButtonTheme(
-        data: IconButtonThemeData(
-          style: ButtonStyle(
-            padding: WidgetStatePropertyAll(EdgeInsets.zero),
-            visualDensity: VisualDensity.compact,
-            iconSize: WidgetStatePropertyAll(20),
+    );
+
+    // Создаем виджет текстовой кнопки, чтобы не дублировать код
+    Widget buildTextButton({required VoidCallback onPressed, required String text}) {
+      return SizedBox(
+        height: 34,
+        child: FilledButton(
+          style: textButtonStyle,
+          onPressed: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(text),
           ),
         ),
-        child: ListHeader(
-          title: appLocalizations.rule,
-          subTitle: isOverrideRule
-              ? appLocalizations.overrideOriginRules
-              : appLocalizations.addedOriginRules,
-          space: 8,
-          actions: [
+      );
+    }
+
+    return ListHeader(
+      title: appLocalizations.rule,
+      subTitle: isOverrideRule
+          ? appLocalizations.overrideOriginRules
+          : appLocalizations.addedOriginRules,
+      space: 8,
+      actions: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
             if (!isEdit)
-              IconButton.filledTonal(
+              IconButton(
+                style: iconButtonStyle,
                 icon: Icon(
-                  isOverrideRule ? Icons.edit_document : Icons.note_add,
+                  isOverrideRule
+                      ? Icons.content_copy_rounded
+                      : Icons.note_add_rounded,
+                  size: 20,
+                  color: colorScheme.onSurface.withOpacity(0.88),
                 ),
                 onPressed: () {
-                  _handleChangeType(
-                    ref,
-                    isOverrideRule,
-                  );
+                  _handleChangeType(ref, isOverrideRule);
                 },
               ),
-            !isEdit
-                ? FilledButton.tonal(
-                    onPressed: () {
-                      globalState.appController.handleAddOrUpdate(ref);
-                    },
-                    child: Text(appLocalizations.add),
-                  )
-                : isSelectAll
-                    ? FilledButton(
-                        onPressed: () {
-                          ref
-                              .read(profileOverrideStateProvider.notifier)
-                              .updateState(
-                                (state) => state.copyWith(
-                                  selectedRules: {},
-                                ),
-                              );
-                        },
-                        child: Text(appLocalizations.selectAll),
-                      )
-                    : FilledButton.tonal(
-                        onPressed: () {
-                          ref
-                              .read(profileOverrideStateProvider.notifier)
-                              .updateState(
-                                (state) => state.copyWith(
-                                  selectedRules: state.overrideData?.rule.rules
-                                          .map((item) => item.id)
-                                          .toSet() ??
-                                      {},
-                                ),
-                              );
-                        },
-                        child: Text(appLocalizations.selectAll),
-                      ),
+            if (!isEdit) const SizedBox(width: 8),
+            if (!isEdit)
+              buildTextButton(
+                onPressed: () {
+                  globalState.appController.handleAddOrUpdate(ref);
+                },
+                text: appLocalizations.add,
+              )
+            else if (isSelectAll)
+              buildTextButton(
+                onPressed: () {
+                  ref.read(profileOverrideStateProvider.notifier).updateState(
+                        (state) => state.copyWith(selectedRules: {}),
+                      );
+                },
+                text: appLocalizations.selectAll,
+              )
+            else
+              buildTextButton(
+                onPressed: () {
+                  ref.read(profileOverrideStateProvider.notifier).updateState(
+                        (state) => state.copyWith(
+                          selectedRules: state.overrideData?.rule.rules
+                                  .map((item) => item.id)
+                                  .toSet() ??
+                              {},
+                        ),
+                      );
+                },
+                text: appLocalizations.selectAll,
+              ),
           ],
         ),
-      ),
+      ],
     );
   }
 }

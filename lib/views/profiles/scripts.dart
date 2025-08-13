@@ -81,14 +81,14 @@ class _ScriptsViewState extends ConsumerState<ScriptsView> {
                         open();
                       },
                       icon: Icon(
-                        Icons.more_vert,
+                        Icons.more_vert_rounded,
                       ),
                     );
                   },
                   popup: CommonPopupMenu(
                     items: [
                       PopupMenuItemData(
-                        icon: Icons.edit,
+                        icon: Icons.edit_rounded,
                         label: appLocalizations.edit,
                         onPressed: () {
                           _handleToEditor(
@@ -97,7 +97,7 @@ class _ScriptsViewState extends ConsumerState<ScriptsView> {
                         },
                       ),
                       PopupMenuItemData(
-                        icon: Icons.delete,
+                        icon: Icons.delete_rounded,
                         label: appLocalizations.delete,
                         onPressed: () {
                           _handleDelScript(
@@ -240,7 +240,7 @@ class _ScriptsViewState extends ConsumerState<ScriptsView> {
         onPressed: () {
           _handleToEditor();
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add_rounded),
       ),
       body: _buildContent(),
       title: appLocalizations.script,

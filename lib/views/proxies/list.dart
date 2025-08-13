@@ -10,6 +10,7 @@ import 'package:flowvy/state.dart';
 import 'package:flowvy/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flowvy/common/custom_theme.dart';
 
 import 'card.dart';
 import 'common.dart';
@@ -207,7 +208,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
     final group =
         ref.read(groupsProvider.select((state) => state.getGroup(groupName)));
     if (group == null) {
-      return SizedBox();
+      return const SizedBox();
     }
     final isExpand = currentUnfoldSet.contains(groupName);
     return SizedBox(
@@ -308,7 +309,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
                           top: -headerState.offset,
                           child: Container(
                             width: container.maxWidth,
-                            color: context.colorScheme.surface,
+                            color: Theme.of(context).scaffoldBackgroundColor,
                             padding: const EdgeInsets.only(
                               top: 16,
                               left: 16,
@@ -455,6 +456,18 @@ class _ListHeaderState extends State<ListHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final iconColor = theme.iconTheme.color;
+    final customTheme = theme.extension<CustomTheme>()!;
+
+    final hoverColor = customTheme.proxyCardBackgroundHover;
+    final buttonStyle = IconButton.styleFrom(
+      foregroundColor: iconColor,
+      hoverColor: hoverColor,
+      highlightColor: hoverColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    );
+
     return CommonCard(
       enterAnimated: widget.enterAnimated,
       key: widget.key,
@@ -543,29 +556,34 @@ class _ListHeaderState extends State<ListHeader> {
               children: [
                 if (isExpand) ...[
                   IconButton(
+                    style: buttonStyle,
                     visualDensity: VisualDensity.standard,
                     onPressed: () {
                       widget.onScrollToSelected(groupName);
                     },
-                    icon: const Icon(
-                      Icons.adjust,
+                    icon: Icon(
+                      Icons.adjust_rounded,
+                      color: iconColor,
                     ),
                   ),
                   IconButton(
+                    style: buttonStyle,
                     onPressed: _delayTest,
                     visualDensity: VisualDensity.standard,
-                    icon: const Icon(
-                      Icons.network_ping,
+                    icon: Icon(
+                      Icons.network_ping_rounded,
+                      color: iconColor,
                     ),
                   ),
                   const SizedBox(
                     width: 6,
                   ),
                 ] else
-                  SizedBox(
+                  const SizedBox(
                     width: 4,
                   ),
-                IconButton.filledTonal(
+                IconButton(
+                  style: buttonStyle,
                   onPressed: () {
                     _handleChange(groupName);
                   },

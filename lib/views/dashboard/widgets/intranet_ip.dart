@@ -15,7 +15,7 @@ class IntranetIP extends StatelessWidget {
       child: CommonCard(
         info: Info(
           label: appLocalizations.intranetIP,
-          iconData: Icons.devices,
+          iconData: Icons.devices_rounded,
         ),
         onPressed: () {},
         child: Container(
@@ -38,15 +38,14 @@ class IntranetIP extends StatelessWidget {
                                 localIp.isNotEmpty
                                     ? localIp
                                     : appLocalizations.noNetwork,
-                                style: context.textTheme.bodyMedium?.toLight
-                                    .adjustSize(1),
+                                style: Theme.of(context).textTheme.bodyMedium,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             )
                           : Container(
-                              padding: EdgeInsets.all(2),
-                              child: AspectRatio(
+                              padding: const EdgeInsets.all(2),
+                              child: const AspectRatio(
                                 aspectRatio: 1,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,

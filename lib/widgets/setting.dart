@@ -1,7 +1,54 @@
-import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'card.dart';
+
+class _StyledSettingCard extends StatelessWidget {
+  final bool isSelected;
+  final VoidCallback onPressed;
+  final Widget child;
+
+  const _StyledSettingCard({
+    required this.isSelected,
+    required this.onPressed,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
+    
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (isSelected) {
+            return customTheme.proxyCardBackgroundSelected!;
+          }
+          if (states.contains(WidgetState.hovered)) {
+            return customTheme.proxyCardBackgroundHover!;
+          }
+          return customTheme.proxyCardBackground!;
+        }),
+        side: WidgetStateProperty.resolveWith<BorderSide>((states) {
+          if (isSelected || states.contains(WidgetState.hovered)) {
+             return BorderSide(color: customTheme.proxyCardBorderSelected!, width: 1);
+          }
+          return BorderSide(color: customTheme.proxyCardBorder!, width: 1);
+        }),
+      ),
+      child: child,
+    );
+  }
+}
+
 
 class SettingInfoCard extends StatelessWidget {
   final Info info;
@@ -17,8 +64,8 @@ class SettingInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CommonCard(
-      isSelected: isSelected,
+    return _StyledSettingCard(
+      isSelected: isSelected ?? false,
       onPressed: onPressed,
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -27,7 +74,7 @@ class SettingInfoCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Flexible(
-              child: Icon(info.iconData),
+              child: Icon(info.iconData, color: Theme.of(context).iconTheme.color),
             ),
             const SizedBox(
               width: 8,
@@ -35,7 +82,9 @@ class SettingInfoCard extends StatelessWidget {
             Flexible(
               child: Text(
                 info.label,
-                style: context.textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface
+                ),
               ),
             ),
           ],
@@ -59,14 +108,16 @@ class SettingTextCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CommonCard(
+    return _StyledSettingCard(
       onPressed: onPressed,
-      isSelected: isSelected,
+      isSelected: isSelected ?? false,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Text(
           text,
-          style: context.textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface
+          ),
         ),
       ),
     );

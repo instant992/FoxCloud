@@ -5,7 +5,6 @@ import 'package:flowvy/state.dart';
 import 'package:flowvy/widgets/fade_box.dart';
 import 'package:flowvy/widgets/pop_scope.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'chip.dart';
 
@@ -242,13 +241,13 @@ class CommonScaffoldState extends State<CommonScaffold> {
     if (_isEdit) {
       return IconButton(
         onPressed: _appBarState.value.editState?.onExit,
-        icon: Icon(Icons.close),
+        icon: const Icon(Icons.close_rounded),
       );
     }
     return _isSearch
         ? IconButton(
             onPressed: _handleExitSearching,
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back_rounded),
           )
         : widget.leading;
   }
@@ -285,7 +284,7 @@ class CommonScaffoldState extends State<CommonScaffold> {
       return genActions([
         IconButton(
           onPressed: _handleClear,
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close_rounded),
         ),
       ]);
     }
@@ -300,7 +299,7 @@ class CommonScaffoldState extends State<CommonScaffold> {
                 ),
               );
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search_rounded),
             tooltip: appLocalizations.search,
           ),
         ...actions
@@ -329,28 +328,12 @@ class CommonScaffoldState extends State<CommonScaffold> {
   }
 
   PreferredSizeWidget _buildAppBar() {
+    final mainTheme = Theme.of(context);
+
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: Theme(
-        data: Theme.of(context).copyWith(
-          appBarTheme: AppBarTheme(
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Brightness.light
-                      : Brightness.dark,
-              systemNavigationBarIconBrightness:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Brightness.light
-                      : Brightness.dark,
-              systemNavigationBarColor: widget.bottomNavigationBar != null
-                  ? context.colorScheme.surfaceContainer
-                  : context.colorScheme.surface,
-              systemNavigationBarDividerColor: Colors.transparent,
-            ),
-          ),
-        ),
+        data: mainTheme,
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
@@ -360,6 +343,8 @@ class CommonScaffoldState extends State<CommonScaffold> {
                   builder: (_, state, __) {
                     return _buildAppBarWrap(
                       AppBar(
+                        backgroundColor: mainTheme.scaffoldBackgroundColor,
+                        elevation: 0,
                         centerTitle: widget.centerTitle ?? false,
                         automaticallyImplyLeading:
                             widget.automaticallyImplyLeading,
@@ -405,7 +390,7 @@ class CommonScaffoldState extends State<CommonScaffold> {
                 }
               });
               if (keywords.isEmpty) {
-                return SizedBox();
+                return const SizedBox();
               }
               return Padding(
                 padding: const EdgeInsets.symmetric(
@@ -447,7 +432,7 @@ class CommonScaffoldState extends State<CommonScaffold> {
               return IntrinsicWidth(
                 child: IntrinsicHeight(
                   child: FadeScaleBox(
-                    child: value ?? SizedBox(),
+                    child: value ?? const SizedBox(),
                   ),
                 ),
               );
@@ -477,7 +462,7 @@ List<Widget> genActions(List<Widget> actions, {double? space}) {
         width: space ?? 4,
       ),
     ),
-    SizedBox(
+    const SizedBox(
       width: 8,
     )
   ];

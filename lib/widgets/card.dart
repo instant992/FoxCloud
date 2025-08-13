@@ -1,4 +1,5 @@
 import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flowvy/widgets/fade_box.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class InfoHeader extends StatelessWidget {
                 if (info.iconData != null) ...[
                   Icon(
                     info.iconData,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    color: Theme.of(context).iconTheme.color,
                   ),
                   const SizedBox(
                     width: 8,
@@ -57,7 +58,7 @@ class InfoHeader extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: context.colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                     ),
                   ),
@@ -80,7 +81,6 @@ class InfoHeader extends StatelessWidget {
     );
   }
 }
-
 class CommonCard extends StatelessWidget {
   const CommonCard({
     super.key,
@@ -88,7 +88,7 @@ class CommonCard extends StatelessWidget {
     this.type = CommonCardType.plain,
     this.onPressed,
     this.selectWidget,
-    this.radius = 12,
+    this.radius = 16,
     required this.child,
     this.padding,
     this.enterAnimated = false,
@@ -105,47 +105,10 @@ class CommonCard extends StatelessWidget {
   final CommonCardType type;
   final double radius;
 
-  // final WidgetStateProperty<Color?>? backgroundColor;
-  // final WidgetStateProperty<BorderSide?>? borderSide;
-
-  BorderSide getBorderSide(BuildContext context, Set<WidgetState> states) {
-    final colorScheme = context.colorScheme;
-    if (type == CommonCardType.filled) {
-      return BorderSide.none;
-    }
-    final hoverColor = isSelected
-        ? colorScheme.primary.opacity80
-        : colorScheme.primary.opacity60;
-    if (states.contains(WidgetState.hovered) ||
-        states.contains(WidgetState.focused) ||
-        states.contains(WidgetState.pressed)) {
-      return BorderSide(
-        color: hoverColor,
-      );
-    }
-    return BorderSide(
-      color: isSelected
-          ? colorScheme.primary
-          : colorScheme.surfaceContainerHighest,
-    );
-  }
-
-  Color? getBackgroundColor(BuildContext context, Set<WidgetState> states) {
-    final colorScheme = context.colorScheme;
-    if (type == CommonCardType.filled) {
-      if (isSelected) {
-        return colorScheme.secondaryContainer.opacity80;
-      }
-      return colorScheme.surfaceContainer;
-    }
-    if (isSelected) {
-      return colorScheme.secondaryContainer;
-    }
-    return colorScheme.surfaceContainerLow;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
+    
     var childWidget = child;
 
     if (info != null) {
@@ -185,18 +148,20 @@ class CommonCard extends StatelessWidget {
       style: ButtonStyle(
         padding: const WidgetStatePropertyAll(EdgeInsets.zero),
         shape: WidgetStatePropertyAll(
-          RoundedSuperellipseBorder(
+          RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
           ),
         ),
-        iconColor: WidgetStatePropertyAll(context.colorScheme.primary),
-        iconSize: WidgetStateProperty.all(20),
-        backgroundColor: WidgetStateProperty.resolveWith(
-          (states) => getBackgroundColor(context, states),
-        ),
-        side: WidgetStateProperty.resolveWith(
-          (states) => getBorderSide(context, states),
-        ),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+           if (isSelected) return customTheme.proxyCardBackgroundSelected!;
+          if (states.contains(WidgetState.hovered)) return customTheme.proxyCardBackgroundHover!;
+          return customTheme.proxyCardBackground!;
+        }),
+        side: WidgetStateProperty.resolveWith<BorderSide>((states) {
+           if (isSelected || states.contains(WidgetState.hovered)) return BorderSide(color: customTheme.proxyCardBorderHover!, width: 1);
+          return BorderSide(color: customTheme.proxyCardBorder!, width: 1);
+        }),
       ),
       onPressed: onPressed,
       child: childWidget,
@@ -222,7 +187,7 @@ class SelectIcon extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         child: const Icon(
-          Icons.check,
+          Icons.check_rounded,
           size: 16,
         ),
       ),
@@ -243,7 +208,7 @@ class SettingsBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Column(
         children: [
           InfoHeader(

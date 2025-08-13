@@ -35,7 +35,7 @@ class BackupAndRecovery extends ConsumerWidget {
       },
       title: appLocalizations.backup,
     );
-    if (res != true) return;
+    if (res != true || !context.mounted) return;
     globalState.showMessage(
       title: appLocalizations.backup,
       message: TextSpan(text: appLocalizations.backupSuccess),
@@ -56,7 +56,7 @@ class BackupAndRecovery extends ConsumerWidget {
       },
       title: appLocalizations.recovery,
     );
-    if (res != true) return;
+    if (res != true || !context.mounted) return;
     globalState.showMessage(
       title: appLocalizations.recovery,
       message: TextSpan(text: appLocalizations.recoverySuccess),
@@ -85,7 +85,7 @@ class BackupAndRecovery extends ConsumerWidget {
       },
       title: appLocalizations.backup,
     );
-    if (res != true) return;
+    if (res != true || !context.mounted) return;
     globalState.showMessage(
       title: appLocalizations.backup,
       message: TextSpan(text: appLocalizations.backupSuccess),
@@ -110,7 +110,7 @@ class BackupAndRecovery extends ConsumerWidget {
       },
       title: appLocalizations.recovery,
     );
-    if (res != true) return;
+    if (res != true || !context.mounted) return;
     globalState.showMessage(
       title: appLocalizations.recovery,
       message: TextSpan(text: appLocalizations.recoverySuccess),
@@ -137,6 +137,8 @@ class BackupAndRecovery extends ConsumerWidget {
   }
 
   _handleUpdateRecoveryStrategy(WidgetRef ref) async {
+    final context = globalState.navigatorKey.currentContext;
+    if (context == null) return;
     final recoveryStrategy = ref.read(appSettingProvider.select(
       (state) => state.recoveryStrategy,
     ));
@@ -164,15 +166,54 @@ class BackupAndRecovery extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final dav = ref.watch(appDAVSettingProvider);
     final client = dav != null ? DAVClient(dav) : null;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    // --- 1. ОПРЕДЕЛЯЕМ СТИЛЬ ДЛЯ КНОПОК ---
+    final buttonStyle = ButtonStyle(
+      foregroundColor: WidgetStatePropertyAll(colorScheme.onSurface),
+      backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        if (states.contains(WidgetState.hovered)) {
+          return colorScheme.secondaryContainer; // 12%
+        }
+        return colorScheme.outline; // 6-8%
+      }),
+      elevation: const WidgetStatePropertyAll(0),
+      padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+      splashFactory: NoSplash.splashFactory,
+      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+      shape: WidgetStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+    );
+
+    // --- 2. СОЗДАЕМ ФУНКЦИЮ-ХЕЛПЕР ДЛЯ ПОСТРОЕНИЯ КНОПКИ ---
+    Widget buildStyledButton(
+        {required VoidCallback onPressed, required Widget child}) {
+      return SizedBox(
+        height: 34,
+        child: FilledButton(
+          style: buttonStyle,
+          onPressed: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: child,
+          ),
+        ),
+      );
+    }
+
     return ListView(
       children: [
         ListHeader(title: appLocalizations.remote),
         if (dav == null)
           ListItem(
-            leading: const Icon(Icons.account_box),
+            leading: const Icon(Icons.account_box_rounded),
             title: Text(appLocalizations.noInfo),
             subtitle: Text(appLocalizations.pleaseBindWebDAV),
-            trailing: FilledButton.tonal(
+            trailing: buildStyledButton(
               onPressed: () {
                 _showAddWebDAV(dav);
               },
@@ -183,7 +224,7 @@ class BackupAndRecovery extends ConsumerWidget {
           )
         else ...[
           ListItem(
-            leading: const Icon(Icons.account_box),
+            leading: const Icon(Icons.account_box_rounded),
             title: TooltipText(
               text: Text(
                 dav.user,
@@ -228,7 +269,7 @@ class BackupAndRecovery extends ConsumerWidget {
                 ],
               ),
             ),
-            trailing: FilledButton.tonal(
+            trailing: buildStyledButton(
               onPressed: () {
                 _showAddWebDAV(dav);
               },
@@ -237,9 +278,7 @@ class BackupAndRecovery extends ConsumerWidget {
               ),
             ),
           ),
-          const SizedBox(
-            height: 4,
-          ),
+          const SizedBox(height: 4),
           ListItem.input(
             title: Text(appLocalizations.file),
             subtitle: Text(dav.fileName),
@@ -292,7 +331,7 @@ class BackupAndRecovery extends ConsumerWidget {
               _handleUpdateRecoveryStrategy(ref);
             },
             title: Text(appLocalizations.recoveryStrategy),
-            trailing: FilledButton(
+            trailing: buildStyledButton(
               onPressed: () {
                 _handleUpdateRecoveryStrategy(ref);
               },
@@ -390,6 +429,9 @@ class _WebDAVFormDialogState extends ConsumerState<WebDAVFormDialog> {
   @override
   void dispose() {
     _obscureController.dispose();
+    uriController.dispose();
+    userController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -418,7 +460,7 @@ class _WebDAVFormDialogState extends ConsumerState<WebDAVFormDialog> {
               maxLines: 5,
               minLines: 1,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.link),
+                prefixIcon: const Icon(Icons.link_rounded),
                 border: const OutlineInputBorder(),
                 labelText: appLocalizations.address,
                 helperText: appLocalizations.addressHelp,
@@ -433,7 +475,7 @@ class _WebDAVFormDialogState extends ConsumerState<WebDAVFormDialog> {
             TextFormField(
               controller: userController,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.account_circle),
+                prefixIcon: const Icon(Icons.account_box_rounded),
                 border: const OutlineInputBorder(),
                 labelText: appLocalizations.account,
               ),
@@ -451,11 +493,11 @@ class _WebDAVFormDialogState extends ConsumerState<WebDAVFormDialog> {
                   controller: passwordController,
                   obscureText: obscure,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.password),
+                    prefixIcon: const Icon(Icons.password_rounded),
                     border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        obscure ? Icons.visibility : Icons.visibility_off,
+                        obscure ? Icons.visibility_rounded : Icons.visibility_off_rounded,
                       ),
                       onPressed: () {
                         _obscureController.value = !obscure;

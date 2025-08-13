@@ -108,6 +108,7 @@ class AdaptiveSheetScaffold extends StatefulWidget {
   final Widget body;
   final String title;
   final List<Widget> actions;
+  final Color? backgroundColor;
 
   const AdaptiveSheetScaffold({
     super.key,
@@ -115,6 +116,7 @@ class AdaptiveSheetScaffold extends StatefulWidget {
     required this.body,
     required this.title,
     this.actions = const [],
+    this.backgroundColor,
   });
 
   @override
@@ -124,7 +126,8 @@ class AdaptiveSheetScaffold extends StatefulWidget {
 class _AdaptiveSheetScaffoldState extends State<AdaptiveSheetScaffold> {
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = context.colorScheme.surface;
+    final backgroundColor = widget.backgroundColor ?? Theme.of(context).colorScheme.surfaceContainer;
+    
     final bottomSheet = widget.type == SheetType.bottomSheet;
     final sideSheet = widget.type == SheetType.sideSheet;
     final appBar = AppBar(
@@ -136,21 +139,23 @@ class _AdaptiveSheetScaffoldState extends State<AdaptiveSheetScaffold> {
               : true,
       centerTitle: bottomSheet,
       backgroundColor: backgroundColor,
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
       title: Text(
         widget.title,
       ),
       actions: genActions([
-        if (widget.actions.isEmpty && sideSheet) CloseButton(),
+        if (widget.actions.isEmpty && sideSheet) const CloseButton(),
         ...widget.actions,
       ]),
     );
     if (bottomSheet) {
-      final handleSize = Size(32, 4);
+      final handleSize = const Size(32, 4);
       return Container(
         clipBehavior: Clip.hardEdge,
         decoration: ShapeDecoration(
           color: backgroundColor,
-          shape: RoundedSuperellipseBorder(
+          shape: const RoundedSuperellipseBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(28.0)),
           ),
         ),
@@ -158,7 +163,7 @@ class _AdaptiveSheetScaffoldState extends State<AdaptiveSheetScaffold> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 16),
+              padding: const EdgeInsets.only(top: 16),
               child: Container(
                 alignment: Alignment.center,
                 height: handleSize.height,

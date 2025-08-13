@@ -177,14 +177,14 @@ class _GeoDataListItemState extends State<GeoDataListItem> {
               spacing: 12,
               children: [
                 CommonChip(
-                  avatar: const Icon(Icons.edit),
+                  avatar: const Icon(Icons.edit_rounded),
                   label: appLocalizations.edit,
                   onPressed: () {
                     _updateUrl(url, ref);
                   },
                 ),
                 CommonChip(
-                  avatar: const Icon(Icons.sync),
+                  avatar: const Icon(Icons.sync_rounded),
                   label: appLocalizations.sync,
                   onPressed: () {
                     _handleUpdateGeoDataItem();

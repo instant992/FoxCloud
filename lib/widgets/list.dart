@@ -247,17 +247,25 @@ class ListItem<T> extends StatelessWidget {
   })  : leading = null,
         onTap = null;
 
-  _buildListTile({
+  _buildListTile(BuildContext context, {
     void Function()? onTap,
     Widget? trailing,
     Widget? leading,
   }) {
+    Widget? finalLeading = leading ?? this.leading;
+    if (finalLeading != null) {
+      finalLeading = IconTheme.merge(
+        data: IconThemeData(color: Theme.of(context).iconTheme.color),
+        child: finalLeading,
+      );
+    }
+
     return ListTile(
       key: key,
       dense: dense,
       titleTextStyle: titleTextStyle,
       subtitleTextStyle: subtitleTextStyle,
-      leading: leading ?? this.leading,
+      leading: finalLeading,
       horizontalTitleGap: horizontalTitleGap,
       title: title,
       minVerticalPadding: 12,
@@ -304,6 +312,7 @@ class ListItem<T> extends StatelessWidget {
           }
 
           return _buildListTile(
+            context,
             onTap: openAction,
           );
         },
@@ -327,6 +336,7 @@ class ListItem<T> extends StatelessWidget {
       );
 
       return _buildListTile(
+        context,
         onTap: () {
           showExtend(
             context,
@@ -351,6 +361,7 @@ class ListItem<T> extends StatelessWidget {
     if (delegate is OptionsDelegate) {
       final optionsDelegate = delegate as OptionsDelegate<T>;
       return _buildListTile(
+        context,
         onTap: () async {
           final value = await globalState.showCommonDialog<T>(
             child: OptionsDialog<T>(
@@ -367,6 +378,7 @@ class ListItem<T> extends StatelessWidget {
     if (delegate is InputDelegate) {
       final inputDelegate = delegate as InputDelegate;
       return _buildListTile(
+        context,
         onTap: () async {
           final value = await globalState.showCommonDialog<String>(
             child: InputDialog(
@@ -384,6 +396,7 @@ class ListItem<T> extends StatelessWidget {
     if (delegate is CheckboxDelegate) {
       final checkboxDelegate = delegate as CheckboxDelegate;
       return _buildListTile(
+        context,
         onTap: () {
           if (checkboxDelegate.onChanged != null) {
             checkboxDelegate.onChanged!(!checkboxDelegate.value);
@@ -398,6 +411,7 @@ class ListItem<T> extends StatelessWidget {
     if (delegate is SwitchDelegate) {
       final switchDelegate = delegate as SwitchDelegate;
       return _buildListTile(
+        context,
         onTap: () {
           if (switchDelegate.onChanged != null) {
             switchDelegate.onChanged!(!switchDelegate.value);
@@ -412,6 +426,7 @@ class ListItem<T> extends StatelessWidget {
     if (delegate is RadioDelegate) {
       final radioDelegate = delegate as RadioDelegate<T>;
       return _buildListTile(
+        context,
         onTap: () {
           if (radioDelegate.onChanged != null) {
             radioDelegate.onChanged!(radioDelegate.value);
@@ -429,6 +444,7 @@ class ListItem<T> extends StatelessWidget {
     }
 
     return _buildListTile(
+      context,
       onTap: onTap,
     );
   }
@@ -483,7 +499,7 @@ class ListHeader extends StatelessWidget {
                   Text(
                     subTitle!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                   ),
               ],

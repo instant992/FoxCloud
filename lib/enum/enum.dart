@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flowvy/views/dashboard/widgets/widgets.dart';
+import 'package:flowvy/views/dashboard/widgets/metainfo.dart';
 import 'package:flowvy/widgets/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -147,10 +148,6 @@ enum RecoveryOption {
 enum ChipType { action, delete }
 
 enum CommonCardType { plain, filled }
-//
-// extension CommonCardTypeExt on CommonCardType {
-//   CommonCardType get variant => CommonCardType.plain;
-// }
 
 enum ProxiesType { tab, list }
 
@@ -323,9 +320,17 @@ enum FunctionTag {
 }
 
 enum DashboardWidget {
+  metainfo(
+    GridItem(
+      crossAxisCellCount: 4,
+      mainAxisCellCount: 3,
+      child: MetainfoWidget(),
+    ),
+  ),
   networkSpeed(
     GridItem(
       crossAxisCellCount: 8,
+      mainAxisCellCount: 3,
       child: NetworkSpeed(),
     ),
   ),

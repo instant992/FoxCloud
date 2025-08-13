@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flowvy/models/models.dart';
 import 'package:flowvy/providers/providers.dart';
@@ -9,8 +10,6 @@ import 'package:flowvy/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-
-typedef OnSelected = void Function(int index);
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -158,13 +157,18 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Icon(Icons.campaign),
+                          Icon(
+                            Icons.campaign_rounded,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               announce,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface
+                              ),
                             ),
                           ),
                         ],
@@ -201,6 +205,8 @@ class CommonNavigationBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
+    
     if (viewMode == ViewMode.mobile) {
       return NavigationBarTheme(
         data: _NavigationBarDefaultsM3(context),
@@ -233,11 +239,12 @@ class CommonNavigationBar extends ConsumerWidget {
                   child: NavigationRail(
                     backgroundColor: context.colorScheme.surfaceContainer,
                     selectedIconTheme: IconThemeData(
-                      color: context.colorScheme.onSurfaceVariant,
+                      color: Theme.of(context).iconTheme.color,
                     ),
                     unselectedIconTheme: IconThemeData(
-                      color: context.colorScheme.onSurfaceVariant,
+                      color: Theme.of(context).iconTheme.color,
                     ),
+                    indicatorColor: customTheme.navRailIndicator,
                     selectedLabelTextStyle:
                         context.textTheme.labelLarge!.copyWith(
                       color: context.colorScheme.onSurface,
@@ -281,7 +288,7 @@ class CommonNavigationBar extends ConsumerWidget {
                     ),
                   );
             },
-            icon: const Icon(Icons.menu),
+            icon: const Icon(Icons.menu_rounded),
           ),
           const SizedBox(
             height: 16,

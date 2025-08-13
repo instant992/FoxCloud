@@ -74,7 +74,7 @@ class ColorSchemeBox extends StatelessWidget {
                     bottom: 4,
                     right: 4,
                     child: Icon(
-                      Icons.colorize,
+                      Icons.colorize_rounded,
                       size: 20,
                     ),
                   )

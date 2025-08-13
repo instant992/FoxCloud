@@ -60,7 +60,7 @@ class _NetworkDetectionState extends ConsumerState<NetworkDetection> {
                                   ),
                             )
                           : Icon(
-                              Icons.network_check,
+                              Icons.network_check_rounded,
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurfaceVariant,
@@ -79,12 +79,12 @@ class _NetworkDetectionState extends ConsumerState<NetworkDetection> {
                                 .textTheme
                                 .titleSmall
                                 ?.copyWith(
-                                  color: context.colorScheme.onSurfaceVariant,
+                                  color: context.colorScheme.onSurface,
                                 ),
                           ),
                         ),
                       ),
-                      SizedBox(width: 2),
+                      const SizedBox(width: 2),
                       AspectRatio(
                         aspectRatio: 1,
                         child: IconButton(
@@ -100,7 +100,7 @@ class _NetworkDetectionState extends ConsumerState<NetworkDetection> {
                           },
                           icon: Icon(
                             size: 16.ap,
-                            Icons.info_outline,
+                            Icons.info_rounded,
                             color: context.colorScheme.onSurfaceVariant,
                           ),
                         ),

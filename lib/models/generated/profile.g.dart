@@ -39,6 +39,8 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
           ? null
           : SubscriptionInfo.fromJson(
               json['subscriptionInfo'] as Map<String, dynamic>),
+      supportUrl: json['supportUrl'] as String?,
+      subscriptionRefillDate: (json['subscriptionRefillDate'] as num?)?.toInt(),
       autoUpdate: json['autoUpdate'] as bool? ?? true,
       selectedMap: (json['selectedMap'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, e as String),
@@ -63,6 +65,8 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'lastUpdateDate': instance.lastUpdateDate?.toIso8601String(),
       'autoUpdateDuration': instance.autoUpdateDuration.inMicroseconds,
       'subscriptionInfo': instance.subscriptionInfo,
+      'supportUrl': instance.supportUrl,
+      'subscriptionRefillDate': instance.subscriptionRefillDate,
       'autoUpdate': instance.autoUpdate,
       'selectedMap': instance.selectedMap,
       'unfoldSet': instance.unfoldSet.toList(),

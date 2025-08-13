@@ -54,6 +54,8 @@ class Profile with _$Profile {
     DateTime? lastUpdateDate,
     required Duration autoUpdateDuration,
     SubscriptionInfo? subscriptionInfo,
+    String? supportUrl,
+    int? subscriptionRefillDate, // <--- ИЗМЕНЕНИЕ 1: ДОБАВЛЕНО ПОЛЕ
     @Default(true) bool autoUpdate,
     @Default({}) SelectedMap selectedMap,
     @Default({}) Set<String> unfoldSet,
@@ -168,11 +170,39 @@ extension ProfileExtension on Profile {
     return (await file.lastModified()).microsecondsSinceEpoch;
   }
 
+  // --- ИЗМЕНЕНИЕ 2: ОБНОВЛЕН МЕТОД UPDATE ---
   Future<Profile> update() async {
     final response = await request.getFileResponseForUrl(url);
 
     final disposition = response.headers.value("content-disposition");
     final userinfo = response.headers.value('subscription-userinfo');
+    final updateIntervalHeader =
+        response.headers.value('profile-update-interval');
+    final profileTitleHeader = response.headers.value('profile-title');
+    final supportUrlHeader = response.headers.value('support-url');
+    final refillDateHeader = response.headers.value('subscription-refill-date');
+
+    Duration newUpdateDuration = const Duration(hours: 12);
+    if (updateIntervalHeader != null) {
+      final hours = int.tryParse(updateIntervalHeader);
+      if (hours != null && hours > 0) {
+        newUpdateDuration = Duration(hours: hours);
+      }
+    }
+
+    String? newLabel;
+    if (profileTitleHeader != null) {
+      if (profileTitleHeader.startsWith('base64:')) {
+        try {
+          final encoded = profileTitleHeader.substring(7);
+          newLabel = utf8.decode(base64.decode(encoded));
+        } catch (e) {
+          commonPrint.log('Error decoding profile-title: $e');
+        }
+      } else {
+        newLabel = profileTitleHeader;
+      }
+    }
 
     String? announce;
     final announceHeader = response.headers.value('Announce');
@@ -185,10 +215,18 @@ extension ProfileExtension on Profile {
       }
     }
 
+    int? newRefillDate;
+    if (refillDateHeader != null) {
+      newRefillDate = int.tryParse(refillDateHeader);
+    }
+
     return await copyWith(
-      label: label ?? utils.getFileNameForDisposition(disposition) ?? id,
+      label: newLabel ?? utils.getFileNameForDisposition(disposition) ?? label ?? id,
       subscriptionInfo: SubscriptionInfo.formHString(userinfo),
       announce: announce,
+      autoUpdateDuration: newUpdateDuration,
+      supportUrl: supportUrlHeader,
+      subscriptionRefillDate: newRefillDate,
     ).saveFile(response.data);
   }
 

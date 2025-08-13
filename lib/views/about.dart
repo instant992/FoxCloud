@@ -47,18 +47,6 @@ class AboutView extends StatelessWidget {
             _checkUpdate(context);
           },
         ),
-        // --- Убираем этот ListItem с Telegram ссылкой ---
-        // ListItem(
-        //   title: const Text("Telegram"),
-        //   onTap: () {
-        //     globalState.openUrl(
-        //       "https://t.me/FlClash",
-        //     );
-        //   },
-        //   trailing: const Icon(Icons.launch),
-        // ),
-        // ------------------------------------------------
-
         ListItem(
           title: Text(appLocalizations.project),
           onTap: () {
@@ -66,7 +54,7 @@ class AboutView extends StatelessWidget {
               "https://github.com/$repository",
             );
           },
-          trailing: const Icon(Icons.launch),
+          trailing: const Icon(Icons.launch_rounded),
         ),
         ListItem(
           title: Text(appLocalizations.core),
@@ -75,13 +63,12 @@ class AboutView extends StatelessWidget {
               "https://github.com/chen08209/Clash.Meta/tree/FlClash",
             );
           },
-          trailing: const Icon(Icons.launch),
+          trailing: const Icon(Icons.launch_rounded),
         ),
       ],
     );
   }
 
-  // --- Обновляем _buildContributorsSection ---
   List<Widget> _buildContributorsSection() {
     const contributors = [
       Contributor(
@@ -116,7 +103,6 @@ class AboutView extends StatelessWidget {
       ],
     );
   }
-  // ------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +112,11 @@ class AboutView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Consumer(builder: (_, ref, ___) {
+              final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+              final String iconAsset = isDarkMode
+                  ? "assets/images/icon.png"
+                  : "assets/images/icon_black.png";
+
               return _DeveloperModeDetector(
                 child: Wrap(
                   spacing: 16,
@@ -134,7 +125,7 @@ class AboutView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(12),
                       child: Image.asset(
-                        'assets/images/icon.png',
+                        iconAsset,
                         width: 64,
                         height: 64,
                       ),
@@ -175,7 +166,7 @@ class AboutView extends StatelessWidget {
       const SizedBox(
         height: 12,
       ),
-      ..._buildContributorsSection(), // Используем обновленную секцию
+      ..._buildContributorsSection(),
       ..._buildMoreSection(context),
     ];
     return Padding(
@@ -199,14 +190,19 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        globalState.openUrl(contributor.link);
+      },
       child: Column(
         children: [
           SizedBox(
             width: 36,
             height: 36,
-            child: CircleAvatar(
-              foregroundImage: AssetImage(
+            child: ClipOval(
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset(
                 contributor.avatar,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -219,9 +215,6 @@ class Avatar extends StatelessWidget {
           )
         ],
       ),
-      onTap: () {
-        globalState.openUrl(contributor.link);
-      },
     );
   }
 }

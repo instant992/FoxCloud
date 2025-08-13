@@ -31,16 +31,18 @@ class _ConnectionsViewState extends ConsumerState<ConnectionsView>
 
   @override
   List<Widget> get actions => [
-        IconButton(
-          onPressed: () async {
-            clashCore.closeConnections();
-            _connectionsStateNotifier.value =
-                _connectionsStateNotifier.value.copyWith(
-              connections: await clashCore.getConnections(),
-            );
-          },
-          icon: const Icon(Icons.delete_sweep_outlined),
-          tooltip: appLocalizations.delete_connections,
+        Tooltip(
+          message: appLocalizations.delete_connections,
+          child: IconButton(
+            onPressed: () async {
+              clashCore.closeConnections();
+              _connectionsStateNotifier.value =
+                  _connectionsStateNotifier.value.copyWith(
+                connections: await clashCore.getConnections(),
+              );
+            },
+            icon: const Icon(Icons.delete_sweep_rounded),
+          ),
         ),
       ];
 
@@ -65,7 +67,7 @@ class _ConnectionsViewState extends ConsumerState<ConnectionsView>
             _connectionsStateNotifier.value.copyWith(
           connections: await clashCore.getConnections(),
         );
-        timer = Timer(Duration(seconds: 1), () async {
+        timer = Timer(const Duration(seconds: 1), () async {
           _updateConnections();
         });
       }
@@ -130,11 +132,14 @@ class _ConnectionsViewState extends ConsumerState<ConnectionsView>
                 onClickKeyword: (value) {
                   context.commonScaffoldState?.addKeyword(value);
                 },
-                trailing: IconButton(
-                  icon: const Icon(Icons.block),
-                  onPressed: () {
-                    _handleBlockConnection(connection.id);
-                  },
+                trailing: Tooltip(
+                  message: appLocalizations.closeConnection,
+                  child: IconButton(
+                    icon: const Icon(Icons.block_rounded),
+                    onPressed: () {
+                      _handleBlockConnection(connection.id);
+                    },
+                  ),
                 ),
               );
             },

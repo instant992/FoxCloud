@@ -1,4 +1,3 @@
-import 'package:flowvy/common/color.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flutter/material.dart';
 
@@ -18,34 +17,54 @@ class CommonChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (type == ChipType.delete) {
-      return Chip(
-        avatar: avatar,
-        labelPadding: const EdgeInsets.symmetric(
-          vertical: 0,
-          horizontal: 4,
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    final Color textColor = colorScheme.onSurface;
+    final Color iconColor = colorScheme.onSurface;
+    final Color defaultBgColor = colorScheme.outline;
+    final Color defaultBorderColor = colorScheme.outline;
+    final Color hoverBgColor = colorScheme.secondaryContainer;
+
+    final labelStyle = textTheme.bodyMedium?.copyWith(color: textColor);
+    final iconTheme = IconThemeData(color: iconColor, size: 18);
+
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        padding: const WidgetStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         ),
-        clipBehavior: Clip.antiAlias,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        onDeleted: onPressed ?? () {},
-        side:
-            BorderSide(color: Theme.of(context).dividerColor.opacity15),
-        labelStyle: Theme.of(context).textTheme.bodyMedium,
-        label: Text(label),
-      );
-    }
-    return ActionChip(
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      avatar: avatar,
-      clipBehavior: Clip.antiAlias,
-      labelPadding: const EdgeInsets.symmetric(
-        vertical: 0,
-        horizontal: 4,
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.hovered)) {
+            return hoverBgColor;
+          }
+          return defaultBgColor;
+        }),
+        side: WidgetStateProperty.all(
+          BorderSide(color: defaultBorderColor, width: 1),
+        ),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      onPressed: onPressed ?? () {},
-      side: BorderSide(color: Theme.of(context).dividerColor.opacity15),
-      labelStyle: Theme.of(context).textTheme.bodyMedium,
-      label: Text(label),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (avatar != null) ...[
+            IconTheme(
+              data: iconTheme,
+              child: avatar!,
+            ),
+            const SizedBox(width: 6),
+          ],
+          Text(label, style: labelStyle),
+        ],
+      ),
     );
   }
 }

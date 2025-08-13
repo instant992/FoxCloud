@@ -1,4 +1,7 @@
+// lib/views/proxies/card.dart - ФИНАЛЬНАЯ ВЕРСИЯ
+
 import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flowvy/models/models.dart';
 import 'package:flowvy/providers/providers.dart';
@@ -33,7 +36,11 @@ class ProxyCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDelayText() {
+  Widget _buildDelayText(BuildContext context) {
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
+    // Используем цвет пинга из кастомной темы
+    final pingColor = customTheme.proxyPingColor;
+
     return SizedBox(
       height: measure.labelSmallHeight,
       child: Consumer(
@@ -42,39 +49,47 @@ class ProxyCard extends StatelessWidget {
             proxyName: proxy.name,
             testUrl: testUrl,
           ));
-          return delay == 0 || delay == null
-              ? SizedBox(
-                  height: measure.labelSmallHeight,
-                  width: measure.labelSmallHeight,
-                  child: delay == 0
-                      ? const CircularProgressIndicator(
-                          strokeWidth: 2,
-                        )
-                      : IconButton(
-                          icon: const Icon(Icons.bolt),
-                          iconSize: globalState.measure.labelSmallHeight,
-                          padding: EdgeInsets.zero,
-                          onPressed: _handleTestCurrentDelay,
-                        ),
-                )
-              : GestureDetector(
-                  onTap: _handleTestCurrentDelay,
-                  child: Text(
-                    delay > 0 ? '$delay ms' : "Timeout",
-                    style: context.textTheme.labelSmall?.copyWith(
-                      overflow: TextOverflow.ellipsis,
-                      color: utils.getDelayColor(
-                        delay,
-                      ),
-                    ),
-                  ),
-                );
+          
+          if (delay == null) {
+            return SizedBox(
+              height: measure.labelSmallHeight,
+              width: measure.labelSmallHeight,
+              child: IconButton(
+                icon: Icon(Icons.bolt_outlined, color: pingColor),
+                iconSize: globalState.measure.labelSmallHeight,
+                padding: EdgeInsets.zero,
+                onPressed: _handleTestCurrentDelay,
+              ),
+            );
+          }
+          if (delay == 0) {
+              return SizedBox(
+              height: measure.labelSmallHeight,
+              width: measure.labelSmallHeight,
+              child: CircularProgressIndicator(strokeWidth: 2, color: pingColor),
+            );
+          }
+          return GestureDetector(
+            onTap: _handleTestCurrentDelay,
+            child: Text(
+              delay > 0 ? '$delay ms' : "Timeout",
+              style: context.textTheme.labelSmall?.copyWith(
+                overflow: TextOverflow.ellipsis,
+                color: delay > 0 ? pingColor : Colors.red,
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
   Widget _buildProxyNameText(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
+      color: Theme.of(context).colorScheme.onSurface,
+      fontSize: 14,
+    ); 
+
     if (type == ProxyCardType.min) {
       return SizedBox(
         height: measure.bodyMediumHeight * 1,
@@ -82,7 +97,7 @@ class ProxyCard extends StatelessWidget {
           proxy.name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: context.textTheme.bodyMedium,
+          style: titleStyle,
         ),
       );
     } else {
@@ -92,7 +107,7 @@ class ProxyCard extends StatelessWidget {
           proxy.name,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: context.textTheme.bodyMedium,
+          style: titleStyle,
         ),
       );
     }
@@ -122,73 +137,100 @@ class ProxyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final measure = globalState.measure;
-    final delayText = _buildDelayText();
+    final delayText = _buildDelayText(context);
     final proxyNameText = _buildProxyNameText(context);
+    final customTheme = theme.extension<CustomTheme>()!;
+    
+    // Стиль для подзаголовка ("Vless", "Fallback")
+    final subtitleStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+
+    final cardContent = Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          proxyNameText,
+          const SizedBox(height: 8),
+          if (type == ProxyCardType.expand) ...[
+            SizedBox(
+              height: measure.bodySmallHeight,
+              child: _ProxyDesc(proxy: proxy),
+            ),
+            const SizedBox(height: 6),
+            delayText,
+          ] else
+            SizedBox(
+              height: measure.bodySmallHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: TooltipText(
+                      text: Text(
+                        proxy.type,
+                        style: subtitleStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  delayText,
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+
     return Stack(
       children: [
         Consumer(
           builder: (_, ref, child) {
             final selectedProxyName =
                 ref.watch(getSelectedProxyNameProvider(groupName));
-            return CommonCard(
-              key: key,
-              onPressed: () {
-                _changeProxy(ref);
-              },
-              isSelected: selectedProxyName == proxy.name,
+            final isSelected = selectedProxyName == proxy.name;
+
+            return OutlinedButton(
+              onPressed: () => _changeProxy(ref),
+              style: ButtonStyle(
+                padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (isSelected) {
+                    return customTheme.proxyCardBackgroundSelected!;
+                  }
+                  if (states.contains(WidgetState.hovered)) {
+                    return customTheme.proxyCardBackgroundHover!;
+                  }
+                  return customTheme.proxyCardBackground!;
+                }),
+                side: WidgetStateProperty.resolveWith<BorderSide>((states) {
+                  if (isSelected) {
+                      return BorderSide(color: customTheme.proxyCardBorderSelected!, width: 1);
+                  }
+                  if (states.contains(WidgetState.hovered)) {
+                    return BorderSide(color: customTheme.proxyCardBorderHover!, width: 1);
+                  }
+                  return BorderSide(color: customTheme.proxyCardBorder!, width: 1);
+                }),
+              ),
               child: child!,
             );
           },
-          child: Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                proxyNameText,
-                const SizedBox(
-                  height: 8,
-                ),
-                if (type == ProxyCardType.expand) ...[
-                  SizedBox(
-                    height: measure.bodySmallHeight,
-                    child: _ProxyDesc(
-                      proxy: proxy,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  delayText,
-                ] else
-                  SizedBox(
-                    height: measure.bodySmallHeight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: TooltipText(
-                            text: Text(
-                              proxy.type,
-                              style: context.textTheme.bodySmall?.copyWith(
-                                overflow: TextOverflow.ellipsis,
-                                color: context
-                                    .textTheme.bodySmall?.color?.opacity80,
-                              ),
-                            ),
-                          ),
-                        ),
-                        delayText,
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          ),
+          child: cardContent,
         ),
         if (groupType.isComputedSelected)
           Positioned(
@@ -216,12 +258,13 @@ class _ProxyDesc extends ConsumerWidget {
     final desc = ref.watch(
       getProxyDescProvider(proxy),
     );
+    final subtitleStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+    );
     return EmojiText(
       desc,
       overflow: TextOverflow.ellipsis,
-      style: context.textTheme.bodySmall?.copyWith(
-        color: context.textTheme.bodySmall?.color?.opacity80,
-      ),
+      style: subtitleStyle,
     );
   }
 }
@@ -241,7 +284,7 @@ class _ProxyComputedMark extends ConsumerWidget {
       getProxyNameProvider(groupName),
     );
     if (proxyName != proxy.name) {
-      return SizedBox();
+      return const SizedBox();
     }
     return Container(
       alignment: Alignment.topRight,

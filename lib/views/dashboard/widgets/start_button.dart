@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flowvy/providers/providers.dart';
 import 'package:flowvy/state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class StartButton extends ConsumerStatefulWidget {
   const StartButton({super.key});
@@ -49,15 +49,17 @@ class _StartButtonState extends ConsumerState<StartButton> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(startButtonSelectorStateProvider);
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
+    
     if (!state.isInit || !state.hasProfile) {
       return const SizedBox.shrink();
     }
 
-    const buttonIcon = Icons.power_settings_new_outlined;
-
+    const buttonIcon = Icons.power_settings_new_rounded;
+    
     final textStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.w600,
-          color: context.colorScheme.onPrimaryContainer,
+          color: customTheme.connectButtonForeground,
         );
 
     final connectText = Text(
@@ -95,9 +97,13 @@ class _StartButtonState extends ConsumerState<StartButton> {
     return FloatingActionButton.extended(
       heroTag: null,
       onPressed: handleSwitchStart,
+      backgroundColor: customTheme.connectButtonBackground,
       label: Row(
         children: [
-          const Icon(buttonIcon),
+          Icon(
+            buttonIcon,
+            color: customTheme.connectButtonIcon,
+          ),
           const SizedBox(width: 8),
           Padding(
             padding: const EdgeInsets.only(bottom: 2.5),

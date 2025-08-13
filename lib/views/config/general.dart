@@ -15,7 +15,7 @@ class LogLevelItem extends ConsumerWidget {
     final logLevel =
         ref.watch(patchClashConfigProvider.select((state) => state.logLevel));
     return ListItem<LogLevel>.options(
-      leading: const Icon(Icons.info_outline),
+      leading: const Icon(Icons.info_rounded),
       title: Text(appLocalizations.logLevel),
       subtitle: Text(logLevel.name),
       delegate: OptionsDelegate<LogLevel>(
@@ -46,7 +46,7 @@ class UaItem extends ConsumerWidget {
     final globalUa =
         ref.watch(patchClashConfigProvider.select((state) => state.globalUa));
     return ListItem<String?>.options(
-      leading: const Icon(Icons.computer_outlined),
+      leading: const Icon(Icons.computer_rounded),
       title: const Text("UA"),
       subtitle: Text(globalUa ?? appLocalizations.defaultText),
       delegate: OptionsDelegate<String?>(
@@ -78,7 +78,7 @@ class KeepAliveIntervalItem extends ConsumerWidget {
     final keepAliveInterval = ref.watch(
         patchClashConfigProvider.select((state) => state.keepAliveInterval));
     return ListItem.input(
-      leading: const Icon(Icons.timer_outlined),
+      leading: const Icon(Icons.timer_rounded),
       title: Text(appLocalizations.keepAliveIntervalDesc),
       subtitle: Text("$keepAliveInterval ${appLocalizations.seconds}"),
       delegate: InputDelegate(
@@ -120,7 +120,7 @@ class TestUrlItem extends ConsumerWidget {
     final testUrl =
         ref.watch(appSettingProvider.select((state) => state.testUrl));
     return ListItem.input(
-      leading: const Icon(Icons.timeline),
+      leading: const Icon(Icons.timeline_rounded),
       title: Text(appLocalizations.testUrl),
       subtitle: Text(testUrl),
       delegate: InputDelegate(
@@ -166,7 +166,7 @@ class PortItem extends ConsumerWidget {
     final mixedPort =
         ref.watch(patchClashConfigProvider.select((state) => state.mixedPort));
     return ListItem(
-      leading: const Icon(Icons.adjust_outlined),
+      leading: const Icon(Icons.adjust_rounded),
       title: Text(appLocalizations.port),
       subtitle: Text("$mixedPort"),
       onTap: () {
@@ -211,7 +211,7 @@ class HostsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem.open(
-      leading: const Icon(Icons.view_list_outlined),
+      leading: const Icon(Icons.view_list_rounded),
       title: const Text("Hosts"),
       subtitle: Text(appLocalizations.hostsDesc),
       delegate: OpenDelegate(
@@ -249,7 +249,7 @@ class Ipv6Item extends ConsumerWidget {
     final ipv6 =
         ref.watch(patchClashConfigProvider.select((state) => state.ipv6));
     return ListItem.switchItem(
-      leading: const Icon(Icons.water_outlined),
+      leading: const Icon(Icons.water_rounded),
       title: const Text("IPv6"),
       subtitle: Text(appLocalizations.ipv6Desc),
       delegate: SwitchDelegate(
@@ -274,7 +274,7 @@ class AllowLanItem extends ConsumerWidget {
     final allowLan =
         ref.watch(patchClashConfigProvider.select((state) => state.allowLan));
     return ListItem.switchItem(
-      leading: const Icon(Icons.device_hub),
+      leading: const Icon(Icons.device_hub_rounded),
       title: Text(appLocalizations.allowLan),
       subtitle: Text(appLocalizations.allowLanDesc),
       delegate: SwitchDelegate(
@@ -300,7 +300,7 @@ class UnifiedDelayItem extends ConsumerWidget {
         .watch(patchClashConfigProvider.select((state) => state.unifiedDelay));
 
     return ListItem.switchItem(
-      leading: const Icon(Icons.compress_outlined),
+      leading: const Icon(Icons.compress_rounded),
       title: Text(appLocalizations.unifiedDelay),
       subtitle: Text(appLocalizations.unifiedDelayDesc),
       delegate: SwitchDelegate(
@@ -326,7 +326,7 @@ class FindProcessItem extends ConsumerWidget {
         .select((state) => state.findProcessMode == FindProcessMode.always));
 
     return ListItem.switchItem(
-      leading: const Icon(Icons.polymer_outlined),
+      leading: const Icon(Icons.polymer_rounded),
       title: Text(appLocalizations.findProcessMode),
       subtitle: Text(appLocalizations.findProcessModeDesc),
       delegate: SwitchDelegate(
@@ -352,7 +352,7 @@ class TcpConcurrentItem extends ConsumerWidget {
     final tcpConcurrent = ref
         .watch(patchClashConfigProvider.select((state) => state.tcpConcurrent));
     return ListItem.switchItem(
-      leading: const Icon(Icons.double_arrow_outlined),
+      leading: const Icon(Icons.double_arrow_rounded),
       title: Text(appLocalizations.tcpConcurrent),
       subtitle: Text(appLocalizations.tcpConcurrentDesc),
       delegate: SwitchDelegate(
@@ -377,7 +377,7 @@ class GeodataLoaderItem extends ConsumerWidget {
     final isMemconservative = ref.watch(patchClashConfigProvider.select(
         (state) => state.geodataLoader == GeodataLoader.memconservative));
     return ListItem.switchItem(
-      leading: const Icon(Icons.memory),
+      leading: const Icon(Icons.memory_rounded),
       title: Text(appLocalizations.geodataLoader),
       subtitle: Text(appLocalizations.geodataLoaderDesc),
       delegate: SwitchDelegate(
@@ -404,7 +404,7 @@ class ExternalControllerItem extends ConsumerWidget {
     final hasExternalController = ref.watch(patchClashConfigProvider.select(
         (state) => state.externalController == ExternalControllerStatus.open));
     return ListItem.switchItem(
-      leading: const Icon(Icons.api_outlined),
+      leading: const Icon(Icons.api_rounded),
       title: Text(appLocalizations.externalController),
       subtitle: Text(appLocalizations.externalControllerDesc),
       delegate: SwitchDelegate(

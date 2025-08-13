@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,6 @@ import 'package:flutter/rendering.dart';
 
 const EdgeInsetsGeometry _kHorizontalItemPadding =
     EdgeInsets.symmetric(vertical: 2, horizontal: 3);
-
-const Radius _kCornerRadius = Radius.circular(9);
 
 const Radius _kThumbRadius = Radius.circular(8);
 
@@ -134,37 +133,28 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
       highlighted = widget.groupValue;
     }
   }
-
+  
   @override
   void dispose() {
     thumbScaleController.dispose();
     thumbController.dispose();
-
     drag.dispose();
     tap.dispose();
     longPress.dispose();
-
     super.dispose();
   }
 
   bool? _startedOnSelectedSegment;
   bool _startedOnDisabledSegment = false;
-
-  bool get isThumbDragging =>
-      (_startedOnSelectedSegment ?? false) && !_startedOnDisabledSegment;
+  bool get isThumbDragging => (_startedOnSelectedSegment ?? false) && !_startedOnDisabledSegment;
 
   T segmentForXPosition(double dx) {
-    final BuildContext currentContext =
-        segmentedControlRenderWidgetKey.currentContext!;
-    final _RenderSegmentedControl<T> renderBox =
-        currentContext.findRenderObject()! as _RenderSegmentedControl<T>;
-
+    final BuildContext currentContext = segmentedControlRenderWidgetKey.currentContext!;
+    final _RenderSegmentedControl<T> renderBox = currentContext.findRenderObject()! as _RenderSegmentedControl<T>;
     final int numOfChildren = widget.children.length;
     assert(renderBox.hasSize);
     assert(numOfChildren >= 2);
-
     int segmentIndex = renderBox.getClosestSegmentIndex(dx);
-
     switch (Directionality.of(context)) {
       case TextDirection.ltr:
         break;
@@ -178,12 +168,10 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
     final RenderBox renderBox = context.findRenderObject()! as RenderBox;
     assert(renderBox.hasSize);
     final Size size = renderBox.size;
-    final Offset offCenter =
-        details.localPosition - Offset(size.width / 2, size.height / 2);
-    final double l2 =
-        math.pow(math.max(0.0, offCenter.dx.abs() - size.width / 2), 2) +
-                math.pow(math.max(0.0, offCenter.dy.abs() - size.height / 2), 2)
-            as double;
+    final Offset offCenter = details.localPosition - Offset(size.width / 2, size.height / 2);
+    final double l2 = math.pow(math.max(0.0, offCenter.dx.abs() - size.width / 2), 2) +
+            math.pow(math.max(0.0, offCenter.dy.abs() - size.height / 2), 2)
+        as double;
     return l2 > _kTouchYDistanceThreshold;
   }
 
@@ -200,7 +188,6 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
     if (highlighted == newValue) {
       return;
     }
-
     setState(() {
       highlighted = newValue;
     });
@@ -231,13 +218,11 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
   void onDown(DragDownDetails details) {
     final T touchDownSegment = segmentForXPosition(details.localPosition.dx);
     _startedOnSelectedSegment = touchDownSegment == highlighted;
-    _startedOnDisabledSegment =
-        widget.disabledChildren.contains(touchDownSegment);
+    _startedOnDisabledSegment = widget.disabledChildren.contains(touchDownSegment);
     if (widget.disabledChildren.contains(touchDownSegment)) {
       return;
     }
     onPressedChangedByGesture(touchDownSegment);
-
     if (isThumbDragging) {
       _playThumbScaleAnimation(isExpanding: false);
     }
@@ -276,7 +261,6 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
         widget.onValueChanged(highlighted);
       }
     }
-
     onPressedChangedByGesture(null);
     _startedOnSelectedSegment = null;
   }
@@ -290,23 +274,22 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
   }
 
   T? highlighted;
-
   T? pressed;
 
   @override
   Widget build(BuildContext context) {
+    final CustomTheme customTheme = Theme.of(context).extension<CustomTheme>()!;
     assert(widget.children.length >= 2);
     List<Widget> children = <Widget>[];
     bool isPreviousSegmentHighlighted = false;
-
     int index = 0;
     int? highlightedIndex;
+
     for (final MapEntry<T, Widget> entry in widget.children.entries) {
       final bool isHighlighted = highlighted == entry.key;
       if (isHighlighted) {
         highlightedIndex = index;
       }
-
       if (index != 0) {
         children.add(
           _SegmentSeparator(
@@ -315,7 +298,6 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
           ),
         );
       }
-
       final TextDirection textDirection = Directionality.of(context);
       final _SegmentLocation segmentLocation = switch (textDirection) {
         TextDirection.ltr when index == 0 => _SegmentLocation.leftmost,
@@ -351,13 +333,10 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
           ),
         ),
       );
-
       index += 1;
       isPreviousSegmentHighlighted = isHighlighted;
     }
-
     assert((highlightedIndex == null) == (highlighted == null));
-
     switch (Directionality.of(context)) {
       case TextDirection.ltr:
         break;
@@ -374,10 +353,14 @@ class _CommonTabBarState<T extends Object> extends State<CommonTabBar<T>>
         clipBehavior: Clip.antiAlias,
         padding: widget.padding.resolve(Directionality.of(context)),
         decoration: ShapeDecoration(
-          shape: RoundedSuperellipseBorder(
-            borderRadius: const BorderRadius.all(_kCornerRadius),
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            side: BorderSide(
+              color: customTheme.switcherBorder!,
+              width: 1,
+            ),
           ),
-          color: widget.backgroundColor,
+          color: customTheme.switcherBackground,
         ),
         child: AnimatedBuilder(
           animation: thumbScaleAnimation,
@@ -410,18 +393,14 @@ class _Segment<T> extends StatefulWidget {
   }) : super(key: key);
 
   final Widget child;
-
   final bool pressed;
   final bool highlighted;
   final bool enabled;
   final _SegmentLocation segmentLocation;
   final bool isDragging;
-
   bool get shouldFadeoutContent => pressed && !highlighted && enabled;
-
   bool get shouldScaleContent =>
       pressed && highlighted && isDragging && enabled;
-
   @override
   _SegmentState<T> createState() => _SegmentState<T>();
 }
@@ -439,7 +418,6 @@ class _SegmentState<T> extends State<_Segment<T>>
       value: widget.shouldScaleContent ? 1 : 0,
       vsync: this,
     );
-
     highlightPressScaleAnimation = highlightPressScaleController.drive(
       Tween<double>(begin: 1.0, end: _kMinThumbScale),
     );
@@ -449,7 +427,6 @@ class _SegmentState<T> extends State<_Segment<T>>
   void didUpdateWidget(_Segment<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     assert(oldWidget.key == widget.key);
-
     if (oldWidget.shouldScaleContent != widget.shouldScaleContent) {
       highlightPressScaleAnimation = highlightPressScaleController.drive(
         Tween<double>(
@@ -475,7 +452,6 @@ class _SegmentState<T> extends State<_Segment<T>>
       _SegmentLocation.rightmost => Alignment.centerRight,
       _SegmentLocation.inbetween => Alignment.center,
     };
-
     return MetaData(
       behavior: HitTestBehavior.opaque,
       child: IndexedStack(
@@ -572,7 +548,7 @@ class _SegmentSeparatorState extends State<_SegmentSeparator>
         return Padding(
           padding: _kSeparatorInset,
           child: DecoratedBox(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.transparent,
             ),
             child: child,
@@ -661,36 +637,28 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     state.thumbController.removeListener(markNeedsPaint);
     super.detach();
   }
-
   double get thumbScale => _thumbScale;
   double _thumbScale;
-
   set thumbScale(double value) {
     if (_thumbScale == value) {
       return;
     }
-
     _thumbScale = value;
     if (state.highlighted != null) {
       markNeedsPaint();
     }
   }
-
   int? get highlightedIndex => _highlightedIndex;
   int? _highlightedIndex;
-
   set highlightedIndex(int? value) {
     if (_highlightedIndex == value) {
       return;
     }
-
     _highlightedIndex = value;
     markNeedsPaint();
   }
-
   Color get thumbColor => _thumbColor;
   Color _thumbColor;
-
   set thumbColor(Color value) {
     if (_thumbColor == value) {
       return;
@@ -698,10 +666,8 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     _thumbColor = value;
     markNeedsPaint();
   }
-
   bool get proportionalWidth => _proportionalWidth;
   bool _proportionalWidth;
-
   set proportionalWidth(bool value) {
     if (_proportionalWidth == value) {
       return;
@@ -721,7 +687,6 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
   }
 
   double get separatorWidth => _kSeparatorInset.horizontal + _kSeparatorWidth;
-
   double get totalSeparatorWidth => separatorWidth * (childCount ~/ 2);
 
   int getClosestSegmentIndex(double dx) {
@@ -735,15 +700,12 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
         childParentData.offset.dx,
         child.size.width + childParentData.offset.dx,
       );
-
       if (dx <= clampX) {
         break;
       }
-
       index++;
       child = nonSeparatorChildAfter(child);
     }
-
     final int segmentCount = childCount ~/ 2 + 1;
     return min(index, segmentCount - 1);
   }
@@ -766,7 +728,6 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     return (maxMinChildWidth + 2 * _kSegmentMinPadding) * childCount +
         totalSeparatorWidth;
   }
-
   @override
   double computeMaxIntrinsicWidth(double height) {
     final int childCount = this.childCount ~/ 2 + 1;
@@ -780,7 +741,6 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     return (maxMaxChildWidth + 2 * _kSegmentMinPadding) * childCount +
         totalSeparatorWidth;
   }
-
   @override
   double computeMinIntrinsicHeight(double width) {
     RenderBox? child = firstChild;
@@ -792,7 +752,6 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     }
     return maxMinChildHeight;
   }
-
   @override
   double computeMaxIntrinsicHeight(double width) {
     RenderBox? child = firstChild;
@@ -804,12 +763,10 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     }
     return maxMaxChildHeight;
   }
-
   @override
   double? computeDistanceToActualBaseline(TextBaseline baseline) {
     return defaultComputeDistanceToHighestActualBaseline(baseline);
   }
-
   @override
   void setupParentData(RenderBox child) {
     if (child.parentData is! _SegmentedControlContainerBoxParentData) {
@@ -830,8 +787,7 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
 
   double _getMaxChildWidth(BoxConstraints constraints) {
     final int childCount = this.childCount ~/ 2 + 1;
-    double childWidth =
-        (constraints.minWidth - totalSeparatorWidth) / childCount;
+    double childWidth = (constraints.minWidth - totalSeparatorWidth) / childCount;
     RenderBox? child = firstChild;
     while (child != null) {
       childWidth = math.max(
@@ -850,22 +806,17 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
       final int segmentCount = childCount ~/ 2 + 1;
       return List<double>.filled(segmentCount, maxChildWidth);
     }
-
     final List<double> segmentWidths = <double>[];
     RenderBox? child = firstChild;
     while (child != null) {
-      final double childWidth =
-          child.getMaxIntrinsicWidth(double.infinity) + 2 * _kSegmentMinPadding;
+      final double childWidth = child.getMaxIntrinsicWidth(double.infinity) + 2 * _kSegmentMinPadding;
       child = nonSeparatorChildAfter(child);
       segmentWidths.add(childWidth);
     }
-
     final double totalWidth = segmentWidths.sum;
     final double allowedMaxWidth = constraints.maxWidth - totalSeparatorWidth;
     final double allowedMinWidth = constraints.minWidth - totalSeparatorWidth;
-
-    final double scale =
-        clampDouble(totalWidth, allowedMinWidth, allowedMaxWidth) / totalWidth;
+    final double scale = clampDouble(totalWidth, allowedMinWidth, allowedMaxWidth) / totalWidth;
     if (scale != 1) {
       for (int i = 0; i < segmentWidths.length; i++) {
         segmentWidths[i] = segmentWidths[i] * scale;
@@ -875,21 +826,16 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
   }
 
   Size _computeOverallSize(BoxConstraints constraints) {
-    final double maxChildHeight =
-        _getMaxChildHeight(constraints, constraints.maxWidth);
+    final double maxChildHeight = _getMaxChildHeight(constraints, constraints.maxWidth);
     return constraints.constrain(
-      Size(_getChildWidths(constraints).sum + totalSeparatorWidth,
-          maxChildHeight),
+      Size(_getChildWidths(constraints).sum + totalSeparatorWidth, maxChildHeight),
     );
   }
 
   @override
-  double? computeDryBaseline(
-      covariant BoxConstraints constraints, TextBaseline baseline) {
+  double? computeDryBaseline(covariant BoxConstraints constraints, TextBaseline baseline) {
     final List<double> segmentWidths = _getChildWidths(constraints);
-    final double childHeight =
-        _getMaxChildHeight(constraints, constraints.maxWidth);
-
+    final double childHeight = _getMaxChildHeight(constraints, constraints.maxWidth);
     int index = 0;
     BaselineOffset baselineOffset = BaselineOffset.noBaseline;
     RenderBox? child = firstChild;
@@ -900,11 +846,9 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
       baselineOffset = baselineOffset.minOf(
         BaselineOffset(child.getDryBaseline(childConstraints, baseline)),
       );
-
       child = nonSeparatorChildAfter(child);
       index++;
     }
-
     return baselineOffset.offset;
   }
 
@@ -917,7 +861,6 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
   void performLayout() {
     final BoxConstraints constraints = this.constraints;
     final List<double> segmentWidths = _getChildWidths(constraints);
-
     final double childHeight = _getMaxChildHeight(constraints, double.infinity);
     final BoxConstraints separatorConstraints = BoxConstraints(
       minHeight: childHeight,
@@ -930,16 +873,13 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
       final BoxConstraints childConstraints = BoxConstraints.tight(
         Size(segmentWidths[index ~/ 2], childHeight),
       );
-      child.layout(index.isEven ? childConstraints : separatorConstraints,
-          parentUsesSize: true);
-      final _SegmentedControlContainerBoxParentData childParentData =
-          child.parentData! as _SegmentedControlContainerBoxParentData;
+      child.layout(index.isEven ? childConstraints : separatorConstraints, parentUsesSize: true);
+      final _SegmentedControlContainerBoxParentData childParentData = child.parentData! as _SegmentedControlContainerBoxParentData;
       final Offset childOffset = Offset(start, 0);
       childParentData.offset = childOffset;
       start += child.size.width;
       assert(
-        index.isEven ||
-            child.size.width == _kSeparatorWidth + _kSeparatorInset.horizontal,
+        index.isEven || child.size.width == _kSeparatorWidth + _kSeparatorInset.horizontal,
         '${child.size.width} != ${_kSeparatorWidth + _kSeparatorInset.horizontal}',
       );
       child = childAfter(child);
@@ -954,16 +894,9 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     if (thumbRect == null) {
       return null;
     }
-
-    final Offset firstChildOffset =
-        (children.first.parentData! as _SegmentedControlContainerBoxParentData)
-            .offset;
+    final Offset firstChildOffset = (children.first.parentData! as _SegmentedControlContainerBoxParentData).offset;
     final double leftMost = firstChildOffset.dx;
-    final double rightMost =
-        (children.last.parentData! as _SegmentedControlContainerBoxParentData)
-                .offset
-                .dx +
-            children.last.size.width;
+    final double rightMost = (children.last.parentData! as _SegmentedControlContainerBoxParentData).offset.dx + children.last.size.width;
     assert(rightMost > leftMost);
     return Rect.fromLTRB(
       math.max(thumbRect.left, leftMost - _kThumbInsets.left),
@@ -979,26 +912,20 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
     for (int index = 1; index < childCount; index += 2) {
       _paintSeparator(context, offset, children[index]);
     }
-
     final int? highlightedChildIndex = highlightedIndex;
     if (highlightedChildIndex != null) {
       final RenderBox selectedChild = children[highlightedChildIndex * 2];
-
-      final _SegmentedControlContainerBoxParentData childParentData =
-          selectedChild.parentData! as _SegmentedControlContainerBoxParentData;
+      final _SegmentedControlContainerBoxParentData childParentData = selectedChild.parentData! as _SegmentedControlContainerBoxParentData;
       final Rect newThumbRect = _kThumbInsets.inflateRect(
         childParentData.offset & selectedChild.size,
       );
       if (state.thumbController.isAnimating) {
         final Animatable<Rect?>? thumbTween = state.thumbAnimatable;
         if (thumbTween == null) {
-          final Rect startingRect =
-              moveThumbRectInBound(currentThumbRect, children) ?? newThumbRect;
-          state.thumbAnimatable =
-              RectTween(begin: startingRect, end: newThumbRect);
+          final Rect startingRect = moveThumbRectInBound(currentThumbRect, children) ?? newThumbRect;
+          state.thumbAnimatable = RectTween(begin: startingRect, end: newThumbRect);
         } else if (newThumbRect != thumbTween.transform(1)) {
-          final Rect startingRect =
-              moveThumbRectInBound(currentThumbRect, children) ?? newThumbRect;
+          final Rect startingRect = moveThumbRectInBound(currentThumbRect, children) ?? newThumbRect;
           state.thumbAnimatable = RectTween(
             begin: startingRect,
             end: newThumbRect,
@@ -1007,12 +934,8 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
       } else {
         state.thumbAnimatable = null;
       }
-
-      final Rect unscaledThumbRect =
-          state.thumbAnimatable?.evaluate(state.thumbController) ??
-              newThumbRect;
+      final Rect unscaledThumbRect = state.thumbAnimatable?.evaluate(state.thumbController) ?? newThumbRect;
       currentThumbRect = unscaledThumbRect;
-
       final _SegmentLocation childLocation;
       if (highlightedChildIndex == 0) {
         childLocation = _SegmentLocation.leftmost;
@@ -1022,10 +945,8 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
         childLocation = _SegmentLocation.inbetween;
       }
       final double delta = switch (childLocation) {
-        _SegmentLocation.leftmost =>
-          unscaledThumbRect.width - unscaledThumbRect.width * thumbScale,
-        _SegmentLocation.rightmost =>
-          unscaledThumbRect.width * thumbScale - unscaledThumbRect.width,
+        _SegmentLocation.leftmost => unscaledThumbRect.width - unscaledThumbRect.width * thumbScale,
+        _SegmentLocation.rightmost => unscaledThumbRect.width * thumbScale - unscaledThumbRect.width,
         _SegmentLocation.inbetween => 0,
       };
       final Rect thumbRect = Rect.fromCenter(
@@ -1033,12 +954,10 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
         width: unscaledThumbRect.width * thumbScale,
         height: unscaledThumbRect.height * thumbScale,
       );
-
       _paintThumb(context, offset, thumbRect);
     } else {
       currentThumbRect = null;
     }
-
     for (int index = 0; index < children.length; index += 2) {
       _paintChild(context, offset, children[index]);
     }
@@ -1046,36 +965,19 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
 
   final Paint separatorPaint = Paint();
 
-  void _paintSeparator(
-      PaintingContext context, Offset offset, RenderBox child) {
-    final _SegmentedControlContainerBoxParentData childParentData =
-        child.parentData! as _SegmentedControlContainerBoxParentData;
+  void _paintSeparator(PaintingContext context, Offset offset, RenderBox child) {
+    final _SegmentedControlContainerBoxParentData childParentData = child.parentData! as _SegmentedControlContainerBoxParentData;
     context.paintChild(child, offset + childParentData.offset);
   }
 
   void _paintChild(PaintingContext context, Offset offset, RenderBox child) {
-    final _SegmentedControlContainerBoxParentData childParentData =
-        child.parentData! as _SegmentedControlContainerBoxParentData;
+    final _SegmentedControlContainerBoxParentData childParentData = child.parentData! as _SegmentedControlContainerBoxParentData;
     context.paintChild(child, childParentData.offset + offset);
   }
 
   void _paintThumb(PaintingContext context, Offset offset, Rect thumbRect) {
-    // const List<BoxShadow> thumbShadow = <BoxShadow>[
-    //   BoxShadow(color: Color(0x1F000000), offset: Offset(0, 3), blurRadius: 8),
-    //   BoxShadow(color: Color(0x0A000000), offset: Offset(0, 3), blurRadius: 1),
-    // ];
-
-    final RRect thumbRRect =
-        RRect.fromRectAndRadius(thumbRect.shift(offset), _kThumbRadius);
-
-    // for (final BoxShadow shadow in thumbShadow) {
-    //   context.canvas
-    //       .drawRRect(thumbRRect.shift(shadow.offset), shadow.toPaint());
-    // }
-
-    context.canvas.drawRRect(
-        thumbRRect.inflate(0.5), Paint()..color = const Color(0x0A000000));
-
+    final RRect thumbRRect = RRect.fromRectAndRadius(thumbRect.shift(offset), _kThumbRadius);
+    context.canvas.drawRRect(thumbRRect.inflate(0.5), Paint()..color = const Color(0x0A000000));
     context.canvas.drawRRect(thumbRRect, Paint()..color = thumbColor);
   }
 
@@ -1083,8 +985,7 @@ class _RenderSegmentedControl<T extends Object> extends RenderBox
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
     RenderBox? child = lastChild;
     while (child != null) {
-      final _SegmentedControlContainerBoxParentData childParentData =
-          child.parentData! as _SegmentedControlContainerBoxParentData;
+      final _SegmentedControlContainerBoxParentData childParentData = child.parentData! as _SegmentedControlContainerBoxParentData;
       if ((childParentData.offset & child.size).contains(position)) {
         return result.addWithPaintOffset(
           offset: childParentData.offset,

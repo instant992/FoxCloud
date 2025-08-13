@@ -234,7 +234,7 @@ class BypassDomainItem extends StatelessWidget {
           },
           tooltip: appLocalizations.reset,
           icon: const Icon(
-            Icons.replay,
+            Icons.replay_rounded,
           ),
         )
       ];
@@ -412,7 +412,7 @@ class NetworkListView extends ConsumerWidget {
           },
           tooltip: appLocalizations.reset,
           icon: const Icon(
-            Icons.replay,
+            Icons.replay_rounded,
           ),
         )
       ];

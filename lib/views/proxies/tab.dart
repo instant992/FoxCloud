@@ -60,10 +60,10 @@ class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
           onPressed: _showMoreMenu,
           icon: isMobileView
               ? const Icon(
-                  Icons.expand_more,
+                  Icons.expand_more_rounded,
                 )
               : const Icon(
-                  Icons.chevron_right,
+                  Icons.chevron_right_rounded,
                 ),
         );
       },
@@ -228,6 +228,15 @@ class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
                     tabAlignment: TabAlignment.start,
                     overlayColor:
                         const WidgetStatePropertyAll(Colors.transparent),
+                    
+                    labelColor: Theme.of(context).colorScheme.onSurface,
+                    unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary.withAlpha(26),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    
                     tabs: [
                       for (final groupName in groupNames)
                         Tab(
@@ -249,7 +258,7 @@ class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      context.colorScheme.surface.opacity10,
+                      context.colorScheme.surface.withAlpha(26),
                       context.colorScheme.surface,
                     ],
                     stops: const [
@@ -439,7 +448,7 @@ class _DelayTestButtonState extends State<DelayTestButton>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: _healthcheck,
-        child: const Icon(Icons.network_ping),
+        child: const Icon(Icons.network_ping_rounded),
       ),
     );
   }

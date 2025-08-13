@@ -28,7 +28,7 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
   get actions => [
         if (_isTab)
           IconButton(
-            icon: const Icon(Icons.speed_outlined),
+            icon: const Icon(Icons.speed_rounded),
             tooltip: appLocalizations.ping,
             onPressed: () async {
               await _proxiesTabKey.currentState?.delayTestCurrentGroup();
@@ -42,21 +42,19 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
                   offset: Offset(0, 20),
                 );
               },
-              icon: Icon(
-                Icons.more_vert,
-              ),
+              icon: const Icon(Icons.more_vert_rounded),
               tooltip: appLocalizations.more_vert,
             );
           },
           popup: CommonPopupMenu(
             items: [
               PopupMenuItemData(
-                icon: Icons.tune,
+                icon: Icons.tune_rounded,
                 label: appLocalizations.settings,
                 onPressed: () {
                   showSheet(
                     context: context,
-                    props: SheetProps(
+                    props: const SheetProps(
                       isScrollControlled: true,
                     ),
                     builder: (_, type) {
@@ -71,7 +69,7 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
               ),
               if (_hasProviders)
                 PopupMenuItemData(
-                  icon: Icons.poll_outlined,
+                  icon: Icons.poll_rounded,
                   label: appLocalizations.providers,
                   onPressed: () {
                     showExtend(
@@ -86,7 +84,7 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
                 ),
               if (!_isTab)
                 PopupMenuItemData(
-                  icon: Icons.style_outlined,
+                  icon: Icons.style_rounded,
                   label: appLocalizations.iconConfiguration,
                   onPressed: () {
                     showExtend(
@@ -106,7 +104,6 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
         )
       ];
 
-  // <--- ДОБАВЛЕНА КНОПКА ПОДКЛЮЧЕНИЯ
   @override
   Widget? get floatingActionButton => const StartButton();
 
@@ -141,7 +138,7 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
             );
           },
           icon: const Icon(
-            Icons.poll_outlined,
+            Icons.poll_rounded,
           ),
         ),
       _isTab
@@ -150,7 +147,7 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
                 _proxiesTabKey.currentState?.scrollToGroupSelected();
               },
               icon: const Icon(
-                Icons.adjust_outlined,
+                Icons.adjust_rounded,
               ),
             )
           : IconButton(
@@ -167,7 +164,7 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
                 );
               },
               icon: const Icon(
-                Icons.style_outlined,
+                Icons.style_rounded,
               ),
             ),
       IconButton(
@@ -187,7 +184,7 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
           );
         },
         icon: const Icon(
-          Icons.tune,
+          Icons.tune_rounded,
         ),
       )
     ];

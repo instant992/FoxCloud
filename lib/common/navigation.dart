@@ -13,14 +13,14 @@ class Navigation {
     return [
       const NavigationItem(
         keep: false,
-        icon: Icon(Icons.space_dashboard),
+        icon: Icon(Icons.space_dashboard_rounded),
         label: PageLabel.dashboard,
         view: DashboardView(
           key: GlobalObjectKey(PageLabel.dashboard),
         ),
       ),
       NavigationItem(
-        icon: const Icon(Icons.article),
+        icon: const Icon(Icons.article_rounded),
         label: PageLabel.proxies,
         view: const ProxiesView(
           key: GlobalObjectKey(
@@ -32,7 +32,7 @@ class Navigation {
             : [],
       ),
       const NavigationItem(
-        icon: Icon(Icons.folder),
+        icon: Icon(Icons.folder_rounded),
         label: PageLabel.profiles,
         view: ProfilesView(
           key: GlobalObjectKey(
@@ -41,7 +41,7 @@ class Navigation {
         ),
       ),
       const NavigationItem(
-        icon: Icon(Icons.view_timeline),
+        icon: Icon(Icons.view_timeline_rounded),
         label: PageLabel.requests,
         view: RequestsView(
           key: GlobalObjectKey(
@@ -52,7 +52,7 @@ class Navigation {
         modes: [NavigationItemMode.desktop, NavigationItemMode.more],
       ),
       const NavigationItem(
-        icon: Icon(Icons.ballot),
+        icon: Icon(Icons.ballot_rounded),
         label: PageLabel.connections,
         view: ConnectionsView(
           key: GlobalObjectKey(
@@ -63,7 +63,7 @@ class Navigation {
         modes: [NavigationItemMode.desktop, NavigationItemMode.more],
       ),
       const NavigationItem(
-        icon: Icon(Icons.storage),
+        icon: Icon(Icons.storage_rounded),
         label: PageLabel.resources,
         description: "resourcesDesc",
         view: ResourcesView(
@@ -74,7 +74,7 @@ class Navigation {
         modes: [NavigationItemMode.more],
       ),
       NavigationItem(
-        icon: const Icon(Icons.adb),
+        icon: const Icon(Icons.adb_rounded),
         label: PageLabel.logs,
         view: const LogsView(
           key: GlobalObjectKey(
@@ -87,7 +87,7 @@ class Navigation {
             : [],
       ),
       const NavigationItem(
-        icon: Icon(Icons.construction),
+        icon: Icon(Icons.construction_rounded),
         label: PageLabel.tools,
         view: ToolsView(
           key: GlobalObjectKey(

@@ -91,26 +91,26 @@ class _ScanPageState extends State<ScanPage> with WidgetsBindingObserver {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: const Icon(Icons.close),
+              icon: const Icon(Icons.close_rounded),
             ),
             actions: [
               ValueListenableBuilder<MobileScannerState>(
                 valueListenable: controller,
                 builder: (context, state, _) {
-                  var icon = const Icon(Icons.flash_off);
+                  var icon = const Icon(Icons.flash_off_rounded);
                   var backgroundColor = Colors.black12;
                   switch (state.torchState) {
                     case TorchState.off:
-                      icon = const Icon(Icons.flash_off);
+                      icon = const Icon(Icons.flash_off_rounded);
                       backgroundColor = Colors.black12;
                     case TorchState.on:
-                      icon = const Icon(Icons.flash_on);
+                      icon = const Icon(Icons.flash_on_rounded);
                       backgroundColor = Colors.orange;
                     case TorchState.unavailable:
-                      icon = const Icon(Icons.flash_off);
+                      icon = const Icon(Icons.flash_off_rounded);
                       backgroundColor = Colors.transparent;
                     case TorchState.auto:
-                      icon = const Icon(Icons.flash_auto);
+                      icon = const Icon(Icons.flash_auto_rounded);
                       backgroundColor = Colors.orange;
                   }
                   return Container(
@@ -146,7 +146,7 @@ class _ScanPageState extends State<ScanPage> with WidgetsBindingObserver {
               padding: const EdgeInsets.all(16),
               iconSize: 32.0,
               onPressed: globalState.appController.addProfileFormQrCode,
-              icon: const Icon(Icons.photo_camera_back),
+              icon: const Icon(Icons.photo_camera_back_rounded),
             ),
           ),
         ],

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/models/models.dart';
 import 'package:flowvy/providers/app.dart';
 import 'package:flowvy/state.dart';
@@ -16,6 +17,8 @@ class TrafficUsage extends StatelessWidget {
     Icon icon,
     TrafficValue trafficValue,
   ) {
+    final subtitleColor = Theme.of(context).colorScheme.onSurfaceVariant;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
@@ -34,7 +37,7 @@ class TrafficUsage extends StatelessWidget {
                 flex: 1,
                 child: Text(
                   trafficValue.showValue,
-                  style: context.textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: subtitleColor),
                   maxLines: 1,
                 ),
               ),
@@ -43,7 +46,7 @@ class TrafficUsage extends StatelessWidget {
         ),
         Text(
           trafficValue.showUnit,
-          style: context.textTheme.bodySmall?.toLighter,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: subtitleColor.withAlpha(204)),
         ),
       ],
     );
@@ -51,14 +54,21 @@ class TrafficUsage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = globalState.theme.darken3PrimaryContainer;
-    final secondaryColor = globalState.theme.darken2SecondaryContainer;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final customTheme = theme.extension<CustomTheme>()!;
+
+    final primaryColor = colorScheme.primary;
+    final subtitleColor = colorScheme.onSurfaceVariant;
+    
+    final downloadColor = customTheme.trafficChartDownloadColor!;
+
     return SizedBox(
       height: getWidgetHeight(2),
       child: CommonCard(
         info: Info(
           label: appLocalizations.trafficUsage,
-          iconData: Icons.data_saver_off,
+          iconData: Icons.data_saver_off_rounded,
         ),
         onPressed: () {},
         child: Consumer(
@@ -77,7 +87,7 @@ class TrafficUsage extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         vertical: 12,
                       ),
                       child: Row(
@@ -94,28 +104,29 @@ class TrafficUsage extends StatelessWidget {
                                 ),
                                 DonutChartData(
                                   value: downTotalTrafficValue.value.toDouble(),
-                                  color: secondaryColor,
+                                  color: downloadColor,
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
                           Flexible(
                             child: LayoutBuilder(
                               builder: (_, container) {
+                                final textStyle = theme.textTheme.bodySmall?.copyWith(color: subtitleColor);
                                 final uploadText = Text(
                                   maxLines: 1,
                                   appLocalizations.upload,
                                   overflow: TextOverflow.ellipsis,
-                                  style: context.textTheme.bodySmall,
+                                  style: textStyle,
                                 );
                                 final downloadText = Text(
                                   maxLines: 1,
                                   appLocalizations.download,
                                   overflow: TextOverflow.ellipsis,
-                                  style: context.textTheme.bodySmall,
+                                  style: textStyle,
                                 );
                                 final uploadTextSize = globalState.measure
                                     .computeTextSize(uploadText);
@@ -143,18 +154,18 @@ class TrafficUsage extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 4,
                                         ),
                                         Text(
                                           maxLines: 1,
                                           appLocalizations.upload,
                                           overflow: TextOverflow.ellipsis,
-                                          style: context.textTheme.bodySmall,
+                                          style: textStyle,
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 4,
                                     ),
                                     Row(
@@ -164,21 +175,21 @@ class TrafficUsage extends StatelessWidget {
                                           width: 20,
                                           height: 8,
                                           decoration: ShapeDecoration(
-                                            color: secondaryColor,
+                                            color: downloadColor,
                                             shape: RoundedSuperellipseBorder(
                                               borderRadius:
                                                   BorderRadius.circular(3),
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 4,
                                         ),
                                         Text(
                                           maxLines: 1,
                                           appLocalizations.download,
                                           overflow: TextOverflow.ellipsis,
-                                          style: context.textTheme.bodySmall,
+                                          style: textStyle,
                                         ),
                                       ],
                                     ),
@@ -194,7 +205,7 @@ class TrafficUsage extends StatelessWidget {
                   _buildTrafficDataItem(
                     context,
                     Icon(
-                      Icons.arrow_upward,
+                      Icons.arrow_upward_rounded,
                       color: primaryColor,
                       size: 14,
                     ),
@@ -206,8 +217,8 @@ class TrafficUsage extends StatelessWidget {
                   _buildTrafficDataItem(
                     context,
                     Icon(
-                      Icons.arrow_downward,
-                      color: secondaryColor,
+                      Icons.arrow_downward_rounded,
+                      color: downloadColor,
                       size: 14,
                     ),
                     downTotalTrafficValue,

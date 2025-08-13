@@ -40,7 +40,7 @@ class _MemoryInfoState extends State<MemoryInfo> {
       _memoryInfoStateNotifier.value = TrafficValue(
         value: clashLib != null ? rss : await clashCore.getMemory() + rss,
       );
-      timer = Timer(Duration(seconds: 2), () async {
+      timer = Timer(const Duration(seconds: 2), () async {
         _updateMemory();
       });
     });
@@ -48,11 +48,13 @@ class _MemoryInfoState extends State<MemoryInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SizedBox(
       height: getWidgetHeight(1),
       child: CommonCard(
         info: Info(
-          iconData: Icons.memory,
+          iconData: Icons.memory_rounded,
           label: appLocalizations.memoryInfo,
         ),
         onPressed: () {
@@ -72,21 +74,23 @@ class _MemoryInfoState extends State<MemoryInfo> {
                 child: ValueListenableBuilder(
                   valueListenable: _memoryInfoStateNotifier,
                   builder: (_, trafficValue, __) {
+                    final textStyle = theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    );
+                    
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           trafficValue.showValue,
-                          style: context.textTheme.bodyMedium?.toLight
-                              .adjustSize(1),
+                          style: textStyle,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 8,
                         ),
                         Text(
                           trafficValue.showUnit,
-                          style: context.textTheme.bodyMedium?.toLight
-                              .adjustSize(1),
+                          style: textStyle,
                         )
                       ],
                     );

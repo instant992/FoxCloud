@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart'; 
 import 'package:flowvy/enum/enum.dart';
 import 'package:flowvy/widgets/activate_box.dart';
 import 'package:flowvy/widgets/card.dart';
@@ -124,7 +125,7 @@ class SuperGridState extends State<SuperGrid> with TickerProviderStateMixin {
 
     _shakeController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 120),
+      duration: const Duration(milliseconds: 120),
     );
 
     _shakeAnimation = Tween<double>(
@@ -708,6 +709,8 @@ class _DeletableContainerState extends State<_DeletableContainer>
 
   @override
   Widget build(BuildContext context) {
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
+    
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -734,10 +737,15 @@ class _DeletableContainerState extends State<_DeletableContainer>
                 height: 24,
                 child: IconButton.filled(
                   iconSize: 20,
-                  padding: EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(2),
                   onPressed: _handleDel,
-                  icon: Icon(
-                    Icons.close,
+                  icon: const Icon(
+                    Icons.close_rounded,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: customTheme.connectButtonBackground,
+                    foregroundColor: customTheme.connectButtonIcon,
+                    shape: const CircleBorder(),
                   ),
                 ),
               ),

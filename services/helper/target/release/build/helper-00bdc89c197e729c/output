@@ -1,2 +1,2 @@
-cargo:rustc-env=TOKEN=651f182e50bf2bf45a8098555cc4587cb5b44cdeef1582d4b5a2c71fee4b7845
+cargo:rustc-env=TOKEN=621d65398851fe6aaa8255171c1406fb4a9d02b5b389503736a4e4b4795c11a4
 cargo:rerun-if-env-changed=TOKEN

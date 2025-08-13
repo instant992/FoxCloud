@@ -116,7 +116,7 @@ class _CommonExpandIconState extends State<CommonExpandIcon>
         );
       },
       child: const Icon(
-        Icons.expand_more,
+        Icons.expand_more_rounded,
       ),
     );
   }

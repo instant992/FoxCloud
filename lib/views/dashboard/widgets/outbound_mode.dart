@@ -1,6 +1,7 @@
 import 'package:flowvy/common/common.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flowvy/providers/config.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/state.dart';
 import 'package:flowvy/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class OutboundMode extends StatelessWidget {
                 onPressed: () {},
                 info: Info(
                   label: appLocalizations.outboundMode,
-                  iconData: Icons.call_split_sharp,
+                  iconData: Icons.call_split_rounded,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -65,10 +66,7 @@ class OutboundMode extends StatelessWidget {
                             ),
                             title: Text(
                               Intl.message(item.name),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.toSoftBold,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                         ),
@@ -85,77 +83,52 @@ class OutboundMode extends StatelessWidget {
 class OutboundModeV2 extends StatelessWidget {
   const OutboundModeV2({super.key});
 
-  Color _getTextColor(BuildContext context, Mode mode) {
-    return switch (mode) {
-      Mode.rule => context.colorScheme.onSecondaryContainer,
-      Mode.global => context.colorScheme.onPrimaryContainer,
-      Mode.direct => context.colorScheme.onTertiaryContainer,
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
     final height = getWidgetHeight(0.72);
+
     return SizedBox(
       height: height,
-      child: CommonCard(
-        padding: EdgeInsets.zero,
-        child: Consumer(
-          builder: (_, ref, __) {
-            final mode = ref.watch(
-              patchClashConfigProvider.select(
-                (state) => state.mode,
-              ),
-            );
-            final thumbColor = switch (mode) {
-              Mode.rule => context.colorScheme.secondaryContainer,
-              Mode.global => globalState.theme.darken3PrimaryContainer,
-              Mode.direct => context.colorScheme.tertiaryContainer,
-            };
-            return Container(
-              constraints: BoxConstraints.expand(),
-              child: CommonTabBar<Mode>(
-                children: Map.fromEntries(
-                  Mode.values.map(
-                    (item) => MapEntry(
-                      item,
-                      Container(
-                        clipBehavior: Clip.antiAlias,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(),
-                        height: height - 16,
-                        child: Text(
-                          Intl.message(item.name),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.adjustSize(1)
-                              .copyWith(
-                                color: item == mode
-                                    ? _getTextColor(
-                                        context,
-                                        item,
-                                      )
-                                    : null,
-                              ),
-                        ),
+      child: Consumer(
+        builder: (_, ref, __) {
+          final mode = ref.watch(
+            patchClashConfigProvider.select(
+              (state) => state.mode,
+            ),
+          );
+
+          return CommonTabBar<Mode>(
+              children: Map.fromEntries(
+                Mode.values.map(
+                  (item) => MapEntry(
+                    item,
+                    Container(
+                      clipBehavior: Clip.antiAlias,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(),
+                      height: height - 16,
+                      child: Text(
+                        Intl.message(item.name),
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: item == mode 
+                                  ? customTheme.switcherSelectedText 
+                                  : customTheme.switcherUnselectedText,
+                            ),
                       ),
                     ),
                   ),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                groupValue: mode,
-                onValueChanged: (value) {
-                  if (value == null) {
-                    return;
-                  }
-                  globalState.appController.changeMode(value);
-                },
-                thumbColor: thumbColor,
               ),
+              padding: const EdgeInsets.all(4),
+              groupValue: mode,
+              onValueChanged: (value) {
+                if (value == null) return;
+                globalState.appController.changeMode(value);
+              },
+              thumbColor: customTheme.switcherThumbBackground!,
             );
-          },
-        ),
+        },
       ),
     );
   }

@@ -24,11 +24,48 @@ import 'views/profiles/override_profile.dart';
 
 class AppController {
   int? lastProfileModified;
+  Timer? _profileUpdateTimer;
 
   final BuildContext context;
   final WidgetRef _ref;
 
   AppController(this.context, WidgetRef ref) : _ref = ref;
+
+  _startPeriodicProfileUpdater() {
+    _profileUpdateTimer?.cancel();
+    _profileUpdateTimer =
+        Timer.periodic(const Duration(hours: 1), (timer) {
+      _checkProfilesForPeriodicUpdate();
+    });
+  }
+
+  _checkProfilesForPeriodicUpdate() {
+    final profiles = _ref.read(profilesProvider);
+    for (final profile in profiles) {
+      if (!profile.autoUpdate || profile.type == ProfileType.file) {
+        continue;
+      }
+
+      bool needsUpdate = false;
+      if (profile.lastUpdateDate == null) {
+        needsUpdate = true;
+      } else {
+        final nextUpdateTime =
+            profile.lastUpdateDate!.add(profile.autoUpdateDuration);
+        if (nextUpdateTime.isBefore(DateTime.now())) {
+          needsUpdate = true;
+        }
+      }
+
+      if (needsUpdate) {
+        try {
+          updateProfile(profile);
+        } catch (e) {
+          commonPrint.log(e.toString());
+        }
+      }
+    }
+  }
 
   setupClashConfigDebounce() {
     debouncer.call(FunctionTag.setupClashConfig, () async {
@@ -195,6 +232,8 @@ class AppController {
     _ref
         .read(profilesProvider.notifier)
         .setProfile(newProfile.copyWith(isUpdating: false));
+    savePreferencesDebounce();
+
     if (profile.id == _ref.read(currentProfileIdProvider)) {
       applyProfileDebounce(silence: true);
     }
@@ -383,15 +422,9 @@ class AppController {
     _ref.read(appBrightnessProvider.notifier).value = brightness;
   }
 
-  autoUpdateProfiles() async {
+  autoUpdateProfilesOnStartup() async {
     for (final profile in _ref.read(profilesProvider)) {
-      if (!profile.autoUpdate) continue;
-      final isNotNeedUpdate = profile.lastUpdateDate
-          ?.add(
-            profile.autoUpdateDuration,
-          )
-          .isBeforeNow;
-      if (isNotNeedUpdate == false || profile.type == ProfileType.file) {
+      if (!profile.autoUpdate || profile.type == ProfileType.file) {
         continue;
       }
       try {
@@ -468,6 +501,7 @@ class AppController {
   }
 
   handleExit() async {
+    _profileUpdateTimer?.cancel();
     Future.delayed(commonDuration, () {
       system.exit();
     });
@@ -482,7 +516,7 @@ class AppController {
         final url = Uri.parse('http://127.0.0.1:47890/shutdown');
         await http.post(url).timeout(const Duration(seconds: 1));
       } catch (e) {
-        // Ignore the errors since the service might no longer be responding.
+        // ...
       }
     } finally {
       system.exit();
@@ -589,8 +623,9 @@ class AppController {
     autoLaunch?.updateStatus(
       _ref.read(appSettingProvider).autoLaunch,
     );
-    autoUpdateProfiles();
+    autoUpdateProfilesOnStartup();
     autoCheckUpdate();
+    _startPeriodicProfileUpdater();
     if (!_ref.read(appSettingProvider).silentLaunch) {
       window?.show();
     } else {
@@ -630,23 +665,38 @@ class AppController {
   initLink() {
     linkManager.initAppLinksListen(
       (url) async {
-        final res = await globalState.showMessage(
-          title: appLocalizations.addProfileTitle,
-          message: TextSpan(
-            children: [
-              TextSpan(text: appLocalizations.doYouWantToPass),
-              TextSpan(
-                text: " $url ",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  decoration: TextDecoration.underline,
-                  decorationColor: Theme.of(context).colorScheme.primary,
-                ),
+        final res = await globalState.showCommonDialog<bool>(
+          child: CommonDialog(
+            title: appLocalizations.addProfileTitle,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text(appLocalizations.no),
               ),
-              TextSpan(
-                text: appLocalizations.createProfileText,
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text(appLocalizations.yes),
               ),
             ],
+            child: SelectableText.rich(
+              TextSpan(
+                style: Theme.of(context).textTheme.labelLarge,
+                children: [
+                  TextSpan(text: appLocalizations.addProfileFromUrlPrompt),
+                  const TextSpan(text: '\n\n'),
+                  TextSpan(
+                    text: url,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         );
 

@@ -1,6 +1,9 @@
 import 'dart:ui';
+import 'dart:async';
+import 'dart:math';
 
 import 'package:flowvy/common/common.dart';
+import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flowvy/models/models.dart';
 import 'package:flowvy/providers/providers.dart';
@@ -13,6 +16,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'add_profile.dart';
+
+class TimeAgoWidget extends StatefulWidget {
+  final DateTime date;
+
+  const TimeAgoWidget({super.key, required this.date});
+
+  @override
+  State<TimeAgoWidget> createState() => _TimeAgoWidgetState();
+}
+
+class _TimeAgoWidgetState extends State<TimeAgoWidget> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final subtitleColor = Theme.of(context).colorScheme.onSurfaceVariant;
+    return Text.rich(
+      TextSpan(
+        style: textTheme.bodySmall?.copyWith(color: subtitleColor),
+        children: [
+          TextSpan(text: '${appLocalizations.updated} '),
+          TextSpan(
+            text: widget.date.lastUpdateTimeDesc,
+            style: TextStyle(fontWeight: FontWeight.w500, color: subtitleColor),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+String _formatBytes(BigInt bytes, int decimals) {
+  if (bytes <= BigInt.zero) return "0 B";
+  const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  var i = (bytes.bitLength - 1) ~/ 10;
+  if (i >= suffixes.length) i = suffixes.length - 1;
+  return '${(bytes.toDouble() / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+}
 
 class ProfilesView extends StatefulWidget {
   const ProfilesView({super.key});
@@ -81,7 +140,7 @@ class _ProfilesViewState extends State<ProfilesView> with PageMixin {
           onPressed: () {
             _updateProfiles();
           },
-          icon: const Icon(Icons.sync),
+          icon: const Icon(Icons.sync_rounded),
           tooltip: appLocalizations.update,
         ),
         IconButton(
@@ -98,7 +157,7 @@ class _ProfilesViewState extends State<ProfilesView> with PageMixin {
               final isScriptMode = ref.watch(
                   scriptStateProvider.select((state) => state.realId != null));
               return Icon(
-                Icons.functions,
+                Icons.functions_rounded,
                 color: isScriptMode ? context.colorScheme.primary : null,
               );
             },
@@ -118,20 +177,21 @@ class _ProfilesViewState extends State<ProfilesView> with PageMixin {
               },
             );
           },
-          icon: const Icon(Icons.sort),
+          icon: const Icon(Icons.sort_rounded),
           tooltip: appLocalizations.sort,
           iconSize: 26,
         ),
       ];
 
   @override
-  Widget? get floatingActionButton => FloatingActionButton(
-        heroTag: null,
-        onPressed: _handleShowAddExtendPage,
-        child: const Icon(
-          Icons.add,
-        ),
-      );
+  Widget? get floatingActionButton {
+
+    return FloatingActionButton(
+      heroTag: null,
+      onPressed: _handleShowAddExtendPage,
+      child: const Icon(Icons.add_rounded),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -250,65 +310,6 @@ class ProfileItem extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildUrlProfileInfo(BuildContext context) {
-    final subscriptionInfo = profile.subscriptionInfo;
-    return [
-      const SizedBox(
-        height: 8,
-      ),
-      if (subscriptionInfo != null)
-        SubscriptionInfoView(
-          subscriptionInfo: subscriptionInfo,
-        ),
-      Text(
-        profile.lastUpdateDate?.lastUpdateTimeDesc ?? "",
-        style: context.textTheme.labelMedium?.toLight,
-      ),
-    ];
-  }
-
-  List<Widget> _buildFileProfileInfo(BuildContext context) {
-    return [
-      const SizedBox(
-        height: 8,
-      ),
-      Text(
-        profile.lastUpdateDate?.lastUpdateTimeDesc ?? "",
-        style: context.textTheme.labelMedium?.toLight,
-      ),
-    ];
-  }
-
-  // _handleCopyLink(BuildContext context) async {
-  //   await Clipboard.setData(
-  //     ClipboardData(
-  //       text: profile.url,
-  //     ),
-  //   );
-  //   if (context.mounted) {
-  //     context.showNotifier(appLocalizations.copySuccess);
-  //   }
-  // }
-
-  _handleExportFile(BuildContext context) async {
-    final commonScaffoldState = context.commonScaffoldState;
-    final res = await commonScaffoldState?.loadingRun<bool>(
-      () async {
-        final file = await profile.getFile();
-        final value = await picker.saveFile(
-          profile.label ?? profile.id,
-          file.readAsBytesSync(),
-        );
-        if (value == null) return false;
-        return true;
-      },
-      title: appLocalizations.tip,
-    );
-    if (res == true && context.mounted) {
-      context.showNotifier(appLocalizations.exportSuccess);
-    }
-  }
-
   _handlePushGenProfilePage(BuildContext context, String id) {
     final overrideProfileView = OverrideProfileView(
       profileId: id,
@@ -319,107 +320,213 @@ class ProfileItem extends StatelessWidget {
     );
   }
 
+  _handleExportFile(BuildContext context) async {
+    final commonScaffoldState = context.commonScaffoldState;
+    final res = await commonScaffoldState?.loadingRun<bool>(() async {
+      final file = await profile.getFile();
+      final value = await picker.saveFile(
+        profile.label ?? profile.id,
+        file.readAsBytesSync(),
+      );
+      if (value == null) return false;
+      return true;
+    },
+      title: appLocalizations.tip,
+    );
+    if (res == true && context.mounted) {
+      context.showNotifier(appLocalizations.exportSuccess);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CommonCard(
-      isSelected: profile.id == groupValue,
-      onPressed: () {
-        onChanged(profile.id);
-      },
-      child: ListItem(
-        key: Key(profile.id),
-        horizontalTitleGap: 16,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        trailing: SizedBox(
-          height: 40,
-          width: 40,
-          child: FadeThroughBox(
-            child: profile.isUpdating
-                ? const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: CircularProgressIndicator(),
-                  )
-                : CommonPopupBox(
-                    popup: CommonPopupMenu(
-                      items: [
-                        PopupMenuItemData(
-                          icon: Icons.edit_outlined,
-                          label: appLocalizations.edit,
-                          onPressed: () {
-                            _handleShowEditExtendPage(context);
-                          },
-                        ),
-                        if (profile.type == ProfileType.url) ...[
-                          PopupMenuItemData(
-                            icon: Icons.sync_alt_sharp,
-                            label: appLocalizations.sync,
-                            onPressed: () {
-                              updateProfile();
-                            },
-                          ),
-                        ],
-                        PopupMenuItemData(
-                          icon: Icons.extension_outlined,
-                          label: appLocalizations.override,
-                          onPressed: () {
-                            _handlePushGenProfilePage(context, profile.id);
-                          },
-                        ),
-                        PopupMenuItemData(
-                          icon: Icons.file_copy_outlined,
-                          label: appLocalizations.exportFile,
-                          onPressed: () {
-                            _handleExportFile(context);
-                          },
-                        ),
-                        PopupMenuItemData(
-                          icon: Icons.delete_outlined,
-                          label: appLocalizations.delete,
-                          onPressed: () {
-                            _handleDeleteProfile(context);
-                          },
-                        ),
-                      ],
-                    ),
-                    targetBuilder: (open) {
-                      return IconButton(
-                        onPressed: () {
-                          open();
-                        },
-                        icon: Icon(Icons.more_vert),
-                      );
-                    },
-                  ),
-          ),
-        ),
-        title: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Column(
+    final customTheme = Theme.of(context).extension<CustomTheme>()!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final iconTheme = Theme.of(context).iconTheme;
+
+    final subscriptionInfo = profile.subscriptionInfo;
+    final isUrlProfile =
+        profile.type == ProfileType.url && subscriptionInfo != null;
+    final isSelected = profile.id == groupValue;
+    final subtitleStyle = textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant);
+
+    final cardContent = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                profile.label ?? profile.id,
-                style: context.textTheme.titleMedium,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  profile.label ?? profile.id,
+                  style: textTheme.titleMedium?.copyWith(color: colorScheme.onSurface),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ...switch (profile.type) {
-                    ProfileType.file => _buildFileProfileInfo(context),
-                    ProfileType.url => _buildUrlProfileInfo(context),
-                  },
-                ],
+              SizedBox(
+                height: 24,
+                width: 24,
+                child: FadeThroughBox(
+                  child: profile.isUpdating
+                      ? const Padding(
+                          padding: EdgeInsets.all(4),
+                          child: CircularProgressIndicator(strokeWidth: 2.0),
+                        )
+                      : CommonPopupBox(
+                          popup: CommonPopupMenu(
+                            items: [
+                              PopupMenuItemData(
+                                icon: Icons.edit_rounded,
+                                label: appLocalizations.edit,
+                                onPressed: () =>
+                                    _handleShowEditExtendPage(context),
+                              ),
+                              if (profile.type == ProfileType.url)
+                                PopupMenuItemData(
+                                  icon: Icons.sync_alt_rounded,
+                                  label: appLocalizations.sync,
+                                  onPressed: updateProfile,
+                                ),
+                              if (profile.supportUrl != null &&
+                                  profile.supportUrl!.isNotEmpty)
+                                PopupMenuItemData(
+                                  icon: Icons.support_agent_rounded,
+                                  label: appLocalizations.support,
+                                  onPressed: () {
+                                    globalState.openUrl(profile.supportUrl!);
+                                  },
+                                ),
+                              PopupMenuItemData(
+                                icon: Icons.extension_rounded,
+                                label: appLocalizations.override,
+                                onPressed: () => _handlePushGenProfilePage(
+                                    context, profile.id),
+                              ),
+                              PopupMenuItemData(
+                                icon: Icons.file_copy_rounded,
+                                label: appLocalizations.exportFile,
+                                onPressed: () => _handleExportFile(context),
+                              ),
+                              PopupMenuItemData(
+                                icon: Icons.delete_rounded,
+                                label: appLocalizations.delete,
+                                onPressed: () => _handleDeleteProfile(context),
+                              ),
+                            ],
+                          ),
+                          targetBuilder: (open) {
+                            return IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: open,
+                              icon: Icon(Icons.more_vert_rounded, size: 20, color: iconTheme.color),
+                            );
+                          },
+                        ),
+                ),
               ),
             ],
           ),
-        ),
-        tileTitleAlignment: ListTileTitleAlignment.titleHeight,
+          const SizedBox(height: 12),
+          if (isUrlProfile)
+            Builder(builder: (context) {
+              final BigInt totalTraffic =
+                  BigInt.from(subscriptionInfo.total);
+              final BigInt download =
+                  BigInt.from(subscriptionInfo.download);
+              final BigInt upload =
+                  BigInt.from(subscriptionInfo.upload);
+              final BigInt usedTraffic = download + upload;
+              double progress = 0.0;
+              if (totalTraffic > BigInt.zero) {
+                progress = usedTraffic.toDouble() / totalTraffic.toDouble();
+                if (progress.isNaN) progress = 0.0;
+                if (progress < 0) progress = 0.0;
+                if (progress > 1) progress = 1.0;
+              }
+              final expireDate = DateTime.fromMillisecondsSinceEpoch(
+                  subscriptionInfo.expire * 1000);
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      style: subtitleStyle,
+                      children: [
+                        TextSpan(text: '${appLocalizations.traffic} '),
+                        TextSpan(
+                          text:
+                              '${_formatBytes(usedTraffic, 2)} / ${_formatBytes(totalTraffic, 2)}',
+                          style:
+                              TextStyle(fontWeight: FontWeight.w500, color: subtitleStyle?.color),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 6,
+                      color: colorScheme.primary,
+                      backgroundColor: customTheme.profileCardProgressTrack,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text.rich(
+                    TextSpan(
+                      style: subtitleStyle,
+                      children: [
+                        TextSpan(
+                            text:
+                                '${appLocalizations.subscriptionExpires} '),
+                        TextSpan(
+                          text: expireDate.ddMMyyyy,
+                          style:
+                              TextStyle(fontWeight: FontWeight.w500, color: subtitleStyle?.color),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
+          const SizedBox(height: 8),
+          const Divider(height: 1),
+          const SizedBox(height: 8),
+          if (profile.lastUpdateDate != null)
+            TimeAgoWidget(date: profile.lastUpdateDate!),
+        ],
       ),
+    );
+
+    return OutlinedButton(
+      onPressed: () => onChanged(profile.id),
+      style: ButtonStyle(
+        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (isSelected) return customTheme.profileCardBackgroundSelected!;
+          if (states.contains(WidgetState.hovered)) return customTheme.profileCardBackgroundHover!;
+          return customTheme.profileCardBackground!;
+        }),
+        side: WidgetStateProperty.resolveWith<BorderSide>((states) {
+          if (isSelected) return BorderSide(color: customTheme.profileCardBorderSelected!, width: 1);
+          if (states.contains(WidgetState.hovered)) return BorderSide(color: customTheme.profileCardBorderHover!, width: 1);
+          return BorderSide(color: customTheme.profileCardBorder!, width: 1);
+        }),
+      ),
+      child: cardContent,
     );
   }
 }
@@ -491,13 +598,13 @@ class _ReorderableProfilesSheetState extends State<ReorderableProfilesSheet> {
             Navigator.of(context).pop();
             globalState.appController.setProfiles(profiles);
           },
-          icon: Icon(
-            Icons.save,
+          icon: const Icon(
+            Icons.save_rounded,
           ),
         )
       ],
       body: Padding(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           bottom: 32,
           top: 16,
         ),
@@ -531,7 +638,7 @@ class _ReorderableProfilesSheetState extends State<ReorderableProfilesSheet> {
                   title: Text(profile.label ?? profile.id),
                   trailing: ReorderableDragStartListener(
                     index: index,
-                    child: const Icon(Icons.drag_handle),
+                    child: const Icon(Icons.drag_handle_rounded),
                   ),
                 ),
               ),

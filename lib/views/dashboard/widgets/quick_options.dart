@@ -37,7 +37,7 @@ class TUNButton extends StatelessWidget {
         },
         info: Info(
           label: appLocalizations.tun,
-          iconData: Icons.stacked_line_chart,
+          iconData: Icons.stacked_line_chart_rounded,
         ),
         child: Container(
           padding: baseInfoEdgeInsets.copyWith(
@@ -56,11 +56,7 @@ class TUNButton extends StatelessWidget {
                     appLocalizations.options,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall
-                        ?.adjustSize(-2)
-                        .toLight,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ),
@@ -105,8 +101,8 @@ class SystemProxyButton extends StatelessWidget {
                 body: generateListView(
                   generateSection(
                     items: [
-                      SystemProxyItem(),
-                      BypassDomainItem(),
+                      const SystemProxyItem(),
+                      const BypassDomainItem(),
                     ],
                   ),
                 ),
@@ -117,7 +113,7 @@ class SystemProxyButton extends StatelessWidget {
         },
         info: Info(
           label: appLocalizations.systemProxy,
-          iconData: Icons.shuffle,
+          iconData: Icons.shuffle_rounded,
         ),
         child: Container(
           padding: baseInfoEdgeInsets.copyWith(
@@ -136,11 +132,7 @@ class SystemProxyButton extends StatelessWidget {
                     appLocalizations.options,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall
-                        ?.adjustSize(-2)
-                        .toLight,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ),
@@ -197,9 +189,9 @@ class VpnButton extends StatelessWidget {
             },
           );
         },
-        info: Info(
+        info: const Info(
           label: "VPN",
-          iconData: Icons.stacked_line_chart,
+          iconData: Icons.stacked_line_chart_rounded,
         ),
         child: Container(
           padding: baseInfoEdgeInsets.copyWith(

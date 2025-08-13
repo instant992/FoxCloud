@@ -23,7 +23,7 @@ class _ConfigViewState extends State<ConfigView> {
       ListItem.open(
         title: Text(appLocalizations.general),
         subtitle: Text(appLocalizations.generalDesc),
-        leading: const Icon(Icons.build),
+        leading: const Icon(Icons.build_rounded),
         delegate: OpenDelegate(
           title: appLocalizations.general,
           widget: generateListView(
@@ -35,7 +35,7 @@ class _ConfigViewState extends State<ConfigView> {
       ListItem.open(
         title: Text(appLocalizations.network),
         subtitle: Text(appLocalizations.networkDesc),
-        leading: const Icon(Icons.vpn_key),
+        leading: const Icon(Icons.vpn_key_rounded),
         delegate: OpenDelegate(
           title: appLocalizations.network,
           blur: false,
@@ -45,7 +45,7 @@ class _ConfigViewState extends State<ConfigView> {
       ListItem.open(
         title: const Text("DNS"),
         subtitle: Text(appLocalizations.dnsDesc),
-        leading: const Icon(Icons.dns),
+        leading: const Icon(Icons.dns_rounded),
         delegate: OpenDelegate(
           title: "DNS",
           action: Consumer(builder: (_, ref, __) {
@@ -68,7 +68,7 @@ class _ConfigViewState extends State<ConfigView> {
               },
               tooltip: appLocalizations.reset,
               icon: const Icon(
-                Icons.replay,
+                Icons.replay_rounded,
               ),
             );
           }),

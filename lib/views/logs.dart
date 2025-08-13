@@ -74,7 +74,7 @@ class _LogsViewState extends ConsumerState<LogsView> with PageMixin {
             _handleExport();
           },
           icon: const Icon(
-            Icons.file_download_outlined,
+            Icons.file_download_rounded,
           ),
           tooltip: appLocalizations.exportLogs,
         ),

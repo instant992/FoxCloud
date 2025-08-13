@@ -1,3 +1,5 @@
+// lib/common/utils.dart
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -170,11 +172,16 @@ class Utils {
   String getTrayIconPath({
     required Brightness brightness,
   }) {
+    final isDark = brightness == Brightness.dark;
+
     if (Platform.isMacOS) {
-      return "assets/images/icon_white.png";
+      return "assets/images/icon_bg_white.png";
     }
+
+    final iconName = isDark ? "icon" : "icon_black";
     final suffix = Platform.isWindows ? "ico" : "png";
-    return "assets/images/icon.$suffix";
+
+    return "assets/images/$iconName.$suffix";
   }
 
   int compareVersions(String version1, String version2) {

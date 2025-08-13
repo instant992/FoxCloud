@@ -195,7 +195,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
                             );
                           }
                         : null,
-                    icon: const Icon(Icons.save_sharp),
+                    icon: const Icon(Icons.save_as_rounded),
                   ),
                 ),
               ),
@@ -203,7 +203,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
               IconButton(
                 onPressed: _handleImport,
                 icon: Icon(
-                  Icons.arrow_downward,
+                  Icons.arrow_downward_rounded,
                 ),
               ),
             _wrapController(
@@ -215,23 +215,23 @@ class _EditorPageState extends ConsumerState<EditorPage> {
                         offset: Offset(-20, 20),
                       );
                     },
-                    icon: const Icon(Icons.more_vert),
+                    icon: const Icon(Icons.more_vert_rounded),
                   );
                 },
                 popup: CommonPopupMenu(
                   items: [
                     PopupMenuItemData(
-                      icon: Icons.search,
+                      icon: Icons.search_rounded,
                       label: appLocalizations.search,
                       onPressed: _handleSearch,
                     ),
                     PopupMenuItemData(
-                      icon: Icons.undo,
+                      icon: Icons.undo_rounded,
                       label: appLocalizations.undo,
                       onPressed: _controller.canUndo ? _controller.undo : null,
                     ),
                     PopupMenuItemData(
-                      icon: Icons.redo,
+                      icon: Icons.redo_rounded,
                       label: appLocalizations.redo,
                       onPressed: _controller.canRedo ? _controller.redo : null,
                     ),
@@ -387,7 +387,7 @@ class FindPanel extends StatelessWidget implements PreferredSizeWidget {
                     : () {
                         controller.previousMatch();
                       },
-                icon: Icons.arrow_upward,
+                icon: Icons.arrow_upward_rounded,
               ),
               _buildIconButton(
                 onPressed: value.result == null
@@ -395,7 +395,7 @@ class FindPanel extends StatelessWidget implements PreferredSizeWidget {
                     : () {
                         controller.nextMatch();
                       },
-                icon: Icons.arrow_downward,
+                icon: Icons.arrow_downward_rounded,
               ),
               SizedBox(
                 width: 2,

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flowvy/common/common.dart';
 import 'package:flowvy/enum/enum.dart';
-import 'package:flowvy/providers/app.dart';
 import 'package:flowvy/providers/config.dart';
 import 'package:flowvy/state.dart';
 import 'package:flutter/material.dart';
@@ -126,30 +125,13 @@ class WindowHeaderContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (_, ref, child) {
-        final version = ref.watch(versionProvider);
-        if (version <= 10 && Platform.isMacOS) {
-          return child!;
-        }
-        return Stack(
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: kHeaderHeight,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: child!,
-                ),
-              ],
-            ),
-            const WindowHeader(),
-          ],
-        );
-      },
-      child: child,
+    return Column(
+      children: [
+        const WindowHeader(),
+        Expanded(
+          child: child,
+        ),
+      ],
     );
   }
 }
@@ -217,7 +199,7 @@ class _WindowHeaderState extends State<WindowHeader> {
                       Icons.push_pin,
                     )
                   : const Icon(
-                      Icons.push_pin_outlined,
+                      Icons.push_pin_rounded,
                     );
             },
           ),
@@ -226,7 +208,7 @@ class _WindowHeaderState extends State<WindowHeader> {
           onPressed: () {
             windowManager.minimize();
           },
-          icon: const Icon(Icons.remove),
+          icon: const Icon(Icons.remove_rounded),
         ),
         IconButton(
           onPressed: () async {
@@ -237,11 +219,11 @@ class _WindowHeaderState extends State<WindowHeader> {
             builder: (_, value, ___) {
               return value
                   ? const Icon(
-                      Icons.filter_none,
+                      Icons.filter_none_rounded,
                       size: 20,
                     )
                   : const Icon(
-                      Icons.crop_square,
+                      Icons.crop_square_rounded,
                     );
             },
           ),
@@ -250,11 +232,8 @@ class _WindowHeaderState extends State<WindowHeader> {
           onPressed: () {
             globalState.appController.handleBackOrExit();
           },
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.close_rounded),
         ),
-        // const SizedBox(
-        //   width: 8,
-        // ),
       ],
     );
   }
@@ -262,39 +241,38 @@ class _WindowHeaderState extends State<WindowHeader> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: [
-          Positioned(
-            child: GestureDetector(
-              onPanStart: (_) {
-                windowManager.startDragging();
-              },
-              onDoubleTap: () {
-                _updateMaximized();
-              },
-              child: Container(
-                color: context.colorScheme.secondary.opacity15,
-                alignment: Alignment.centerLeft,
-                height: kHeaderHeight,
+      color: Theme.of(context).colorScheme.surface,
+      child: SizedBox(
+        height: kHeaderHeight,
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onPanStart: (_) {
+                  windowManager.startDragging();
+                },
+                onDoubleTap: () {
+                  _updateMaximized();
+                },
               ),
             ),
-          ),
-          if (Platform.isMacOS)
-            const Text(
-              appName,
-            )
-          else ...[
-            const Positioned(
-              left: 0,
-              child: AppIcon(),
-            ),
-            Positioned(
-              right: 0,
-              child: _buildActions(),
-            ),
-          ]
-        ],
+            if (Platform.isMacOS)
+              const Text(
+                appName,
+              )
+            else ...[
+              const Positioned(
+                left: 0,
+                child: AppIcon(),
+              ),
+              Positioned(
+                right: 0,
+                child: _buildActions(),
+              ),
+            ]
+          ],
+        ),
       ),
     );
   }
@@ -305,23 +283,30 @@ class AppIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    final String iconAsset = isDarkMode
+        ? "assets/images/icon.png"
+        : "assets/images/icon_black.png";
+
     return Container(
-      margin: const EdgeInsets.only(left: 8),
-      child: const Row(
+      margin: const EdgeInsets.only(left: 14),
+      child: Row(
         children: [
           SizedBox(
             width: 24,
             height: 24,
-            child: CircleAvatar(
-              foregroundImage: AssetImage("assets/images/icon.png"),
-              backgroundColor: Colors.transparent,
+            child: Image.asset(
+              iconAsset,
+              fit: BoxFit.contain,
             ),
           ),
-          SizedBox(
-            width: 8,
-          ),
+          const SizedBox(width: 8),
           Text(
             appName,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
         ],
       ),

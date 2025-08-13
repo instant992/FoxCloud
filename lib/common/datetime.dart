@@ -1,4 +1,29 @@
+// datetime.dart
+
 import 'package:flowvy/common/app_localizations.dart';
+
+// ------------------------------------------------------------------
+// ШАГ 1.1: ВОТ НОВЫЙ EXTENSION ДЛЯ ЧИСЕЛ (ПЕРЕИСПОЛЬЗУЕМ ТВОЮ ЛОГИКУ)
+// ------------------------------------------------------------------
+extension IntPluralExtension on int {
+  /// Возвращает правильную форму слова (один, два, пять) для числа.
+  String plural(String one, String two, String five) {
+    int n = abs();
+    n %= 100;
+    if (n >= 11 && n <= 19) {
+      return five;
+    }
+    n %= 10;
+    if (n == 1) {
+      return one;
+    }
+    if (n >= 2 && n <= 4) {
+      return two;
+    }
+    return five;
+  }
+}
+
 
 extension DateTimeExtension on DateTime {
   bool get isBeforeNow {
@@ -12,28 +37,52 @@ extension DateTimeExtension on DateTime {
     return true;
   }
 
+  String get ddMMyyyy {
+    String pad(int n) => n.toString().padLeft(2, '0');
+    return "${pad(day)}.${pad(month)}.$year";
+  }
+
   String get lastUpdateTimeDesc {
-    final currentDateTime = DateTime.now();
-    final difference = currentDateTime.difference(this);
-    final days = difference.inDays;
-    if (days >= 365) {
-      return "${(days / 365).floor()} ${appLocalizations.years}${appLocalizations.ago}";
+    // ------------------------------------------------------------------
+    // ШАГ 1.2: ТУТ МЫ УБРАЛИ СТАРУЮ ЛОГИКУ PLURAL
+    // ТЕПЕРЬ ОНА ВЫЗЫВАЕТСЯ НАПРЯМУЮ ИЗ НОВОГО EXTENSION
+    // ------------------------------------------------------------------
+
+    final difference = DateTime.now().difference(this);
+    final ago = appLocalizations.ago.trim();
+
+    if (difference.inMinutes.abs() < 1) {
+      return appLocalizations.just;
     }
-    if (days >= 30) {
-      return "${(days / 30).floor()} ${appLocalizations.months}${appLocalizations.ago}";
+    if (difference.inHours.abs() < 1) {
+      final minutes = difference.inMinutes;
+      final unit = minutes.plural(appLocalizations.minuteOne,
+          appLocalizations.minuteTwo, appLocalizations.minutes);
+      return "$minutes $unit $ago";
     }
-    if (days >= 1) {
-      return "$days ${appLocalizations.days}${appLocalizations.ago}";
+    if (difference.inDays.abs() < 1) {
+      final hours = difference.inHours;
+      final unit = hours.plural(appLocalizations.hourOne,
+          appLocalizations.hourTwo, appLocalizations.hours);
+      return "$hours $unit $ago";
     }
-    final hours = difference.inHours;
-    if (hours >= 1) {
-      return "$hours ${appLocalizations.hours}${appLocalizations.ago}";
+    if (difference.inDays.abs() < 30) {
+      final days = difference.inDays;
+      final unit = days.plural(
+          appLocalizations.dayOne, appLocalizations.dayTwo, appLocalizations.days);
+      return "$days $unit $ago";
     }
-    final minutes = difference.inMinutes;
-    if (minutes >= 1) {
-      return "$minutes ${appLocalizations.minutes}${appLocalizations.ago}";
+    if (difference.inDays.abs() < 365) {
+      final months = (difference.inDays.abs() / 30).floor();
+      final unit = months.plural(appLocalizations.monthOne,
+          appLocalizations.monthTwo, appLocalizations.months);
+      return "$months $unit $ago";
     }
-    return appLocalizations.just;
+
+    final years = (difference.inDays.abs() / 365).floor();
+    final unit = years.plural(appLocalizations.yearOne,
+        appLocalizations.yearTwo, appLocalizations.years);
+    return "$years $unit $ago";
   }
 
   String get show {

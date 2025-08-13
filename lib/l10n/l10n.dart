@@ -479,6 +479,16 @@ class AppLocalizations {
     return Intl.message('Confirm', name: 'confirm', desc: '', args: []);
   }
 
+  /// `Yes`
+  String get yes {
+    return Intl.message('Yes', name: 'yes', desc: '', args: []);
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message('No', name: 'no', desc: '', args: []);
+  }
+
   /// `Update`
   String get update {
     return Intl.message('Update', name: 'update', desc: '', args: []);
@@ -554,14 +564,14 @@ class AppLocalizations {
     return Intl.message('Hours', name: 'hours', desc: '', args: []);
   }
 
-  /// `Days`
+  /// `days`
   String get days {
-    return Intl.message('Days', name: 'days', desc: '', args: []);
+    return Intl.message('days', name: 'days', desc: '', args: []);
   }
 
-  /// `Minutes`
+  /// `minutes`
   String get minutes {
-    return Intl.message('Minutes', name: 'minutes', desc: '', args: []);
+    return Intl.message('minutes', name: 'minutes', desc: '', args: []);
   }
 
   /// `Seconds`
@@ -569,14 +579,14 @@ class AppLocalizations {
     return Intl.message('Seconds', name: 'seconds', desc: '', args: []);
   }
 
-  /// ` Ago`
+  /// ` ago`
   String get ago {
-    return Intl.message(' Ago', name: 'ago', desc: '', args: []);
+    return Intl.message(' ago', name: 'ago', desc: '', args: []);
   }
 
-  /// `Just`
+  /// `just`
   String get just {
-    return Intl.message('Just', name: 'just', desc: '', args: []);
+    return Intl.message('just', name: 'just', desc: '', args: []);
   }
 
   /// `QR code`
@@ -744,6 +754,16 @@ class AppLocalizations {
     return Intl.message(
       'Do you want to pass',
       name: 'doYouWantToPass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to add a subscription from the following URL?`
+  String get addProfileFromUrlPrompt {
+    return Intl.message(
+      'Do you want to add a subscription from the following URL?',
+      name: 'addProfileFromUrlPrompt',
       desc: '',
       args: [],
     );
@@ -3209,6 +3229,141 @@ class AppLocalizations {
     return Intl.message(
       'Auto set system DNS',
       name: 'autoSetSystemDns',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `year`
+  String get yearOne {
+    return Intl.message('year', name: 'yearOne', desc: '', args: []);
+  }
+
+  /// `years`
+  String get yearTwo {
+    return Intl.message('years', name: 'yearTwo', desc: '', args: []);
+  }
+
+  /// `month`
+  String get monthOne {
+    return Intl.message('month', name: 'monthOne', desc: '', args: []);
+  }
+
+  /// `months`
+  String get monthTwo {
+    return Intl.message('months', name: 'monthTwo', desc: '', args: []);
+  }
+
+  /// `day`
+  String get dayOne {
+    return Intl.message('day', name: 'dayOne', desc: '', args: []);
+  }
+
+  /// `days`
+  String get dayTwo {
+    return Intl.message('days', name: 'dayTwo', desc: '', args: []);
+  }
+
+  /// `hour`
+  String get hourOne {
+    return Intl.message('hour', name: 'hourOne', desc: '', args: []);
+  }
+
+  /// `hours`
+  String get hourTwo {
+    return Intl.message('hours', name: 'hourTwo', desc: '', args: []);
+  }
+
+  /// `minute`
+  String get minuteOne {
+    return Intl.message('minute', name: 'minuteOne', desc: '', args: []);
+  }
+
+  /// `minutes`
+  String get minuteTwo {
+    return Intl.message('minutes', name: 'minuteTwo', desc: '', args: []);
+  }
+
+  /// `Traffic`
+  String get traffic {
+    return Intl.message('Traffic', name: 'traffic', desc: '', args: []);
+  }
+
+  /// `Subscription expires on`
+  String get subscriptionExpires {
+    return Intl.message(
+      'Subscription expires on',
+      name: 'subscriptionExpires',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updated:`
+  String get updated {
+    return Intl.message('Updated:', name: 'updated', desc: '', args: []);
+  }
+
+  /// `Close connection`
+  String get closeConnection {
+    return Intl.message(
+      'Close connection',
+      name: 'closeConnection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Support`
+  String get support {
+    return Intl.message('Support', name: 'support', desc: '', args: []);
+  }
+
+  /// `Reset to default view`
+  String get resetLayout {
+    return Intl.message(
+      'Reset to default view',
+      name: 'resetLayout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Подписка бессрочная`
+  String get subscriptionEternal {
+    return Intl.message(
+      'Подписка бессрочная',
+      name: 'subscriptionEternal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expires on`
+  String get expiresOn {
+    return Intl.message('Expires on', name: 'expiresOn', desc: '', args: []);
+  }
+
+  /// `Unlimited Traffic`
+  String get trafficUnlimited {
+    return Intl.message(
+      'Unlimited Traffic',
+      name: 'trafficUnlimited',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remaining`
+  String get remaining {
+    return Intl.message('Remaining', name: 'remaining', desc: '', args: []);
+  }
+
+  /// `Limit reset in`
+  String get limitResetIn {
+    return Intl.message(
+      'Limit reset in',
+      name: 'limitResetIn',
       desc: '',
       args: [],
     );

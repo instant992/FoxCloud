@@ -64,19 +64,19 @@ class AddProfileView extends StatelessWidget {
     return ListView(
       children: [
         ListItem(
-          leading: const Icon(Icons.qr_code_sharp),
+          leading: const Icon(Icons.qr_code_scanner_rounded),
           title: Text(appLocalizations.qrcode),
           subtitle: Text(appLocalizations.qrcodeDesc),
           onTap: _toScan,
         ),
         ListItem(
-          leading: const Icon(Icons.upload_file_sharp),
+          leading: const Icon(Icons.upload_file_rounded),
           title: Text(appLocalizations.file),
           subtitle: Text(appLocalizations.fileDesc),
           onTap: _handleAddProfileFormFile,
         ),
         ListItem(
-          leading: const Icon(Icons.cloud_download_sharp),
+          leading: const Icon(Icons.cloud_download_rounded),
           title: Text(appLocalizations.url),
           subtitle: Text(appLocalizations.urlDesc),
           onTap: _toAdd,
