@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <img src="https://github.com/this-xkit/Flowvy/blob/main/assets/images/screenshot_2.png" alt="Скриншот Flowvy" width="800">
+  <img src="https://github.com/this-xkit/Flowvy/blob/main/assets/images/screenshot/Flowvy_Dark_Light.png" alt="Скриншот Flowvy" width="800">
 </p>
 
 ## О проекте
