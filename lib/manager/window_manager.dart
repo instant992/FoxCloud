@@ -196,10 +196,10 @@ class _WindowHeaderState extends State<WindowHeader> {
             builder: (_, value, ___) {
               return value
                   ? const Icon(
-                      Icons.push_pin,
+                      Icons.push_pin_rounded,
                     )
                   : const Icon(
-                      Icons.push_pin_rounded,
+                      Icons.push_pin_outlined,
                     );
             },
           ),
