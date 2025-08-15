@@ -4,7 +4,7 @@
 # Flowvy
 
 <p align="center">
-  <img src="https://github.com/this-xkit/Flowvy/blob/main/assets/images/icon.png" alt="Flowvy Logo" width="100">
+  <img src="https://github.com/this-xkit/Flowvy/blob/main/assets/images/icon_bg_white.png" alt="Flowvy Logo" width="100">
 </p>
 
 <p align="center">
