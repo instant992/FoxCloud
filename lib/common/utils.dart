@@ -9,7 +9,6 @@ import 'dart:ui';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flowvy/common/common.dart';
 import 'package:flowvy/enum/enum.dart';
-import 'package:flowvy/state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,13 +19,10 @@ import 'package:yaml/yaml.dart';
 class Utils {
   Future<Map<String, String>> getDeviceHeaders() async {
     final headers = <String, String>{};
-
-    headers['user-agent'] = 'Mihomo/${globalState.ua}';
+    final deviceInfo = DeviceInfoPlugin();
 
     if (Platform.isWindows) {
-      final deviceInfo = DeviceInfoPlugin();
       final windowsInfo = await deviceInfo.windowsInfo;
-
       final hwid = windowsInfo.deviceId;
       if (hwid.isNotEmpty) {
         headers['x-hwid'] = hwid;
@@ -34,6 +30,15 @@ class Utils {
       headers['x-device-os'] = windowsInfo.productName;
       headers['x-ver-os'] = windowsInfo.displayVersion;
       headers['x-device-model'] = windowsInfo.computerName;
+    } else if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      final hwid = androidInfo.id; 
+      if (hwid.isNotEmpty) {
+        headers['x-hwid'] = hwid;
+      }
+      headers['x-device-os'] = "Android ${androidInfo.version.release}";
+      headers['x-ver-os'] = "SDK ${androidInfo.version.sdkInt}";
+      headers['x-device-model'] = "${androidInfo.manufacturer} ${androidInfo.model}";
     }
 
     return headers;

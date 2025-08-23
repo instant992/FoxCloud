@@ -53,7 +53,7 @@ fun Service.createFlowvyNotificationBuilder(): Deferred<NotificationCompat.Build
                 this@createFlowvyNotificationBuilder, GlobalState.NOTIFICATION_CHANNEL
             )
         ) {
-            setSmallIcon(R.drawable.ic)
+            setSmallIcon(R.drawable.ic_launcher_foreground)
             setContentTitle("Flowvy")
             setContentIntent(pendingIntent)
             setCategory(NotificationCompat.CATEGORY_SERVICE)

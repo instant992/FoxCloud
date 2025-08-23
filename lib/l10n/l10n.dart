@@ -204,10 +204,10 @@ class AppLocalizations {
     );
   }
 
-  /// `No profile, Please add a profile`
+  /// `No profile`
   String get nullProfileDesc {
     return Intl.message(
-      'No profile, Please add a profile',
+      'No profile',
       name: 'nullProfileDesc',
       desc: '',
       args: [],

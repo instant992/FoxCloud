@@ -10,9 +10,8 @@ _$AppSettingPropsImpl _$$AppSettingPropsImplFromJson(
         Map<String, dynamic> json) =>
     _$AppSettingPropsImpl(
       locale: json['locale'] as String?,
-      dashboardWidgets: json['dashboardWidgets'] == null
-          ? defaultDashboardWidgets
-          : dashboardWidgetsSafeFormJson(json['dashboardWidgets'] as List?),
+      dashboardWidgets:
+          dashboardWidgetsSafeFormJson(json['dashboardWidgets'] as List?),
       onlyStatisticsProxy: json['onlyStatisticsProxy'] as bool? ?? false,
       autoLaunch: json['autoLaunch'] as bool? ?? false,
       silentLaunch: json['silentLaunch'] as bool? ?? false,
@@ -311,10 +310,8 @@ Map<String, dynamic> _$$ScriptPropsImplToJson(_$ScriptPropsImpl instance) =>
     };
 
 _$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
-      appSetting: json['appSetting'] == null
-          ? defaultAppSettingProps
-          : AppSettingProps.safeFromJson(
-              json['appSetting'] as Map<String, Object?>?),
+      appSetting: AppSettingProps.safeFromJson(
+          json['appSetting'] as Map<String, Object?>?),
       profiles: (json['profiles'] as List<dynamic>?)
               ?.map((e) => Profile.fromJson(e as Map<String, dynamic>))
               .toList() ??

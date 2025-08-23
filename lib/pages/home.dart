@@ -310,6 +310,7 @@ class _NavigationBarDefaultsM3 extends NavigationBarThemeData {
   final BuildContext context;
   late final ColorScheme _colors = Theme.of(context).colorScheme;
   late final TextTheme _textTheme = Theme.of(context).textTheme;
+  late final CustomTheme _customTheme = Theme.of(context).extension<CustomTheme>()!;
 
   @override
   Color? get backgroundColor => _colors.surfaceContainer;
@@ -323,34 +324,36 @@ class _NavigationBarDefaultsM3 extends NavigationBarThemeData {
   @override
   WidgetStateProperty<IconThemeData?>? get iconTheme {
     return WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+      final color = Theme.of(context).iconTheme.color;
       return IconThemeData(
         size: 24.0,
         color: states.contains(WidgetState.disabled)
-            ? _colors.onSurfaceVariant.opacity38
-            : states.contains(WidgetState.selected)
-                ? _colors.onSecondaryContainer
-                : _colors.onSurfaceVariant,
+            ? color?.withOpacity(0.38)
+            : color,
       );
     });
   }
 
   @override
-  Color? get indicatorColor => _colors.secondaryContainer;
+  Color? get indicatorColor => _customTheme.navRailIndicator;
 
   @override
-  ShapeBorder? get indicatorShape => const StadiumBorder();
+  ShapeBorder? get indicatorShape => const RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(16)),
+  );
 
   @override
   WidgetStateProperty<TextStyle?>? get labelTextStyle {
     return WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-      final TextStyle style = _textTheme.labelMedium!;
+      final TextStyle style = _textTheme.labelLarge!;
+      final Color color = _colors.onSurface;
+
       return style.apply(
-          overflow: TextOverflow.ellipsis,
-          color: states.contains(WidgetState.disabled)
-              ? _colors.onSurfaceVariant.opacity38
-              : states.contains(WidgetState.selected)
-                  ? _colors.onSurface
-                  : _colors.onSurfaceVariant);
+        overflow: TextOverflow.ellipsis,
+        color: states.contains(WidgetState.disabled)
+            ? color.withOpacity(0.38)
+            : color,
+      );
     });
   }
 }

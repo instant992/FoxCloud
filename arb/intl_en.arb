@@ -22,7 +22,7 @@
   "download": "Download",
   "noProxy": "No proxy",
   "noProxyDesc": "Please create a profile or add a valid profile",
-  "nullProfileDesc": "No profile, Please add a profile",
+  "nullProfileDesc": "No profile",
   "settings": "Settings",
   "language": "Language",
   "defaultText": "Default",

@@ -1,17 +1,22 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:width="240dp"
-    android:height="240dp"
-    android:viewportWidth="240"
-    android:viewportHeight="240"
-    tools:ignore="VectorRaster">
-  <path
-      android:pathData="M48.1,80.89L168.44,11.41c11.08,-6.4 25.24,-2.6 31.64,8.48 0,0 0,0 0,0h0c6.4,11.08 2.6,25.24 -8.48,31.64 0,0 0,0 0,0l-120.34,69.48c-11.08,6.4 -25.24,2.6 -31.64,-8.48 0,0 0,0 0,0h0c-6.4,-11.08 -2.6,-25.24 8.48,-31.64 0,0 0,0 0,0Z"
-      android:fillColor="#FFFFFF"/>
-  <path
-      android:pathData="M78.98,134.37l60.18,-34.74c11.07,-6.39 25.23,-2.59 31.63,8.48h0c6.4,11.07 2.61,25.24 -8.47,31.64l-60.18,34.74c-11.08,6.4 -25.24,2.6 -31.64,-8.48 0,0 0,0 0,0h0c-6.4,-11.08 -2.6,-25.24 8.48,-31.64h0Z"
-      android:fillColor="#FFFFFF"/>
-  <path
-      android:pathData="M109.86,187.86h0c11.08,-6.4 25.24,-2.6 31.64,8.48 0,0 0,0 0,0h0c6.4,11.08 2.6,25.24 -8.48,31.64 0,0 0,0 0,0h0c-11.08,6.4 -25.24,2.6 -31.64,-8.48 0,0 0,0 0,0h0c-6.4,-11.08 -2.6,-25.24 8.48,-31.64 0,0 0,0 0,0Z"
-      android:fillColor="#FFFFFF"/>
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <group
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:translateX="102.4"
+        android:translateY="102.4">
+
+        <path android:fillColor="#ffffff" android:pathData="M64,64h128v128h-128z" />
+        <path android:fillColor="#ffffff" android:pathData="M192,64h128v128h-128z" />
+        <path android:fillAlpha="0.64" android:fillColor="#ffffff" android:pathData="M320,64h128v128h-128z" />
+        <path android:fillColor="#ffffff" android:pathData="M64,192h128v128h-128z" />
+        <path android:fillAlpha="0.64" android:fillColor="#ffffff" android:pathData="M192,192h128v128h-128z" />
+        <path android:fillColor="#ffffff" android:pathData="M64,320h128v128h-128z" />
+        <path android:fillColor="#49DD93" android:pathData="M320,320h128v128h-128z" />
+
+    </group>
 </vector>

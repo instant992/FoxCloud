@@ -34,8 +34,10 @@ class MetainfoWidget extends ConsumerWidget {
     final subtitleColor = theme.colorScheme.onSurfaceVariant;
     final customTheme = theme.extension<CustomTheme>()!;
 
+    Widget child;
+
     if (allProfiles.isEmpty) {
-      return CommonCard(
+      child = CommonCard(
         onPressed: () {
           showExtend(
             context,
@@ -68,233 +70,241 @@ class MetainfoWidget extends ConsumerWidget {
           ),
         ),
       );
-    }
+    } else {
+      final subscriptionInfo = profile?.subscriptionInfo;
 
-    final subscriptionInfo = profile?.subscriptionInfo;
+      if (profile == null || subscriptionInfo == null) {
+        child = const SizedBox.shrink();
+      } else {
+        final bool isPerpetual = subscriptionInfo.expire == 0;
+        final supportUrl = profile.supportUrl;
 
-    if (profile == null || subscriptionInfo == null) {
-      return const SizedBox.shrink();
-    }
+        String expireDate = '';
+        if (!isPerpetual) {
+          final expireDateTime =
+              DateTime.fromMillisecondsSinceEpoch(subscriptionInfo.expire * 1000);
+          expireDate = expireDateTime.ddMMyyyy;
+        }
 
-    final bool isPerpetual = subscriptionInfo.expire == 0;
-    final supportUrl = profile.supportUrl;
-
-    String expireDate = '';
-    if (!isPerpetual) {
-      final expireDateTime =
-          DateTime.fromMillisecondsSinceEpoch(subscriptionInfo.expire * 1000);
-      expireDate = expireDateTime.ddMMyyyy;
-    }
-
-    return CommonCard(
-      onPressed: () {},
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+        child = CommonCard(
+          onPressed: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    profile.label ?? 'Профиль',
-                    style: theme.textTheme.titleMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                if (supportUrl != null && supportUrl.isNotEmpty)
-                  Tooltip(
-                    message: appLocalizations.support,
-                    child: SizedBox(
-                      width: 32,
-                      height: 32,
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: Icon(
-                          supportUrl.toLowerCase().contains('t.me')
-                              ? Icons.telegram_rounded
-                              : Icons.launch_rounded,
-                        ),
-                        iconSize: 22,
-                        color: theme.iconTheme.color,
-                        onPressed: () {
-                          globalState.openUrl(supportUrl);
-                        },
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        profile.label ?? 'Профиль',
+                        style: theme.textTheme.titleMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  ),
-                Tooltip(
-                  message: appLocalizations.sync,
-                  child: SizedBox(
-                    width: 32,
-                    height: 32,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.sync_rounded),
-                      iconSize: 22,
-                      color: theme.iconTheme.color,
-                      onPressed: () {
-                        globalState.appController.updateProfile(profile);
-                      },
+                    if (supportUrl != null && supportUrl.isNotEmpty)
+                      Tooltip(
+                        message: appLocalizations.support,
+                        child: SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(
+                              supportUrl.toLowerCase().contains('t.me')
+                                  ? Icons.telegram_rounded
+                                  : Icons.launch_rounded,
+                            ),
+                            iconSize: 22,
+                            color: theme.iconTheme.color,
+                            onPressed: () {
+                              globalState.openUrl(supportUrl);
+                            },
+                          ),
+                        ),
+                      ),
+                    Tooltip(
+                      message: appLocalizations.sync,
+                      child: SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(Icons.sync_rounded),
+                          iconSize: 22,
+                          color: theme.iconTheme.color,
+                          onPressed: () {
+                            globalState.appController.updateProfile(profile);
+                          },
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: Builder(builder: (context) {
-                final total = subscriptionInfo.total;
-                final used =
-                    subscriptionInfo.upload + subscriptionInfo.download;
-                final isUnlimited = total == 0;
+                const SizedBox(height: 8),
+                Expanded(
+                  child: Builder(builder: (context) {
+                    final total = subscriptionInfo.total;
+                    final used =
+                        subscriptionInfo.upload + subscriptionInfo.download;
+                    final isUnlimited = total == 0;
 
-                if (isUnlimited) {
-                  return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          appLocalizations.trafficUnlimited,
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(color: theme.colorScheme.primary),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
+                    if (isUnlimited) {
+                      return Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: Divider(),
+                            Text(
+                              appLocalizations.trafficUnlimited,
+                              style: theme.textTheme.titleMedium
+                                  ?.copyWith(color: theme.colorScheme.primary),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            Row(
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.calendar_today_rounded, size: 14, color: subtitleColor),
-                                const SizedBox(width: 8),
-                                Flexible(
-                                  child: Text(
-                                    isPerpetual
-                                        ? appLocalizations.subscriptionEternal
-                                        : '${appLocalizations.expiresOn} $expireDate',
-                                    style: theme.textTheme.bodySmall?.copyWith(color: subtitleColor),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Divider(),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ]
-                  );
-                }
-                
-                return ScrollConfiguration(
-                  behavior: _NoScrollbarBehavior(),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: LinearProgressIndicator(
-                                value: (used / total).clamp(0.0, 1.0),
-                                minHeight: 8,
-                                color: theme.colorScheme.primary,
-                                backgroundColor: customTheme.profileCardProgressTrack,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      _formatBytes(used, 0), 
-                                      style: theme.textTheme.labelSmall?.copyWith(fontSize: 10.5, color: subtitleColor),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        _formatBytes(total, 0), 
-                                        style: theme.textTheme.labelSmall?.copyWith(fontSize: 10.5, color: subtitleColor),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.hourglass_bottom_rounded, size: 15, color: subtitleColor),
-                                const SizedBox(width: 8),
-                                Flexible(
-                                  child: Text(
-                                    "${appLocalizations.remaining}: ${_formatBytes(total - used, 2)}",
-                                    style: theme.textTheme.bodySmall?.copyWith(fontFeatures: [const FontFeature.tabularFigures()], color: subtitleColor),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (profile.subscriptionRefillDate != null && profile.subscriptionRefillDate! > 0)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4.0),
-                                child: Row(
+                                Row(
                                   children: [
-                                    Icon(Icons.restart_alt_rounded, size: 15, color: subtitleColor),
+                                    Icon(Icons.calendar_today_rounded, size: 14, color: subtitleColor),
                                     const SizedBox(width: 8),
                                     Flexible(
-                                      child: Builder(
-                                        builder: (context) {
-                                          final refillTimestamp = profile.subscriptionRefillDate!;
-                                          final nextResetDate = DateTime.fromMillisecondsSinceEpoch(refillTimestamp * 1000);
-                                          final daysUntilReset = nextResetDate.difference(DateTime.now()).inDays.clamp(0, 9999);
-                                          final dayUnit = daysUntilReset.plural(appLocalizations.dayOne, appLocalizations.dayTwo, appLocalizations.days);
-                                          
-                                          return Text(
-                                            '${appLocalizations.limitResetIn} $daysUntilReset $dayUnit',
-                                            style: theme.textTheme.bodySmall?.copyWith(fontFeatures: [const FontFeature.tabularFigures()], color: subtitleColor),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          );
-                                        }
+                                      child: Text(
+                                        isPerpetual
+                                            ? appLocalizations.subscriptionEternal
+                                            : '${appLocalizations.expiresOn} $expireDate',
+                                        style: theme.textTheme.bodySmall?.copyWith(color: subtitleColor),
+                                        softWrap: true,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.visible,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
+                              ],
+                            ),
+                          ]
+                      );
+                    }
+
+                    return ScrollConfiguration(
+                      behavior: _NoScrollbarBehavior(),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: LinearProgressIndicator(
+                                    value: (used / total).clamp(0.0, 1.0),
+                                    minHeight: 8,
+                                    color: theme.colorScheme.primary,
+                                    backgroundColor: customTheme.profileCardProgressTrack,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          _formatBytes(used, 0),
+                                          style: theme.textTheme.labelSmall?.copyWith(fontSize: 10.5, color: subtitleColor),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            _formatBytes(total, 0),
+                                            style: theme.textTheme.labelSmall?.copyWith(fontSize: 10.5, color: subtitleColor),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.hourglass_bottom_rounded, size: 15, color: subtitleColor),
+                                    const SizedBox(width: 8),
+                                    Flexible(
+                                      child: Text(
+                                        "${appLocalizations.remaining}: ${_formatBytes(total - used, 2)}",
+                                        style: theme.textTheme.bodySmall?.copyWith(fontFeatures: [const FontFeature.tabularFigures()], color: subtitleColor),
+                                        softWrap: true,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.visible,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (profile.subscriptionRefillDate != null && profile.subscriptionRefillDate! > 0)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.restart_alt_rounded, size: 15, color: subtitleColor),
+                                        const SizedBox(width: 8),
+                                        Flexible(
+                                          child: Builder(
+                                            builder: (context) {
+                                              final refillTimestamp = profile.subscriptionRefillDate!;
+                                              final nextResetDate = DateTime.fromMillisecondsSinceEpoch(refillTimestamp * 1000);
+                                              final daysUntilReset = nextResetDate.difference(DateTime.now()).inDays.clamp(0, 9999);
+                                              final dayUnit = daysUntilReset.plural(appLocalizations.dayOne, appLocalizations.dayTwo, appLocalizations.days);
+
+                                              return Text(
+                                                '${appLocalizations.limitResetIn} $daysUntilReset $dayUnit',
+                                                style: theme.textTheme.bodySmall?.copyWith(fontFeatures: [const FontFeature.tabularFigures()], color: subtitleColor),
+                                                softWrap: true, // ✅ разрешаем перенос
+                                                maxLines: 2,      // ✅ максимум 2 строки
+                                                overflow: TextOverflow.visible,
+                                              );
+                                            }
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
+                      ),
+                    );
+                  }),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      }
+    }
+
+    return SizedBox(
+      height: getWidgetHeight(2),
+      child: child,
     );
   }
 }

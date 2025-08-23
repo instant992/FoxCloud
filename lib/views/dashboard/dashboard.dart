@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:io';
 
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:flowvy/common/common.dart';
@@ -128,20 +129,28 @@ class _DashboardViewState extends ConsumerState<DashboardView> with PageMixin {
     );
   }
 
-  _handleResetLayout() async {
-    ref.read(appSettingProvider.notifier).updateState(
-          (state) => state.copyWith(dashboardWidgets: defaultDashboardWidgets),
-        );
+_handleResetLayout() async {
+  final defaultWidgets = Platform.isWindows
+      ? defaultWindowsDashboardWidgets
+      : defaultAndroidDashboardWidgets;
 
+  ref.read(appSettingProvider.notifier).updateState(
+        (state) => state.copyWith(dashboardWidgets: defaultWidgets),
+      );
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     ref
         .read(windowSettingProvider.notifier)
         .updateState((state) => defaultWindowProps);
-        
-    await windowManager.setSize(Size(defaultWindowProps.width, defaultWindowProps.height));
-    await windowManager.center();
 
-    _isEditNotifier.value = false;
+    await windowManager.setSize(
+        Size(defaultWindowProps.width, defaultWindowProps.height));
+    await windowManager.center();
   }
+
+  _isEditNotifier.value = false;
+}
+
 
   _handleUpdateIsEdit() {
     if (_isEditNotifier.value == true) {

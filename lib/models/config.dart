@@ -4,6 +4,7 @@ import 'package:flowvy/common/common.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'dart:io' show Platform;
 
 import 'models.dart';
 
@@ -30,7 +31,6 @@ const defaultBypassDomain = [
   "192.168.*"
 ];
 
-const defaultAppSettingProps = AppSettingProps();
 const defaultVpnProps = VpnProps();
 const defaultNetworkProps = NetworkProps();
 const defaultProxiesStyle = ProxiesStyle();
@@ -40,7 +40,7 @@ final defaultThemeProps = ThemeProps(
   primaryColor: defaultPrimaryColor,
 );
 
-const List<DashboardWidget> defaultDashboardWidgets = [
+const List<DashboardWidget> defaultWindowsDashboardWidgets = [
   DashboardWidget.networkSpeed,
   DashboardWidget.metainfo,
   DashboardWidget.outboundMode,
@@ -49,16 +49,27 @@ const List<DashboardWidget> defaultDashboardWidgets = [
   DashboardWidget.memoryInfo,
 ];
 
+const List<DashboardWidget> defaultAndroidDashboardWidgets = [
+  DashboardWidget.outboundModeV2,
+  DashboardWidget.networkSpeed,
+  DashboardWidget.metainfo,
+  DashboardWidget.trafficUsage,
+  DashboardWidget.networkDetection,
+  DashboardWidget.memoryInfo,
+];
+
+const defaultAppSettingProps = AppSettingProps(dashboardWidgets: []);
+
 List<DashboardWidget> dashboardWidgetsSafeFormJson(
   List<dynamic>? dashboardWidgets,
 ) {
   try {
     return dashboardWidgets
-            ?.map((e) => $enumDecode(_$DashboardWidgetEnumMap, e))
-            .toList() ??
-        defaultDashboardWidgets;
+        ?.map((e) => $enumDecode(_$DashboardWidgetEnumMap, e))
+        .toList() ??
+        defaultAppSettingProps.dashboardWidgets;
   } catch (_) {
-    return defaultDashboardWidgets;
+    return defaultAppSettingProps.dashboardWidgets;
   }
 }
 
@@ -66,9 +77,8 @@ List<DashboardWidget> dashboardWidgetsSafeFormJson(
 class AppSettingProps with _$AppSettingProps {
   const factory AppSettingProps({
     String? locale,
-    @Default(defaultDashboardWidgets)
     @JsonKey(fromJson: dashboardWidgetsSafeFormJson)
-    List<DashboardWidget> dashboardWidgets,
+    required List<DashboardWidget> dashboardWidgets,
     @Default(false) bool onlyStatisticsProxy,
     @Default(false) bool autoLaunch,
     @Default(false) bool silentLaunch,
@@ -90,9 +100,16 @@ class AppSettingProps with _$AppSettingProps {
       _$AppSettingPropsFromJson(json);
 
   factory AppSettingProps.safeFromJson(Map<String, Object?>? json) {
-    return json == null
-        ? defaultAppSettingProps
-        : AppSettingProps.fromJson(json);
+    if (json == null) {
+      if (Platform.isWindows) {
+        return const AppSettingProps(dashboardWidgets: defaultWindowsDashboardWidgets);
+      }
+      if (Platform.isAndroid) {
+        return const AppSettingProps(dashboardWidgets: defaultAndroidDashboardWidgets);
+      }
+      return const AppSettingProps(dashboardWidgets: []);
+    }
+    return AppSettingProps.fromJson(json);
   }
 }
 
@@ -244,8 +261,7 @@ extension ScriptPropsExt on ScriptProps {
 class Config with _$Config {
   const factory Config({
     @JsonKey(fromJson: AppSettingProps.safeFromJson)
-    @Default(defaultAppSettingProps)
-    AppSettingProps appSetting,
+    required AppSettingProps appSetting,
     @Default([]) List<Profile> profiles,
     @Default([]) List<HotKeyAction> hotKeyActions,
     String? currentProfileId,

@@ -523,13 +523,15 @@ class AppController {
     }
   }
 
-  Future handleClear() async {
-    await preferences.clearPreferences();
-    commonPrint.log("clear preferences");
-    globalState.config = Config(
-      themeProps: defaultThemeProps,
-    );
-  }
+Future handleClear() async {
+  await preferences.clearPreferences();
+  commonPrint.log("clear preferences");
+  globalState.config = Config(
+    appSetting: AppSettingProps.safeFromJson(null),
+    themeProps: ThemeProps.safeFromJson(null),
+  );
+}
+
 
   autoCheckUpdate() async {
     if (!_ref.read(appSettingProvider).autoCheckUpdate) return;

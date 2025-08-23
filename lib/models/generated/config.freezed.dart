@@ -322,7 +322,7 @@ class _$AppSettingPropsImpl implements _AppSettingProps {
   const _$AppSettingPropsImpl(
       {this.locale,
       @JsonKey(fromJson: dashboardWidgetsSafeFormJson)
-      final List<DashboardWidget> dashboardWidgets = defaultDashboardWidgets,
+      required final List<DashboardWidget> dashboardWidgets,
       this.onlyStatisticsProxy = false,
       this.autoLaunch = false,
       this.silentLaunch = false,
@@ -486,7 +486,7 @@ abstract class _AppSettingProps implements AppSettingProps {
   const factory _AppSettingProps(
       {final String? locale,
       @JsonKey(fromJson: dashboardWidgetsSafeFormJson)
-      final List<DashboardWidget> dashboardWidgets,
+      required final List<DashboardWidget> dashboardWidgets,
       final bool onlyStatisticsProxy,
       final bool autoLaunch,
       final bool silentLaunch,
@@ -2827,7 +2827,7 @@ class __$$ConfigImplCopyWithImpl<$Res>
 class _$ConfigImpl implements _Config {
   const _$ConfigImpl(
       {@JsonKey(fromJson: AppSettingProps.safeFromJson)
-      this.appSetting = defaultAppSettingProps,
+      required this.appSetting,
       final List<Profile> profiles = const [],
       final List<HotKeyAction> hotKeyActions = const [],
       this.currentProfileId,
@@ -2969,7 +2969,7 @@ class _$ConfigImpl implements _Config {
 abstract class _Config implements Config {
   const factory _Config(
       {@JsonKey(fromJson: AppSettingProps.safeFromJson)
-      final AppSettingProps appSetting,
+      required final AppSettingProps appSetting,
       final List<Profile> profiles,
       final List<HotKeyAction> hotKeyActions,
       final String? currentProfileId,

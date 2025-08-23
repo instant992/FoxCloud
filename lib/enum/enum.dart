@@ -323,14 +323,12 @@ enum DashboardWidget {
   metainfo(
     GridItem(
       crossAxisCellCount: 4,
-      mainAxisCellCount: 3,
       child: MetainfoWidget(),
     ),
   ),
   networkSpeed(
     GridItem(
       crossAxisCellCount: 8,
-      mainAxisCellCount: 3,
       child: NetworkSpeed(),
     ),
   ),

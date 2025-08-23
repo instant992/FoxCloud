@@ -38,7 +38,7 @@ import kotlin.concurrent.withLock
 
 data object VpnPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private lateinit var flutterMethodChannel: MethodChannel
-    private var FlowvyService: BaseServiceInterface? = null
+    private var flowvyService: BaseServiceInterface? = null
     private var options: VpnOptions? = null
     private var isBind: Boolean = false
     private lateinit var scope: CoroutineScope
@@ -53,7 +53,7 @@ data object VpnPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             isBind = true
-            FlowvyService = when (service) {
+            flowvyService = when (service) {
                 is FlowvyVpnService.LocalBinder -> service.getService()
                 is FlowvyService.LocalBinder -> service.getService()
                 else -> throw Exception("invalid binder")
@@ -63,7 +63,7 @@ data object VpnPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
         override fun onServiceDisconnected(arg: ComponentName) {
             isBind = false
-            FlowvyService = null
+            flowvyService = null
         }
     }
 
@@ -102,7 +102,7 @@ data object VpnPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     fun handleStart(options: VpnOptions): Boolean {
         onUpdateNetwork();
         if (options.enable != this.options?.enable) {
-            this.FlowvyService = null
+            this.flowvyService = null
         }
         this.options = options
         when (options.enable) {
@@ -176,7 +176,7 @@ data object VpnPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
             )
             if (lastStartForegroundParams != startForegroundParams) {
                 lastStartForegroundParams = startForegroundParams
-                FlowvyService?.startForeground(
+                flowvyService?.startForeground(
                     startForegroundParams.title,
                     startForegroundParams.content,
                 )
@@ -209,14 +209,14 @@ data object VpnPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     }
 
     private fun handleStartService() {
-        if (FlowvyService == null) {
+        if (flowvyService == null) {
             bindService()
             return
         }
         GlobalState.runLock.withLock {
             if (GlobalState.runState.value == RunState.START) return
             GlobalState.runState.value = RunState.START
-            val fd = FlowvyService?.start(options!!)
+            val fd = flowvyService?.start(options!!)
             Core.startTun(
                 fd = fd ?: 0,
                 protect = this::protect,
@@ -227,7 +227,7 @@ data object VpnPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     }
 
     private fun protect(fd: Int): Boolean {
-        return (FlowvyService as? FlowvyVpnService)?.protect(fd) == true
+        return (flowvyService as? FlowvyVpnService)?.protect(fd) == true
     }
 
     private fun resolverProcess(
@@ -256,7 +256,7 @@ data object VpnPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         GlobalState.runLock.withLock {
             if (GlobalState.runState.value == RunState.STOP) return
             GlobalState.runState.value = RunState.STOP
-            FlowvyService?.stop()
+            flowvyService?.stop()
             stopForegroundJob()
             Core.stopTun()
             GlobalState.handleTryDestroy()

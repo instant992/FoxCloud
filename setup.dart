@@ -149,24 +149,24 @@ class Build {
   static String _getCc(BuildItem buildItem) {
     final environment = Platform.environment;
     if (buildItem.target == Target.android) {
-      final ndk = environment["ANDROID_NDK"];
+      final ndk = environment['ANDROID_NDK'];
       assert(ndk != null);
       final prebuiltDir =
-          Directory(join(ndk!, "toolchains", "llvm", "prebuilt"));
+          Directory(join(ndk!, 'toolchains', 'llvm', 'prebuilt'));
       final prebuiltDirList = prebuiltDir.listSync();
       final map = {
-        "armeabi-v7a": "armv7a-linux-androideabi21-clang",
-        "arm64-v8a": "aarch64-linux-android21-clang",
-        "x86": "i686-linux-android21-clang",
-        "x86_64": "x86_64-linux-android21-clang"
+        'armeabi-v7a': 'armv7a-linux-androideabi21-clang',
+        'arm64-v8a': 'aarch64-linux-android21-clang',
+        'x86': 'i686-linux-android21-clang',
+        'x86_64': 'x86_64-linux-android21-clang'
       };
       return join(
         prebuiltDirList.first.path,
-        "bin",
+        'bin',
         map[buildItem.archName],
       );
     }
-    return "gcc";
+    return 'gcc';
   }
 
   static get tags => "with_gvisor";

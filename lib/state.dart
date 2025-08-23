@@ -87,18 +87,20 @@ class GlobalState {
     } catch (_) {}
   }
 
-  init() async {
-    packageInfo = await PackageInfo.fromPlatform();
-    config = await preferences.getConfig() ??
-        Config(
-          themeProps: defaultThemeProps,
-        );
-    await globalState.migrateOldData(config);
-    await AppLocalizations.load(
-      utils.getLocaleForString(config.appSetting.locale) ??
-          WidgetsBinding.instance.platformDispatcher.locale,
-    );
-  }
+init() async {
+  packageInfo = await PackageInfo.fromPlatform();
+  config = await preferences.getConfig() ??
+      Config(
+        appSetting: AppSettingProps.safeFromJson(null),
+        themeProps: ThemeProps.safeFromJson(null),
+      );
+  await globalState.migrateOldData(config);
+  await AppLocalizations.load(
+    utils.getLocaleForString(config.appSetting.locale) ??
+        WidgetsBinding.instance.platformDispatcher.locale,
+  );
+}
+
 
   String get ua => config.patchClashConfig.globalUa ?? packageInfo.ua;
 

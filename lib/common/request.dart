@@ -28,17 +28,18 @@ class Request {
     _clashDio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          options.headers["User-Agent"] = 'Mihomo/${globalState.ua}';
           final deviceHeaders = await utils.getDeviceHeaders();
           options.headers.addAll(deviceHeaders);
+
           return handler.next(options);
         },
       ),
     );
-    
+
     _clashDio.httpClientAdapter = IOHttpClientAdapter(createHttpClient: () {
       final client = HttpClient();
       client.findProxy = (Uri uri) {
-        client.userAgent = 'Mihomo/${globalState.ua}';
         return FlowvyHttpOverrides.handleFindProxy(uri);
       };
       return client;
