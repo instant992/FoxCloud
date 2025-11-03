@@ -23,7 +23,7 @@ LanguageDetectionMethod=uilanguage
 en.RemoveUserDataText=Do you want to remove saved settings and application data?%n%nThis action cannot be undone.
 ru.RemoveUserDataText=Удалить сохранённые настройки и данные приложения?%n%nЭто действие нельзя отменить.
 en.AppRunningWarning=Flowvy is currently running.%n%nThe installer will automatically close the application and stop all services. Do you want to continue?
-ru.AppRunningWarning=Приложение Flowvy запущено.%n%nУстановщик автоматически закроет приложение и остановит все службы. Продолжить?
+ru.AppRunningWarning=Приложение Flowvy запущено.%n%nУстановщик автоматически закроет приложение%nи остановит все службы. Продолжить?
 en.StoppingProcesses=Stopping Flowvy processes and services...%n%nThis may take a few moments.
 ru.StoppingProcesses=Остановка процессов и служб Flowvy...%n%nЭто может занять несколько секунд.
 
