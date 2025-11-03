@@ -744,7 +744,10 @@ OverrideData _$OverrideDataFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OverrideData {
   bool get enable => throw _privateConstructorUsedError;
-  OverrideRule get rule => throw _privateConstructorUsedError;
+  OverrideRule get rule =>
+      throw _privateConstructorUsedError; // Сохраненные настройки клиента для этого профиля (Variant B)
+// Используются когда autoUpdate=false для сохранения пользовательских изменений
+  ClashConfig? get savedConfig => throw _privateConstructorUsedError;
 
   /// Serializes this OverrideData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -762,9 +765,10 @@ abstract class $OverrideDataCopyWith<$Res> {
           OverrideData value, $Res Function(OverrideData) then) =
       _$OverrideDataCopyWithImpl<$Res, OverrideData>;
   @useResult
-  $Res call({bool enable, OverrideRule rule});
+  $Res call({bool enable, OverrideRule rule, ClashConfig? savedConfig});
 
   $OverrideRuleCopyWith<$Res> get rule;
+  $ClashConfigCopyWith<$Res>? get savedConfig;
 }
 
 /// @nodoc
@@ -784,6 +788,7 @@ class _$OverrideDataCopyWithImpl<$Res, $Val extends OverrideData>
   $Res call({
     Object? enable = null,
     Object? rule = null,
+    Object? savedConfig = freezed,
   }) {
     return _then(_value.copyWith(
       enable: null == enable
@@ -794,6 +799,10 @@ class _$OverrideDataCopyWithImpl<$Res, $Val extends OverrideData>
           ? _value.rule
           : rule // ignore: cast_nullable_to_non_nullable
               as OverrideRule,
+      savedConfig: freezed == savedConfig
+          ? _value.savedConfig
+          : savedConfig // ignore: cast_nullable_to_non_nullable
+              as ClashConfig?,
     ) as $Val);
   }
 
@@ -806,6 +815,20 @@ class _$OverrideDataCopyWithImpl<$Res, $Val extends OverrideData>
       return _then(_value.copyWith(rule: value) as $Val);
     });
   }
+
+  /// Create a copy of OverrideData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ClashConfigCopyWith<$Res>? get savedConfig {
+    if (_value.savedConfig == null) {
+      return null;
+    }
+
+    return $ClashConfigCopyWith<$Res>(_value.savedConfig!, (value) {
+      return _then(_value.copyWith(savedConfig: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -816,10 +839,12 @@ abstract class _$$OverrideDataImplCopyWith<$Res>
       __$$OverrideDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool enable, OverrideRule rule});
+  $Res call({bool enable, OverrideRule rule, ClashConfig? savedConfig});
 
   @override
   $OverrideRuleCopyWith<$Res> get rule;
+  @override
+  $ClashConfigCopyWith<$Res>? get savedConfig;
 }
 
 /// @nodoc
@@ -837,6 +862,7 @@ class __$$OverrideDataImplCopyWithImpl<$Res>
   $Res call({
     Object? enable = null,
     Object? rule = null,
+    Object? savedConfig = freezed,
   }) {
     return _then(_$OverrideDataImpl(
       enable: null == enable
@@ -847,6 +873,10 @@ class __$$OverrideDataImplCopyWithImpl<$Res>
           ? _value.rule
           : rule // ignore: cast_nullable_to_non_nullable
               as OverrideRule,
+      savedConfig: freezed == savedConfig
+          ? _value.savedConfig
+          : savedConfig // ignore: cast_nullable_to_non_nullable
+              as ClashConfig?,
     ));
   }
 }
@@ -855,7 +885,9 @@ class __$$OverrideDataImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$OverrideDataImpl implements _OverrideData {
   const _$OverrideDataImpl(
-      {this.enable = false, this.rule = const OverrideRule()});
+      {this.enable = false,
+      this.rule = const OverrideRule(),
+      this.savedConfig});
 
   factory _$OverrideDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$OverrideDataImplFromJson(json);
@@ -866,10 +898,14 @@ class _$OverrideDataImpl implements _OverrideData {
   @override
   @JsonKey()
   final OverrideRule rule;
+// Сохраненные настройки клиента для этого профиля (Variant B)
+// Используются когда autoUpdate=false для сохранения пользовательских изменений
+  @override
+  final ClashConfig? savedConfig;
 
   @override
   String toString() {
-    return 'OverrideData(enable: $enable, rule: $rule)';
+    return 'OverrideData(enable: $enable, rule: $rule, savedConfig: $savedConfig)';
   }
 
   @override
@@ -878,12 +914,14 @@ class _$OverrideDataImpl implements _OverrideData {
         (other.runtimeType == runtimeType &&
             other is _$OverrideDataImpl &&
             (identical(other.enable, enable) || other.enable == enable) &&
-            (identical(other.rule, rule) || other.rule == rule));
+            (identical(other.rule, rule) || other.rule == rule) &&
+            (identical(other.savedConfig, savedConfig) ||
+                other.savedConfig == savedConfig));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, enable, rule);
+  int get hashCode => Object.hash(runtimeType, enable, rule, savedConfig);
 
   /// Create a copy of OverrideData
   /// with the given fields replaced by the non-null parameter values.
@@ -902,8 +940,10 @@ class _$OverrideDataImpl implements _OverrideData {
 }
 
 abstract class _OverrideData implements OverrideData {
-  const factory _OverrideData({final bool enable, final OverrideRule rule}) =
-      _$OverrideDataImpl;
+  const factory _OverrideData(
+      {final bool enable,
+      final OverrideRule rule,
+      final ClashConfig? savedConfig}) = _$OverrideDataImpl;
 
   factory _OverrideData.fromJson(Map<String, dynamic> json) =
       _$OverrideDataImpl.fromJson;
@@ -911,7 +951,11 @@ abstract class _OverrideData implements OverrideData {
   @override
   bool get enable;
   @override
-  OverrideRule get rule;
+  OverrideRule
+      get rule; // Сохраненные настройки клиента для этого профиля (Variant B)
+// Используются когда autoUpdate=false для сохранения пользовательских изменений
+  @override
+  ClashConfig? get savedConfig;
 
   /// Create a copy of OverrideData
   /// with the given fields replaced by the non-null parameter values.

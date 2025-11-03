@@ -1,4 +1,4 @@
-package com.follow.clash.plugins
+package com.flowvy.app.plugins
 
 import android.Manifest
 import android.app.Activity
@@ -18,13 +18,13 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile
-import com.follow.clash.FlowvyApplication
-import com.follow.clash.GlobalState
-import com.follow.clash.R
-import com.follow.clash.extensions.awaitResult
-import com.follow.clash.extensions.getActionIntent
-import com.follow.clash.extensions.getBase64
-import com.follow.clash.models.Package
+import com.flowvy.app.FlowvyApplication
+import com.flowvy.app.GlobalState
+import com.flowvy.app.R
+import com.flowvy.app.extensions.awaitResult
+import com.flowvy.app.extensions.getActionIntent
+import com.flowvy.app.extensions.getBase64
+import com.flowvy.app.models.Package
 import com.google.gson.Gson
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.plugins.FlutterPlugin

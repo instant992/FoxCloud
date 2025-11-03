@@ -23,8 +23,9 @@ class ProxiesTabView extends ConsumerStatefulWidget {
 class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
     with TickerProviderStateMixin {
   TabController? _tabController;
-  final _hasMoreButtonNotifier = ValueNotifier<bool>(false);
   GroupNameKeyMap _keyMap = {};
+  double _dragStartX = 0;
+  int _dragStartIndex = 0;
 
   @override
   void initState() {
@@ -52,67 +53,75 @@ class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
     );
   }
 
-  _buildMoreButton() {
+  Widget _buildPageIndicator(int count) {
     return Consumer(
-      builder: (_, ref, ___) {
-        final isMobileView = ref.watch(isMobileViewProvider);
-        return IconButton(
-          onPressed: _showMoreMenu,
-          icon: isMobileView
-              ? const Icon(
-                  Icons.expand_more_rounded,
-                )
-              : const Icon(
-                  Icons.chevron_right_rounded,
-                ),
-        );
-      },
-    );
-  }
+      builder: (_, ref, __) {
+        final isMobile = ref.watch(isMobileViewProvider);
 
-  _showMoreMenu() {
-    showSheet(
-      context: context,
-      props: SheetProps(
-        isScrollControlled: false,
-      ),
-      builder: (_, type) {
-        return AdaptiveSheetScaffold(
-          type: type,
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Consumer(
-              builder: (_, ref, __) {
-                final state = ref.watch(proxiesSelectorStateProvider);
-                return SizedBox(
-                  width: double.infinity,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    runSpacing: 8,
-                    spacing: 8,
-                    children: [
-                      for (final groupName in state.groupNames)
-                        SettingTextCard(
-                          groupName,
-                          onPressed: () {
-                            final index = state.groupNames.indexWhere(
-                              (item) => item == groupName,
-                            );
-                            if (index == -1) return;
-                            _tabController?.animateTo(index);
-                            globalState.appController
-                                .updateCurrentGroupName(groupName);
-                            Navigator.of(context).pop();
-                          },
-                          isSelected: groupName == state.currentGroupName,
-                        )
-                    ],
-                  ),
-                );
-              },
+        // Показываем индикаторы только на мобильных устройствах
+        if (!isMobile) {
+          return const SizedBox.shrink();
+        }
+
+        final currentGroupName = ref.watch(
+          currentProfileProvider.select((state) => state?.currentGroupName),
+        );
+        final groupNames = ref.watch(
+          proxiesSelectorStateProvider.select((state) => state.groupNames),
+        );
+        final currentIndex = groupNames.indexWhere(
+          (name) => name == currentGroupName,
+        );
+
+        return GestureDetector(
+          onHorizontalDragStart: (details) {
+            _dragStartX = details.globalPosition.dx;
+            _dragStartIndex = currentIndex;
+          },
+          onHorizontalDragUpdate: (details) {
+            final deltaX = details.globalPosition.dx - _dragStartX;
+            final threshold = 40.0; // Пороговое значение для переключения
+
+            if (deltaX > threshold && _dragStartIndex > 0) {
+              // Свайп вправо - переключаем на предыдущую группу
+              final newIndex = _dragStartIndex - 1;
+              _tabController?.animateTo(newIndex);
+              globalState.appController.updateCurrentGroupName(groupNames[newIndex]);
+              _dragStartX = details.globalPosition.dx;
+              _dragStartIndex = newIndex;
+            } else if (deltaX < -threshold && _dragStartIndex < groupNames.length - 1) {
+              // Свайп влево - переключаем на следующую группу
+              final newIndex = _dragStartIndex + 1;
+              _tabController?.animateTo(newIndex);
+              globalState.appController.updateCurrentGroupName(groupNames[newIndex]);
+              _dragStartX = details.globalPosition.dx;
+              _dragStartIndex = newIndex;
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                min(count, 10), // Максимум 10 точек для большого количества групп
+                (index) {
+                  final isActive = index == currentIndex;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    width: isActive ? 20 : 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3),
+                      color: isActive
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurface.withAlpha(51),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-          title: appLocalizations.proxyGroup,
         );
       },
     );
@@ -205,70 +214,36 @@ class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        NotificationListener<ScrollMetricsNotification>(
-          onNotification: (scrollNotification) {
-            _hasMoreButtonNotifier.value =
-                scrollNotification.metrics.maxScrollExtent > 0;
-            return true;
-          },
-          child: ValueListenableBuilder(
-            valueListenable: _hasMoreButtonNotifier,
-            builder: (_, value, child) {
-              return Stack(
-                alignment: AlignmentDirectional.centerStart,
-                children: [
-                  TabBar(
-                    controller: _tabController,
-                    padding: EdgeInsets.only(
-                      left: 16,
-                      right: 16 + (value ? 16 : 0),
-                    ),
-                    dividerColor: Colors.transparent,
-                    isScrollable: true,
-                    tabAlignment: TabAlignment.start,
-                    overlayColor:
-                        const WidgetStatePropertyAll(Colors.transparent),
-                    
-                    labelColor: Theme.of(context).colorScheme.onSurface,
-                    unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
-                    indicator: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withAlpha(26),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    
-                    tabs: [
-                      for (final groupName in groupNames)
-                        Tab(
-                          text: groupName,
-                        ),
-                    ],
-                  ),
-                  if (value)
-                    Positioned(
-                      right: 0,
-                      child: child!,
-                    ),
-                ],
-              );
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      context.colorScheme.surface.withAlpha(26),
-                      context.colorScheme.surface,
-                    ],
-                    stops: const [
-                      0.0,
-                      0.1
-                    ]),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TabBar(
+              controller: _tabController,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              dividerColor: Colors.transparent,
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              overlayColor:
+                  const WidgetStatePropertyAll(Colors.transparent),
+
+              labelColor: Theme.of(context).colorScheme.onSurface,
+              unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+              indicator: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary.withAlpha(26),
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: _buildMoreButton(),
+              indicatorSize: TabBarIndicatorSize.tab,
+
+              tabs: [
+                for (final groupName in groupNames)
+                  Tab(
+                    text: groupName,
+                  ),
+              ],
             ),
-          ),
+            if (groupNames.length > 1)
+              _buildPageIndicator(groupNames.length),
+          ],
         ),
         Expanded(
           child: TabBarView(

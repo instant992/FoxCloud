@@ -49,7 +49,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> with PageMixin {
   }
 
   @override
-  Widget? get floatingActionButton => const StartButton();
+  Widget? get floatingActionButton => null;
 
   Widget _buildIsEdit(_IsEditWidgetBuilder builder) {
     return ValueListenableBuilder(
@@ -179,6 +179,7 @@ _handleResetLayout() async {
   @override
   Widget build(BuildContext context) {
     final dashboardState = ref.watch(dashboardStateProvider);
+    final isMobile = ref.watch(isMobileViewProvider);
     final columns = max(4 * ((dashboardState.viewWidth / 320).ceil()), 8);
     final spacing = 16.ap;
     final children = [
@@ -204,49 +205,63 @@ _handleResetLayout() async {
           .map((item) => item.widget)
           .toList();
     });
-    return Align(
-      alignment: Alignment.topCenter,
-      child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16).copyWith(
-            bottom: 88,
-          ),
-          child: _buildIsEdit((isEdit) {
-            return isEdit
-                ? SystemBackBlock(
-                    child: CommonPopScope(
-                      child: SuperGrid(
-                        key: key,
-                        crossAxisCount: columns,
-                        crossAxisSpacing: spacing,
-                        mainAxisSpacing: spacing,
-                        children: [
-                          ...dashboardState.dashboardWidgets
-                              .where(
-                                (item) => item.platforms.contains(
-                                  SupportPlatform.currentPlatform,
+
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topCenter,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16).copyWith(
+              bottom: 88,
+            ),
+            child: _buildIsEdit((isEdit) {
+              return isEdit
+                  ? SystemBackBlock(
+                      child: CommonPopScope(
+                        child: SuperGrid(
+                          key: key,
+                          crossAxisCount: columns,
+                          crossAxisSpacing: spacing,
+                          mainAxisSpacing: spacing,
+                          children: [
+                            ...dashboardState.dashboardWidgets
+                                .where(
+                                  (item) => item.platforms.contains(
+                                    SupportPlatform.currentPlatform,
+                                  ),
+                                )
+                                .map(
+                                  (item) => item.widget,
                                 ),
-                              )
-                              .map(
-                                (item) => item.widget,
-                              ),
-                        ],
-                        onUpdate: () {
-                          _handleSave();
+                          ],
+                          onUpdate: () {
+                            _handleSave();
+                          },
+                        ),
+                        onPop: () {
+                          _handleUpdateIsEdit();
+                          return false;
                         },
                       ),
-                      onPop: () {
-                        _handleUpdateIsEdit();
-                        return false;
-                      },
-                    ),
-                  )
-                : Grid(
-                    crossAxisCount: columns,
-                    crossAxisSpacing: spacing,
-                    mainAxisSpacing: spacing,
-                    children: children,
-                  );
-          })),
+                    )
+                  : Grid(
+                      crossAxisCount: columns,
+                      crossAxisSpacing: spacing,
+                      mainAxisSpacing: spacing,
+                      children: children,
+                    );
+            }),
+          ),
+        ),
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          bottom: isMobile ? 0 : 16,
+          right: isMobile ? 0 : 16,
+          left: isMobile ? 0 : null,
+          child: StartButton(isMobileStyle: isMobile),
+        ),
+      ],
     );
   }
 }

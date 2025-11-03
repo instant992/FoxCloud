@@ -1,4 +1,4 @@
-package com.follow.clash.core
+package com.flowvy.app.core
 
 import androidx.annotation.Keep
 

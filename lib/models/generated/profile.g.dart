@@ -80,12 +80,16 @@ _$OverrideDataImpl _$$OverrideDataImplFromJson(Map<String, dynamic> json) =>
       rule: json['rule'] == null
           ? const OverrideRule()
           : OverrideRule.fromJson(json['rule'] as Map<String, dynamic>),
+      savedConfig: json['savedConfig'] == null
+          ? null
+          : ClashConfig.fromJson(json['savedConfig'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$OverrideDataImplToJson(_$OverrideDataImpl instance) =>
     <String, dynamic>{
       'enable': instance.enable,
       'rule': instance.rule,
+      'savedConfig': instance.savedConfig,
     };
 
 _$OverrideRuleImpl _$$OverrideRuleImplFromJson(Map<String, dynamic> json) =>

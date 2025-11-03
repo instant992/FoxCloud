@@ -9,6 +9,7 @@ import 'package:flowvy/common/custom_theme.dart';
 import 'package:flowvy/l10n/l10n.dart';
 import 'package:flowvy/manager/hotkey_manager.dart';
 import 'package:flowvy/manager/manager.dart';
+import 'package:flowvy/models/models.dart';
 import 'package:flowvy/plugins/app.dart';
 import 'package:flowvy/providers/providers.dart';
 import 'package:flowvy/state.dart';
@@ -143,7 +144,29 @@ class ApplicationState extends ConsumerState<Application> {
   }
 
   _autoUpdateProfilesTask() {
-    _autoUpdateProfilesTaskTimer = Timer(const Duration(minutes: 20), () async {});
+    _autoUpdateProfilesTaskTimer = Timer(const Duration(minutes: 5), () async {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final profiles = ref.read(profilesProvider);
+        final now = DateTime.now();
+
+        for (final profile in profiles) {
+          // Проверяем нужно ли обновлять этот профиль
+          if (profile.realAutoUpdate && profile.lastUpdateDate != null) {
+            final timeSinceUpdate = now.difference(profile.lastUpdateDate!);
+            if (timeSinceUpdate >= profile.autoUpdateDuration) {
+              try {
+                await globalState.appController.updateProfile(profile);
+              } catch (e) {
+                commonPrint.log("Failed to auto-update profile ${profile.label}: $e");
+              }
+            }
+          }
+        }
+
+        // Перезапускаем таймер
+        _autoUpdateProfilesTask();
+      });
+    });
   }
 
   _buildPlatformState(Widget child) {
@@ -268,6 +291,8 @@ class ApplicationState extends ConsumerState<Application> {
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0,
       elevation: 0,
       actionsIconTheme: IconThemeData(color: Color(0xE0171717)),
       iconTheme: IconThemeData(color: Color(0xE0171717)),
@@ -407,6 +432,8 @@ final darkTheme = ThemeData(
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.transparent,
+    surfaceTintColor: Colors.transparent,
+    scrolledUnderElevation: 0,
     elevation: 0,
     actionsIconTheme: IconThemeData(color: Color(0xE0FFFFFF)),
     iconTheme: IconThemeData(color: Color(0xE0FFFFFF)),

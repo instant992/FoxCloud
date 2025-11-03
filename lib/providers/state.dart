@@ -117,7 +117,8 @@ UpdateParams updateParams(Ref ref) {
         allowLan: state.allowLan,
         findProcessMode: state.findProcessMode,
         mode: state.mode,
-        logLevel: state.logLevel,
+        // LogLevel.app не поддерживается mihomo, заменяем на info
+        logLevel: state.logLevel == LogLevel.app ? LogLevel.info : state.logLevel,
         ipv6: state.ipv6,
         tcpConcurrent: state.tcpConcurrent,
         externalController: state.externalController,
@@ -527,13 +528,14 @@ String? getSelectedProxyName(Ref ref, String groupName) {
 String getProxyDesc(Ref ref, Proxy proxy) {
   final groupTypeNamesList = GroupType.values.map((e) => e.name).toList();
   if (!groupTypeNamesList.contains(proxy.type)) {
-    return proxy.type;
+    // Если есть serverDescription, показываем его, иначе type
+    return proxy.serverDescription ?? proxy.type;
   } else {
     final groups = ref.watch(groupsProvider);
     final index = groups.indexWhere((element) => element.name == proxy.name);
-    if (index == -1) return proxy.type;
+    if (index == -1) return proxy.serverDescription ?? proxy.type;
     final state = ref.watch(getProxyCardStateProvider(proxy.name));
-    return "${proxy.type}(${state.proxyName.isNotEmpty ? state.proxyName : '*'})";
+    return "${proxy.serverDescription ?? proxy.type}(${state.proxyName.isNotEmpty ? state.proxyName : '*'})";
   }
 }
 

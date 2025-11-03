@@ -1,4 +1,4 @@
-package com.follow.clash
+package com.flowvy.app
 
 import android.database.Cursor
 import android.database.MatrixCursor

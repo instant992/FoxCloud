@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class StartButton extends ConsumerStatefulWidget {
-  const StartButton({super.key});
+  final bool isMobileStyle;
+
+  const StartButton({
+    super.key,
+    this.isMobileStyle = false,
+  });
 
   @override
   ConsumerState<StartButton> createState() => _StartButtonState();
@@ -50,13 +55,15 @@ class _StartButtonState extends ConsumerState<StartButton> {
   Widget build(BuildContext context) {
     final state = ref.watch(startButtonSelectorStateProvider);
     final customTheme = Theme.of(context).extension<CustomTheme>()!;
-    
+
     if (!state.isInit || !state.hasProfile) {
       return const SizedBox.shrink();
     }
 
+    final isMobile = widget.isMobileStyle;
+
     const buttonIcon = Icons.power_settings_new_rounded;
-    
+
     final textStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.w600,
           color: customTheme.connectButtonForeground,
@@ -82,44 +89,77 @@ class _StartButtonState extends ConsumerState<StartButton> {
       },
     );
 
-    final connectTextWidth =
-        globalState.measure.computeTextSize(connectText).width;
+    final connectTextWidth = isMobile
+        ? 0.0
+        : globalState.measure.computeTextSize(connectText).width;
     final runTime = ref.watch(runTimeProvider);
     final timerTextString = utils.getTimeText(runTime);
-    final timerTextWidth = globalState.measure
-        .computeTextSize(
-          Text(timerTextString, style: textStyle),
-        )
-        .width;
+    final timerTextWidth = isMobile
+        ? 0.0
+        : globalState.measure
+            .computeTextSize(
+              Text(timerTextString, style: textStyle),
+            )
+            .width;
 
     final targetWidth = isStart ? timerTextWidth : connectTextWidth;
+
+    final buttonContent = Row(
+      mainAxisSize: isMobile ? MainAxisSize.max : MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          buttonIcon,
+          color: customTheme.connectButtonIcon,
+        ),
+        const SizedBox(width: 8),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 2.5),
+          child: isMobile
+              ? AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: isStart ? timerConsumer : connectText,
+                )
+              : AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                  width: targetWidth,
+                  alignment: Alignment.center,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: isStart ? timerConsumer : connectText,
+                  ),
+                ),
+        ),
+      ],
+    );
+
+    if (isMobile) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: TextButton(
+            onPressed: handleSwitchStart,
+            style: TextButton.styleFrom(
+              backgroundColor: customTheme.connectButtonBackground,
+              foregroundColor: customTheme.connectButtonForeground,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: buttonContent,
+          ),
+        ),
+      );
+    }
 
     return FloatingActionButton.extended(
       heroTag: null,
       onPressed: handleSwitchStart,
       backgroundColor: customTheme.connectButtonBackground,
-      label: Row(
-        children: [
-          Icon(
-            buttonIcon,
-            color: customTheme.connectButtonIcon,
-          ),
-          const SizedBox(width: 8),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 2.5),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOut,
-              width: targetWidth,
-              alignment: Alignment.center,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: isStart ? timerConsumer : connectText,
-              ),
-            ),
-          ),
-        ],
-      ),
+      label: buttonContent,
     );
   }
 }

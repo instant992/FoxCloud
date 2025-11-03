@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flowvy/common/common.dart';
 import 'package:flowvy/enum/enum.dart';
 import 'package:flowvy/models/models.dart';
-import 'package:flowvy/providers/config.dart';
+import 'package:flowvy/providers/providers.dart';
 import 'package:flowvy/state.dart';
 import 'package:flowvy/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -193,15 +193,45 @@ class TunStackItem extends ConsumerWidget {
         value: stack,
         options: TunStack.values,
         textBuilder: (value) => value.name,
-        onChanged: (value) {
+        onChanged: (value) async {
           if (value == null) {
             return;
           }
+
+          // Проверяем автообновление профиля
+          final currentProfile = ref.read(currentProfileProvider);
+          if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
+            final res = await globalState.showMessage(
+              title: appLocalizations.tip,
+              message: TextSpan(
+                text: appLocalizations.profileHasUpdate,
+              ),
+            );
+            if (res == true) {
+              // Отключаем автообновление
+              if (currentProfile != null) {
+                final appController = globalState.appController;
+                appController.setProfile(
+                  currentProfile.copyWith(autoUpdate: false),
+                );
+                appController.savePreferencesDebounce();
+              }
+            }
+          }
+
+          // Настройка применяется всегда
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith.tun(
                   stack: value,
                 ),
               );
+
+          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          final updatedProfile = ref.read(currentProfileProvider);
+          if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
+            final currentConfig = ref.read(patchClashConfigProvider);
+            await globalState.saveCurrentConfigToProfile(updatedProfile, currentConfig);
+          }
         },
         title: appLocalizations.stackMode,
       ),

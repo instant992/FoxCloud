@@ -105,7 +105,7 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
       ];
 
   @override
-  Widget? get floatingActionButton => const StartButton();
+  Widget? get floatingActionButton => null;
 
   @override
   get onSearch => (value) {
@@ -214,17 +214,36 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> with PageMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = ref.watch(isMobileViewProvider);
     final proxiesType = ref.watch(
       proxiesStyleSettingProvider.select(
         (state) => state.type,
       ),
     );
-    return switch (proxiesType) {
+
+    final content = switch (proxiesType) {
       ProxiesType.tab => ProxiesTabView(
           key: _proxiesTabKey,
         ),
       ProxiesType.list => const ProxiesListView(),
     };
+
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 88),
+          child: content,
+        ),
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          bottom: isMobile ? 0 : 16,
+          right: isMobile ? 0 : 16,
+          left: isMobile ? 0 : null,
+          child: StartButton(isMobileStyle: isMobile),
+        ),
+      ],
+    );
   }
 }
 

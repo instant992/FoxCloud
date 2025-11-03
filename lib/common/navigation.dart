@@ -95,6 +95,8 @@ class Navigation {
           ),
         ),
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
+        mobileIcon: Icon(Icons.more_horiz_rounded),
+        mobileLabel: PageLabel.more,
       ),
     ];
   }

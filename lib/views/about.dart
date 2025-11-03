@@ -20,102 +20,135 @@ class Contributor {
   });
 }
 
-class AboutView extends StatelessWidget {
+class AboutView extends StatefulWidget {
   const AboutView({super.key});
 
-  _checkUpdate(BuildContext context) async {
-    final commonScaffoldState = context.commonScaffoldState;
-    if (commonScaffoldState?.mounted != true) return;
-    final data = await commonScaffoldState?.loadingRun<Map<String, dynamic>?>(
-      request.checkForUpdate,
-      title: appLocalizations.checkUpdate,
-    );
-    globalState.appController.checkUpdateResultHandle(
-      data: data,
-      handleError: true,
-    );
+  @override
+  State<AboutView> createState() => _AboutViewState();
+}
+
+class _AboutViewState extends State<AboutView> {
+  bool _isChecking = false;
+
+  Future<void> _checkUpdate(BuildContext context) async {
+    setState(() {
+      _isChecking = true;
+    });
+
+    try {
+      final data = await request.checkForUpdate();
+      
+      if (mounted) {
+        globalState.appController.checkUpdateResultHandle(
+          data: data,
+          handleError: true,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isChecking = false;
+        });
+      }
+    }
   }
 
   List<Widget> _buildMoreSection(BuildContext context) {
+    final iconColor = Theme.of(context).iconTheme.color;
+
     return generateSection(
       separated: false,
       title: appLocalizations.more,
       items: [
         ListItem(
-          title: Text(appLocalizations.checkUpdate),
-          onTap: () {
-            _checkUpdate(context);
-          },
-        ),
-        ListItem(
           title: Text(appLocalizations.project),
           onTap: () {
             globalState.openUrl(
-              "https://github.com/$repository",
+              'https://github.com/$repository',
             );
           },
-          trailing: const Icon(Icons.launch_rounded),
+          trailing: Icon(Icons.insert_link_rounded, color: iconColor),
         ),
         ListItem(
           title: Text(appLocalizations.core),
           onTap: () {
             globalState.openUrl(
-              "https://github.com/chen08209/Clash.Meta/tree/FlClash",
+              'https://github.com/chen08209/Clash.Meta/tree/FlClash',
             );
           },
-          trailing: const Icon(Icons.launch_rounded),
+          trailing: Icon(Icons.insert_link_rounded, color: iconColor),
         ),
       ],
     );
   }
 
-  List<Widget> _buildContributorsSection() {
-    const contributors = [
+  List<Widget> _buildCreditsSections(BuildContext context) {
+    final iconColor = Theme.of(context).iconTheme.color;
+
+    const authors = [
       Contributor(
-        avatar: "assets/images/avatars/x_kit_.jpg",
-        name: "x_kit_",
-        link: "https://github.com/this-xkit",
-      ),
-      Contributor(
-        avatar: "assets/images/avatars/pluralplay.jpg",
-        name: "pluralplay",
-        link: "https://github.com/pluralplay",
+        avatar: 'assets/images/avatars/x_kit_.jpg',
+        name: 'x_kit_',
+        link: 'https://github.com/this-xkit',
       ),
     ];
-    return generateSection(
-      separated: false,
-      title: appLocalizations.Contributors,
-      items: [
-        ListItem(
-          title: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Wrap(
-              spacing: 24,
-              children: [
-                for (final contributor in contributors)
-                  Avatar(
-                    contributor: contributor,
-                  ),
-              ],
+
+    const specialThanks = [
+      Contributor(
+        avatar: 'assets/images/avatars/pluralplay.jpg',
+        name: 'pluralplay',
+        link: 'https://github.com/pluralplay',
+      ),
+    ];
+
+    return [
+      ...generateSection(
+        separated: false,
+        title: appLocalizations.Contributors,
+        items: [
+          ListItem(
+            title: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Wrap(
+                spacing: 24,
+                children: [
+                  for (final contributor in authors)
+                    Avatar(contributor: contributor),
+                ],
+              ),
             ),
-          ),
-        )
-      ],
-    );
+          )
+        ],
+      ),
+      const SizedBox(height: 12),
+      ...generateSection(
+        separated: false,
+        title: appLocalizations.specialThanks,
+        items: [
+          for (final contributor in specialThanks)
+            ListItem(
+              title: Text(contributor.name),
+              onTap: () => globalState.openUrl(contributor.link),
+              trailing: Icon(Icons.explore_rounded, color: iconColor),
+            )
+        ],
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    final items = [
+    final scrollableItems = [
       ListTile(
+        contentPadding: EdgeInsets.zero,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Consumer(builder: (_, ref, ___) {
               final isDarkMode = Theme.of(context).brightness == Brightness.dark;
               final String iconAsset = isDarkMode
-                  ? "assets/images/icon.png"
-                  : "assets/images/icon_black.png";
+                  ? 'assets/images/icon.png'
+                  : 'assets/images/icon_black.png';
 
               return _DeveloperModeDetector(
                 child: Wrap(
@@ -137,10 +170,15 @@ class AboutView extends StatelessWidget {
                           appName,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
+                        const SizedBox(height: 4),
                         Text(
-                          globalState.packageInfo.version,
-                          style: Theme.of(context).textTheme.labelLarge,
-                        )
+                          '${appLocalizations.clientVersion}: ${globalState.packageInfo.version}',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Text(
+                          '${appLocalizations.coreVersion}: $coreVersion',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ],
                     )
                   ],
@@ -153,28 +191,59 @@ class AboutView extends StatelessWidget {
                 },
               );
             }),
-            const SizedBox(
-              height: 24,
-            ),
-            Text(
-              appLocalizations.desc,
-              style: Theme.of(context).textTheme.bodySmall,
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                appLocalizations.desc,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ),
           ],
         ),
       ),
-      const SizedBox(
-        height: 12,
-      ),
-      ..._buildContributorsSection(),
+      const SizedBox(height: 12),
+      ..._buildCreditsSections(context),
       ..._buildMoreSection(context),
     ];
-    return Padding(
-      padding: kMaterialListPadding.copyWith(
-        top: 16,
-        bottom: 16,
-      ),
-      child: generateListView(items),
+
+    return Column(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: kMaterialListPadding.copyWith(
+              top: 16,
+              bottom: 16,
+            ),
+            child: generateListView(scrollableItems),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          child: Center(
+            child: FilledButton.icon(
+              onPressed: _isChecking ? null : () => _checkUpdate(context),
+              icon: _isChecking
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    )
+                  : const Icon(Icons.update_rounded),
+              label: Text(
+                _isChecking 
+                    ? appLocalizations.checking
+                    : appLocalizations.checkUpdate
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -243,7 +312,7 @@ class _DeveloperModeDetectorState extends State<_DeveloperModeDetector> {
       _resetCounter();
     } else {
       _timer?.cancel();
-      _timer = Timer(Duration(seconds: 1), _resetCounter);
+      _timer = Timer(const Duration(seconds: 1), _resetCounter);
     }
   }
 

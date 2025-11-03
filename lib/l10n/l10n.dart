@@ -94,6 +94,11 @@ class AppLocalizations {
     return Intl.message('Tools', name: 'tools', desc: '', args: []);
   }
 
+  /// `More`
+  String get more {
+    return Intl.message('More', name: 'more', desc: '', args: []);
+  }
+
   /// `Logs`
   String get logs {
     return Intl.message('Logs', name: 'logs', desc: '', args: []);
@@ -169,10 +174,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Network detection`
+  /// `IP Address`
   String get networkDetection {
     return Intl.message(
-      'Network detection',
+      'IP Address',
       name: 'networkDetection',
       desc: '',
       args: [],
@@ -204,10 +209,10 @@ class AppLocalizations {
     );
   }
 
-  /// `No profile`
+  /// `You have not yet added any subscriptions`
   String get nullProfileDesc {
     return Intl.message(
-      'No profile',
+      'You have not yet added any subscriptions',
       name: 'nullProfileDesc',
       desc: '',
       args: [],
@@ -227,11 +232,6 @@ class AppLocalizations {
   /// `Default`
   String get defaultText {
     return Intl.message('Default', name: 'defaultText', desc: '', args: []);
-  }
-
-  /// `More`
-  String get more {
-    return Intl.message('More', name: 'more', desc: '', args: []);
   }
 
   /// `Other`
@@ -749,20 +749,10 @@ class AppLocalizations {
     return Intl.message('Submit', name: 'submit', desc: '', args: []);
   }
 
-  /// `Do you want to pass`
-  String get doYouWantToPass {
-    return Intl.message(
-      'Do you want to pass',
-      name: 'doYouWantToPass',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Do you want to add a subscription from the following URL?`
+  /// `Do you want to import the subscription from the following link?`
   String get addProfileFromUrlPrompt {
     return Intl.message(
-      'Do you want to add a subscription from the following URL?',
+      'Do you want to import the subscription from the following link?',
       name: 'addProfileFromUrlPrompt',
       desc: '',
       args: [],
@@ -999,10 +989,10 @@ class AppLocalizations {
     );
   }
 
-  /// `A multi-platform proxy client based on the FlClash code (ClashMeta), simple and easy to use, open-source and ad-free.`
+  /// `A cross-platform proxy client based on the FlClash project — simple, easy to use, open-source, and ad-free`
   String get desc {
     return Intl.message(
-      'A multi-platform proxy client based on the FlClash code (ClashMeta), simple and easy to use, open-source and ad-free.',
+      'A cross-platform proxy client based on the FlClash project — simple, easy to use, open-source, and ad-free',
       name: 'desc',
       desc: '',
       args: [],
@@ -1234,10 +1224,10 @@ class AppLocalizations {
     );
   }
 
-  /// `The current application is already the latest version`
+  /// `The latest version of the client is already installed`
   String get checkUpdateError {
     return Intl.message(
-      'The current application is already the latest version',
+      'The latest version of the client is already installed',
       name: 'checkUpdateError',
       desc: '',
       args: [],
@@ -2294,10 +2284,10 @@ class AppLocalizations {
     return Intl.message('Disclaimer', name: 'disclaimer', desc: '', args: []);
   }
 
-  /// `This software is only used for non-commercial purposes such as learning exchanges and scientific research. It is strictly prohibited to use this software for commercial purposes. Any commercial activity, if any, has nothing to do with this software.`
+  /// `This application is distributed as free and open-source software and is not intended for circumventing legal restrictions. The author does not endorse or encourage the use of this program for purposes prohibited by local law. The user bears full responsibility for the methods and purposes of its use.\n\nBy continuing to use this application, you confirm that you have read and agree to this disclaimer.`
   String get disclaimerDesc {
     return Intl.message(
-      'This software is only used for non-commercial purposes such as learning exchanges and scientific research. It is strictly prohibited to use this software for commercial purposes. Any commercial activity, if any, has nothing to do with this software.',
+      'This application is distributed as free and open-source software and is not intended for circumventing legal restrictions. The author does not endorse or encourage the use of this program for purposes prohibited by local law. The user bears full responsibility for the methods and purposes of its use.\n\nBy continuing to use this application, you confirm that you have read and agree to this disclaimer.',
       name: 'disclaimerDesc',
       desc: '',
       args: [],
@@ -2614,10 +2604,20 @@ class AppLocalizations {
     );
   }
 
-  /// `The profile has been modified. Do you want to disable auto update?`
+  /// `The config has been changed`
+  String get HasUpdateTitle {
+    return Intl.message(
+      'The config has been changed',
+      name: 'HasUpdateTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disable subscription auto-renewal?`
   String get profileHasUpdate {
     return Intl.message(
-      'The profile has been modified. Do you want to disable auto update?',
+      'Disable subscription auto-renewal?',
       name: 'profileHasUpdate',
       desc: '',
       args: [],
@@ -2649,9 +2649,14 @@ class AppLocalizations {
     return Intl.message('Copy link', name: 'copyLink', desc: '', args: []);
   }
 
-  /// `Export file`
+  /// `Export config`
   String get exportFile {
-    return Intl.message('Export file', name: 'exportFile', desc: '', args: []);
+    return Intl.message(
+      'Export config',
+      name: 'exportFile',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `The cache is corrupt. Do you want to clear it?`
@@ -2759,6 +2764,26 @@ class AppLocalizations {
     return Intl.message('No resolve IP', name: 'noResolve', desc: '', args: []);
   }
 
+  /// `Creates routing rules with highest priority`
+  String get aboudOverrideTitle {
+    return Intl.message(
+      'Creates routing rules with highest priority',
+      name: 'aboudOverrideTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Overrides existing config rules or adds new ones. Unlike direct config editing, these rules persist through subscription updates.`
+  String get aboudOverride {
+    return Intl.message(
+      'Overrides existing config rules or adds new ones. Unlike direct config editing, these rules persist through subscription updates.',
+      name: 'aboudOverride',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Get original rules`
   String get getOriginRules {
     return Intl.message(
@@ -2839,14 +2864,9 @@ class AppLocalizations {
     );
   }
 
-  /// `Are you sure you want to save?`
+  /// `Confirm save?`
   String get saveTip {
-    return Intl.message(
-      'Are you sure you want to save?',
-      name: 'saveTip',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Confirm save?', name: 'saveTip', desc: '', args: []);
   }
 
   /// `Color schemes`
@@ -3089,20 +3109,20 @@ class AppLocalizations {
     );
   }
 
-  /// `Are you sure you want to delete the current profile?`
+  /// `Confirm deletion of this subscription?`
   String get deleteTip {
     return Intl.message(
-      'Are you sure you want to delete the current profile?',
+      'Confirm deletion of this subscription?',
       name: 'deleteTip',
       desc: '',
       args: [],
     );
   }
 
-  /// `Are you sure you want to delete the selected profiles?`
+  /// `Confirm deletion of selected subscriptions?`
   String get deleteMultipTip {
     return Intl.message(
-      'Are you sure you want to delete the selected profiles?',
+      'Confirm deletion of selected subscriptions?',
       name: 'deleteMultipTip',
       desc: '',
       args: [],
@@ -3329,10 +3349,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Подписка бессрочная`
+  /// `The subscription is permanent`
   String get subscriptionEternal {
     return Intl.message(
-      'Подписка бессрочная',
+      'The subscription is permanent',
       name: 'subscriptionEternal',
       desc: '',
       args: [],
@@ -3344,10 +3364,10 @@ class AppLocalizations {
     return Intl.message('Expires on', name: 'expiresOn', desc: '', args: []);
   }
 
-  /// `Unlimited Traffic`
+  /// `Unlimited traffic`
   String get trafficUnlimited {
     return Intl.message(
-      'Unlimited Traffic',
+      'Unlimited traffic',
       name: 'trafficUnlimited',
       desc: '',
       args: [],
@@ -3359,14 +3379,84 @@ class AppLocalizations {
     return Intl.message('Remaining', name: 'remaining', desc: '', args: []);
   }
 
-  /// `Limit reset in`
+  /// `Limit reset:`
   String get limitResetIn {
     return Intl.message(
-      'Limit reset in',
+      'Limit reset:',
       name: 'limitResetIn',
       desc: '',
       args: [],
     );
+  }
+
+  /// `Community in Telegram`
+  String get communityInTelegram {
+    return Intl.message(
+      'Community in Telegram',
+      name: 'communityInTelegram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Special Thanks`
+  String get specialThanks {
+    return Intl.message(
+      'Special Thanks',
+      name: 'specialThanks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unlimited subscription`
+  String get subscriptionUnlimited {
+    return Intl.message(
+      'Unlimited subscription',
+      name: 'subscriptionUnlimited',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription until`
+  String get subscriptionTo {
+    return Intl.message(
+      'Subscription until',
+      name: 'subscriptionTo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Plan`
+  String get yourPlan {
+    return Intl.message('Your Plan', name: 'yourPlan', desc: '', args: []);
+  }
+
+  /// `Client Version`
+  String get clientVersion {
+    return Intl.message(
+      'Client Version',
+      name: 'clientVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Core Version`
+  String get coreVersion {
+    return Intl.message(
+      'Core Version',
+      name: 'coreVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Off`
+  String get off {
+    return Intl.message('Off', name: 'off', desc: '', args: []);
   }
 }
 

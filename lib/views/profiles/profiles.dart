@@ -48,18 +48,27 @@ class _TimeAgoWidgetState extends State<TimeAgoWidget> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final iconTheme = Theme.of(context).iconTheme;
     final subtitleColor = Theme.of(context).colorScheme.onSurfaceVariant;
-    return Text.rich(
-      TextSpan(
-        style: textTheme.bodySmall?.copyWith(color: subtitleColor),
-        children: [
-          TextSpan(text: '${appLocalizations.updated} '),
-          TextSpan(
-            text: widget.date.lastUpdateTimeDesc,
-            style: TextStyle(fontWeight: FontWeight.w500, color: subtitleColor),
+    return Row(
+      children: [
+        Icon(Icons.sync_rounded, size: 16, color: iconTheme.color),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text.rich(
+            TextSpan(
+              style: textTheme.bodySmall?.copyWith(color: subtitleColor),
+              children: [
+                TextSpan(text: '${appLocalizations.updated} '),
+                TextSpan(
+                  text: widget.date.lastUpdateTimeDesc,
+                  style: TextStyle(fontWeight: FontWeight.w500, color: subtitleColor),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -108,7 +117,7 @@ class _ProfilesViewState extends State<ProfilesView> with PageMixin {
           profile.copyWith(isUpdating: true),
         );
         try {
-          await globalState.appController.updateProfile(profile);
+          await globalState.appController.updateProfile(profile, isManualUpdate: true);
         } catch (e) {
           messages.add("${profile.label ?? profile.id}: $e \n");
           globalState.appController.setProfile(
@@ -282,7 +291,7 @@ class ProfileItem extends StatelessWidget {
             isUpdating: true,
           ),
         );
-        await appController.updateProfile(profile);
+        await appController.updateProfile(profile, isManualUpdate: true);
       } catch (e) {
         appController.setProfile(
           profile.copyWith(
@@ -324,8 +333,10 @@ class ProfileItem extends StatelessWidget {
     final commonScaffoldState = context.commonScaffoldState;
     final res = await commonScaffoldState?.loadingRun<bool>(() async {
       final file = await profile.getFile();
+      // Добавляем расширение .yaml к имени файла
+      final fileName = '${profile.label ?? profile.id}.yaml';
       final value = await picker.saveFile(
-        profile.label ?? profile.id,
+        fileName,
         file.readAsBytesSync(),
       );
       if (value == null) return false;
@@ -394,7 +405,9 @@ class ProfileItem extends StatelessWidget {
                               if (profile.supportUrl != null &&
                                   profile.supportUrl!.isNotEmpty)
                                 PopupMenuItemData(
-                                  icon: Icons.support_agent_rounded,
+                                  icon: isTelegramUrl(profile.supportUrl!)
+                                      ? Icons.telegram_rounded
+                                      : Icons.support_agent_rounded,
                                   label: appLocalizations.support,
                                   onPressed: () {
                                     globalState.openUrl(profile.supportUrl!);
@@ -440,58 +453,96 @@ class ProfileItem extends StatelessWidget {
               final BigInt upload =
                   BigInt.from(subscriptionInfo.upload);
               final BigInt usedTraffic = download + upload;
+
+              final isUnlimitedTraffic = totalTraffic <= BigInt.zero;
+
               double progress = 0.0;
-              if (totalTraffic > BigInt.zero) {
+              if (!isUnlimitedTraffic) {
                 progress = usedTraffic.toDouble() / totalTraffic.toDouble();
                 if (progress.isNaN) progress = 0.0;
                 if (progress < 0) progress = 0.0;
                 if (progress > 1) progress = 1.0;
               }
-              final expireDate = DateTime.fromMillisecondsSinceEpoch(
-                  subscriptionInfo.expire * 1000);
+
+              final hasExpireDate = subscriptionInfo.expire > 0;
+              final expireDate = hasExpireDate
+                  ? DateTime.fromMillisecondsSinceEpoch(subscriptionInfo.expire * 1000)
+                  : null;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text.rich(
-                    TextSpan(
-                      style: subtitleStyle,
-                      children: [
-                        TextSpan(text: '${appLocalizations.traffic} '),
-                        TextSpan(
-                          text:
-                              '${_formatBytes(usedTraffic, 2)} / ${_formatBytes(totalTraffic, 2)}',
-                          style:
-                              TextStyle(fontWeight: FontWeight.w500, color: subtitleStyle?.color),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.data_usage_rounded, size: 16, color: iconTheme.color),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: isUnlimitedTraffic
+                            ? Text(
+                                appLocalizations.trafficUnlimited,
+                                style: subtitleStyle?.copyWith(fontWeight: FontWeight.w500),
+                              )
+                            : Text.rich(
+                                TextSpan(
+                                  style: subtitleStyle,
+                                  children: [
+                                    TextSpan(text: '${appLocalizations.traffic} '),
+                                    TextSpan(
+                                      text:
+                                          '${_formatBytes(usedTraffic, 2)} / ${_formatBytes(totalTraffic, 2)}',
+                                      style:
+                                          TextStyle(fontWeight: FontWeight.w500, color: subtitleStyle?.color),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                  if (!isUnlimitedTraffic) ...[
+                    const SizedBox(height: 6),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 22),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          minHeight: 6,
+                          color: colorScheme.primary,
+                          backgroundColor: customTheme.profileCardProgressTrack,
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: progress,
-                      minHeight: 6,
-                      color: colorScheme.primary,
-                      backgroundColor: customTheme.profileCardProgressTrack,
-                    ),
-                  ),
+                  ],
                   const SizedBox(height: 10),
-                  Text.rich(
-                    TextSpan(
-                      style: subtitleStyle,
-                      children: [
-                        TextSpan(
-                            text:
-                                '${appLocalizations.subscriptionExpires} '),
-                        TextSpan(
-                          text: expireDate.ddMMyyyy,
-                          style:
-                              TextStyle(fontWeight: FontWeight.w500, color: subtitleStyle?.color),
-                        ),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      Icon(Icons.event_rounded, size: 16, color: iconTheme.color),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: hasExpireDate && expireDate != null
+                            ? Text.rich(
+                                TextSpan(
+                                  style: subtitleStyle,
+                                  children: [
+                                    TextSpan(
+                                        text:
+                                            '${appLocalizations.subscriptionExpires} '),
+                                    TextSpan(
+                                      text: expireDate.ddMMyyyy,
+                                      style:
+                                          TextStyle(fontWeight: FontWeight.w500, color: subtitleStyle?.color),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Text(
+                                appLocalizations.subscriptionUnlimited,
+                                style: subtitleStyle?.copyWith(fontWeight: FontWeight.w500),
+                              ),
+                      ),
+                    ],
                   ),
                 ],
               );

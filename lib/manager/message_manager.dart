@@ -98,17 +98,18 @@ class MessageManagerState extends State<MessageManager> {
                           ),
                           elevation: 10,
                           color: context.colorScheme.surfaceContainerHigh,
-                          child: Container(
-                            width: min(
-                              constraints.maxWidth,
-                              500,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: min(constraints.maxWidth, 500),
                             ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 16,
-                            ),
-                            child: Text(
-                              messages.last.text,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              child: Text(
+                                messages.last.text,
+                              ),
                             ),
                           ),
                         );

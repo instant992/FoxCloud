@@ -91,10 +91,36 @@ func handleValidateConfig(bytes []byte) string {
 	return ""
 }
 
-func handleGetProxies() map[string]constant.Proxy {
+func handleGetProxies() map[string]interface{} {
 	runLock.Lock()
 	defer runLock.Unlock()
-	return tunnel.ProxiesWithProviders()
+
+	proxies := tunnel.ProxiesWithProviders()
+	result := make(map[string]interface{})
+
+	for name, proxy := range proxies {
+		// Сериализуем прокси в JSON и обратно, чтобы получить map
+		proxyBytes, err := json.Marshal(proxy)
+		if err != nil {
+			continue
+		}
+
+		var proxyData map[string]interface{}
+		if err := json.Unmarshal(proxyBytes, &proxyData); err != nil {
+			continue
+		}
+
+		// Добавляем serverDescription из оригинального конфига (если есть)
+		if rawProxy, exists := rawProxiesConfig[name]; exists {
+			if desc, ok := rawProxy["serverDescription"]; ok {
+				proxyData["serverDescription"] = desc
+			}
+		}
+
+		result[name] = proxyData
+	}
+
+	return result
 }
 
 func handleChangeProxy(data string, fn func(string string)) {
@@ -132,7 +158,6 @@ func handleChangeProxy(data string, fn func(string string)) {
 		}
 
 		fn("")
-		return
 	}()
 }
 
@@ -244,10 +269,7 @@ func handleCloseConnections() bool {
 func closeConnections() {
 	statistic.DefaultManager.Range(func(c statistic.Tracker) bool {
 		err := c.Close()
-		if err != nil {
-			return false
-		}
-		return true
+		return err == nil
 	})
 }
 

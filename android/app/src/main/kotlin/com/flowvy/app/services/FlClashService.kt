@@ -1,4 +1,4 @@
-package com.follow.clash.services
+package com.flowvy.app.services
 
 import android.annotation.SuppressLint
 import android.app.Service
@@ -7,8 +7,8 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import com.follow.clash.GlobalState
-import com.follow.clash.models.VpnOptions
+import com.flowvy.app.GlobalState
+import com.flowvy.app.models.VpnOptions
 
 
 class FlowvyService : Service(), BaseServiceInterface {

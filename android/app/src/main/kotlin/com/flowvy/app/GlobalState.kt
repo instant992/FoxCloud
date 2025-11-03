@@ -1,9 +1,9 @@
-package com.follow.clash
+package com.flowvy.app
 
 import androidx.lifecycle.MutableLiveData
-import com.follow.clash.plugins.AppPlugin
-import com.follow.clash.plugins.TilePlugin
-import com.follow.clash.plugins.VpnPlugin
+import com.flowvy.app.plugins.AppPlugin
+import com.flowvy.app.plugins.TilePlugin
+import com.flowvy.app.plugins.VpnPlugin
 import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor

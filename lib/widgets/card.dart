@@ -93,6 +93,8 @@ class CommonCard extends StatelessWidget {
     this.padding,
     this.enterAnimated = false,
     this.info,
+    this.actions,
+    this.headerPadding,
   }) : isSelected = isSelected ?? false;
 
   final bool enterAnimated;
@@ -102,6 +104,8 @@ class CommonCard extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
   final Info? info;
+  final List<Widget>? actions;
+  final EdgeInsetsGeometry? headerPadding;
   final CommonCardType type;
   final double radius;
 
@@ -116,10 +120,11 @@ class CommonCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           InfoHeader(
-            padding: baseInfoEdgeInsets.copyWith(
+            padding: headerPadding ?? baseInfoEdgeInsets.copyWith(
               bottom: 0,
             ),
             info: info!,
+            actions: actions,
           ),
           Flexible(
             flex: 1,

@@ -1712,7 +1712,7 @@ class _$ProxiesStyleImpl implements _ProxiesStyle {
       this.sortType = ProxiesSortType.none,
       this.layout = ProxiesLayout.standard,
       this.iconStyle = ProxiesIconStyle.standard,
-      this.cardType = ProxyCardType.expand,
+      this.cardType = ProxyCardType.shrink,
       final Map<String, String> iconMap = const {}})
       : _iconMap = iconMap;
 
@@ -2158,7 +2158,7 @@ class _$ThemePropsImpl implements _ThemeProps {
   const _$ThemePropsImpl(
       {this.primaryColor,
       final List<int> primaryColors = defaultPrimaryColors,
-      this.themeMode = ThemeMode.dark,
+      this.themeMode = ThemeMode.system,
       this.schemeVariant = DynamicSchemeVariant.content,
       this.pureBlack = false,
       this.textScale = const TextScale()})

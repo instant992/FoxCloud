@@ -1,4 +1,4 @@
-package com.follow.clash.services
+package com.flowvy.app.services
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -8,9 +8,9 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
-import com.follow.clash.GlobalState
-import com.follow.clash.RunState
-import com.follow.clash.TempActivity
+import com.flowvy.app.GlobalState
+import com.flowvy.app.RunState
+import com.flowvy.app.TempActivity
 
 
 @RequiresApi(Build.VERSION_CODES.N)

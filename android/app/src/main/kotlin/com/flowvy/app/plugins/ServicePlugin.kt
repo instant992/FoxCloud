@@ -1,7 +1,7 @@
-package com.follow.clash.plugins
+package com.flowvy.app.plugins
 
-import com.follow.clash.GlobalState
-import com.follow.clash.models.VpnOptions
+import com.flowvy.app.GlobalState
+import com.flowvy.app.models.VpnOptions
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall

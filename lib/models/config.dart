@@ -12,11 +12,6 @@ part 'generated/config.freezed.dart';
 part 'generated/config.g.dart';
 
 const defaultBypassDomain = [
-  "*zhihu.com",
-  "*zhimg.com",
-  "*jd.com",
-  "100ime-iat-api.xfyun.cn",
-  "*360buyimg.com",
   "localhost",
   "*.local",
   "127.*",
@@ -50,7 +45,6 @@ const List<DashboardWidget> defaultWindowsDashboardWidgets = [
 ];
 
 const List<DashboardWidget> defaultAndroidDashboardWidgets = [
-  DashboardWidget.outboundModeV2,
   DashboardWidget.networkSpeed,
   DashboardWidget.metainfo,
   DashboardWidget.trafficUsage,
@@ -183,7 +177,7 @@ class ProxiesStyle with _$ProxiesStyle {
     @Default(ProxiesSortType.none) ProxiesSortType sortType,
     @Default(ProxiesLayout.standard) ProxiesLayout layout,
     @Default(ProxiesIconStyle.standard) ProxiesIconStyle iconStyle,
-    @Default(ProxyCardType.expand) ProxyCardType cardType,
+    @Default(ProxyCardType.shrink) ProxyCardType cardType,
     @Default({}) Map<String, String> iconMap,
   }) = _ProxiesStyle;
 
@@ -207,7 +201,7 @@ class ThemeProps with _$ThemeProps {
   const factory ThemeProps({
     int? primaryColor,
     @Default(defaultPrimaryColors) List<int> primaryColors,
-    @Default(ThemeMode.dark) ThemeMode themeMode,
+    @Default(ThemeMode.system) ThemeMode themeMode,
     @Default(DynamicSchemeVariant.content) DynamicSchemeVariant schemeVariant,
     @Default(false) bool pureBlack,
     @Default(TextScale()) TextScale textScale,

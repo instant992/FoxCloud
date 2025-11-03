@@ -3519,8 +3519,6 @@ mixin _$ClashConfig {
   @JsonKey(name: "proxy-groups")
   List<ProxyGroup> get proxyGroups => throw _privateConstructorUsedError;
   List<String> get rule => throw _privateConstructorUsedError;
-  @JsonKey(name: "global-ua")
-  String? get globalUa => throw _privateConstructorUsedError;
   @JsonKey(name: "external-controller")
   ExternalControllerStatus get externalController =>
       throw _privateConstructorUsedError;
@@ -3565,7 +3563,6 @@ abstract class $ClashConfigCopyWith<$Res> {
       @JsonKey(name: "geodata-loader") GeodataLoader geodataLoader,
       @JsonKey(name: "proxy-groups") List<ProxyGroup> proxyGroups,
       List<String> rule,
-      @JsonKey(name: "global-ua") String? globalUa,
       @JsonKey(name: "external-controller")
       ExternalControllerStatus externalController,
       Map<String, String> hosts});
@@ -3609,7 +3606,6 @@ class _$ClashConfigCopyWithImpl<$Res, $Val extends ClashConfig>
     Object? geodataLoader = null,
     Object? proxyGroups = null,
     Object? rule = null,
-    Object? globalUa = freezed,
     Object? externalController = null,
     Object? hosts = null,
   }) {
@@ -3690,10 +3686,6 @@ class _$ClashConfigCopyWithImpl<$Res, $Val extends ClashConfig>
           ? _value.rule
           : rule // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      globalUa: freezed == globalUa
-          ? _value.globalUa
-          : globalUa // ignore: cast_nullable_to_non_nullable
-              as String?,
       externalController: null == externalController
           ? _value.externalController
           : externalController // ignore: cast_nullable_to_non_nullable
@@ -3767,7 +3759,6 @@ abstract class _$$ClashConfigImplCopyWith<$Res>
       @JsonKey(name: "geodata-loader") GeodataLoader geodataLoader,
       @JsonKey(name: "proxy-groups") List<ProxyGroup> proxyGroups,
       List<String> rule,
-      @JsonKey(name: "global-ua") String? globalUa,
       @JsonKey(name: "external-controller")
       ExternalControllerStatus externalController,
       Map<String, String> hosts});
@@ -3812,7 +3803,6 @@ class __$$ClashConfigImplCopyWithImpl<$Res>
     Object? geodataLoader = null,
     Object? proxyGroups = null,
     Object? rule = null,
-    Object? globalUa = freezed,
     Object? externalController = null,
     Object? hosts = null,
   }) {
@@ -3893,10 +3883,6 @@ class __$$ClashConfigImplCopyWithImpl<$Res>
           ? _value._rule
           : rule // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      globalUa: freezed == globalUa
-          ? _value.globalUa
-          : globalUa // ignore: cast_nullable_to_non_nullable
-              as String?,
       externalController: null == externalController
           ? _value.externalController
           : externalController // ignore: cast_nullable_to_non_nullable
@@ -3938,7 +3924,6 @@ class _$ClashConfigImpl implements _ClashConfig {
       @JsonKey(name: "proxy-groups")
       final List<ProxyGroup> proxyGroups = const [],
       final List<String> rule = const [],
-      @JsonKey(name: "global-ua") this.globalUa,
       @JsonKey(name: "external-controller")
       this.externalController = ExternalControllerStatus.close,
       final Map<String, String> hosts = const {}})
@@ -4019,9 +4004,6 @@ class _$ClashConfigImpl implements _ClashConfig {
   }
 
   @override
-  @JsonKey(name: "global-ua")
-  final String? globalUa;
-  @override
   @JsonKey(name: "external-controller")
   final ExternalControllerStatus externalController;
   final Map<String, String> _hosts;
@@ -4035,7 +4017,7 @@ class _$ClashConfigImpl implements _ClashConfig {
 
   @override
   String toString() {
-    return 'ClashConfig(mixedPort: $mixedPort, socksPort: $socksPort, port: $port, redirPort: $redirPort, tproxyPort: $tproxyPort, mode: $mode, allowLan: $allowLan, logLevel: $logLevel, ipv6: $ipv6, findProcessMode: $findProcessMode, keepAliveInterval: $keepAliveInterval, unifiedDelay: $unifiedDelay, tcpConcurrent: $tcpConcurrent, tun: $tun, dns: $dns, geoXUrl: $geoXUrl, geodataLoader: $geodataLoader, proxyGroups: $proxyGroups, rule: $rule, globalUa: $globalUa, externalController: $externalController, hosts: $hosts)';
+    return 'ClashConfig(mixedPort: $mixedPort, socksPort: $socksPort, port: $port, redirPort: $redirPort, tproxyPort: $tproxyPort, mode: $mode, allowLan: $allowLan, logLevel: $logLevel, ipv6: $ipv6, findProcessMode: $findProcessMode, keepAliveInterval: $keepAliveInterval, unifiedDelay: $unifiedDelay, tcpConcurrent: $tcpConcurrent, tun: $tun, dns: $dns, geoXUrl: $geoXUrl, geodataLoader: $geodataLoader, proxyGroups: $proxyGroups, rule: $rule, externalController: $externalController, hosts: $hosts)';
   }
 
   @override
@@ -4074,8 +4056,6 @@ class _$ClashConfigImpl implements _ClashConfig {
             const DeepCollectionEquality()
                 .equals(other._proxyGroups, _proxyGroups) &&
             const DeepCollectionEquality().equals(other._rule, _rule) &&
-            (identical(other.globalUa, globalUa) ||
-                other.globalUa == globalUa) &&
             (identical(other.externalController, externalController) ||
                 other.externalController == externalController) &&
             const DeepCollectionEquality().equals(other._hosts, _hosts));
@@ -4104,7 +4084,6 @@ class _$ClashConfigImpl implements _ClashConfig {
         geodataLoader,
         const DeepCollectionEquality().hash(_proxyGroups),
         const DeepCollectionEquality().hash(_rule),
-        globalUa,
         externalController,
         const DeepCollectionEquality().hash(_hosts)
       ]);
@@ -4149,7 +4128,6 @@ abstract class _ClashConfig implements ClashConfig {
       @JsonKey(name: "geodata-loader") final GeodataLoader geodataLoader,
       @JsonKey(name: "proxy-groups") final List<ProxyGroup> proxyGroups,
       final List<String> rule,
-      @JsonKey(name: "global-ua") final String? globalUa,
       @JsonKey(name: "external-controller")
       final ExternalControllerStatus externalController,
       final Map<String, String> hosts}) = _$ClashConfigImpl;
@@ -4211,9 +4189,6 @@ abstract class _ClashConfig implements ClashConfig {
   List<ProxyGroup> get proxyGroups;
   @override
   List<String> get rule;
-  @override
-  @JsonKey(name: "global-ua")
-  String? get globalUa;
   @override
   @JsonKey(name: "external-controller")
   ExternalControllerStatus get externalController;

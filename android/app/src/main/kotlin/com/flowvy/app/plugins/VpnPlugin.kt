@@ -1,4 +1,4 @@
-package com.follow.clash.plugins
+package com.flowvy.app.plugins
 
 import android.content.ComponentName
 import android.content.Context
@@ -11,17 +11,17 @@ import android.net.NetworkRequest
 import android.os.Build
 import android.os.IBinder
 import androidx.core.content.getSystemService
-import com.follow.clash.FlowvyApplication
-import com.follow.clash.GlobalState
-import com.follow.clash.RunState
-import com.follow.clash.core.Core
-import com.follow.clash.extensions.awaitResult
-import com.follow.clash.extensions.resolveDns
-import com.follow.clash.models.StartForegroundParams
-import com.follow.clash.models.VpnOptions
-import com.follow.clash.services.BaseServiceInterface
-import com.follow.clash.services.FlowvyService
-import com.follow.clash.services.FlowvyVpnService
+import com.flowvy.app.FlowvyApplication
+import com.flowvy.app.GlobalState
+import com.flowvy.app.RunState
+import com.flowvy.app.core.Core
+import com.flowvy.app.extensions.awaitResult
+import com.flowvy.app.extensions.resolveDns
+import com.flowvy.app.models.StartForegroundParams
+import com.flowvy.app.models.VpnOptions
+import com.flowvy.app.services.BaseServiceInterface
+import com.flowvy.app.services.FlowvyService
+import com.flowvy.app.services.FlowvyVpnService
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall

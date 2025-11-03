@@ -142,11 +142,6 @@ class ProxyCard extends StatelessWidget {
     final delayText = _buildDelayText(context);
     final proxyNameText = _buildProxyNameText(context);
     final customTheme = theme.extension<CustomTheme>()!;
-    
-    // Стиль для подзаголовка ("Vless", "Fallback")
-    final subtitleStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: theme.colorScheme.onSurfaceVariant,
-    );
 
     final cardContent = Container(
       alignment: Alignment.centerLeft,
@@ -159,32 +154,22 @@ class ProxyCard extends StatelessWidget {
           const SizedBox(height: 8),
           if (type == ProxyCardType.expand) ...[
             SizedBox(
-              height: measure.bodySmallHeight,
+              height: measure.bodySmallHeight * 1.3,
               child: _ProxyDesc(proxy: proxy),
             ),
             const SizedBox(height: 6),
             delayText,
           ] else
-            SizedBox(
-              height: measure.bodySmallHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: TooltipText(
-                      text: Text(
-                        proxy.type,
-                        style: subtitleStyle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  delayText,
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: _ProxyDesc(proxy: proxy),
+                ),
+                delayText,
+              ],
             ),
         ],
       ),

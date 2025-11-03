@@ -1,4 +1,4 @@
-package com.follow.clash.services
+package com.flowvy.app.services
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,12 +11,12 @@ import android.os.Parcel
 import android.os.RemoteException
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.follow.clash.GlobalState
-import com.follow.clash.extensions.getIpv4RouteAddress
-import com.follow.clash.extensions.getIpv6RouteAddress
-import com.follow.clash.extensions.toCIDR
-import com.follow.clash.models.AccessControlMode
-import com.follow.clash.models.VpnOptions
+import com.flowvy.app.GlobalState
+import com.flowvy.app.extensions.getIpv4RouteAddress
+import com.flowvy.app.extensions.getIpv6RouteAddress
+import com.flowvy.app.extensions.toCIDR
+import com.flowvy.app.models.AccessControlMode
+import com.flowvy.app.models.VpnOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

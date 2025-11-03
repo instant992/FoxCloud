@@ -101,9 +101,6 @@ init() async {
   );
 }
 
-
-  String get ua => config.patchClashConfig.globalUa ?? packageInfo.ua;
-
   startUpdateTasks([UpdateTasks? tasks]) async {
     if (timer != null && timer!.isActive == true) return;
     if (tasks != null) {
@@ -327,7 +324,10 @@ init() async {
     rawConfig["tcp-concurrent"] = realPatchConfig.tcpConcurrent;
     rawConfig["unified-delay"] = realPatchConfig.unifiedDelay;
     rawConfig["ipv6"] = realPatchConfig.ipv6;
-    rawConfig["log-level"] = realPatchConfig.logLevel.name;
+    // LogLevel.app используется только для Flutter логов, mihomo его не поддерживает
+    rawConfig["log-level"] = realPatchConfig.logLevel == LogLevel.app
+        ? LogLevel.info.name
+        : realPatchConfig.logLevel.name;
     rawConfig["port"] = 0;
     rawConfig["socks-port"] = 0;
     rawConfig["keep-alive-interval"] = realPatchConfig.keepAliveInterval;
@@ -396,7 +396,7 @@ init() async {
 
     rawConfig["profile"]["store-selected"] = false;
     rawConfig["geox-url"] = realPatchConfig.geoXUrl.toJson();
-    rawConfig["global-ua"] = realPatchConfig.globalUa;
+    rawConfig["global-ua"] = globalState.packageInfo.ua;
     if (rawConfig["hosts"] == null) {
       rawConfig["hosts"] = {};
     }
@@ -447,6 +447,189 @@ init() async {
     configMap["rules"] = configMap["rule"];
     configMap.remove("rule");
     return configMap;
+  }
+
+  /// Применяет настройки из конфига профиля в patchClashConfigProvider
+  /// Вызывается при загрузке/обновлении профиля
+  ///
+  /// [force] - если true, игнорирует savedConfig и применяет настройки из конфига
+  /// (используется при первом импорте профиля или обновлении с сервера)
+  Future<void> applyConfigOverridesFromProfile(
+    Profile? profile, {
+    bool force = false,
+  }) async {
+    if (profile == null) return;
+
+    // Применяем настройки только для URL-профилей
+    if (profile.type != ProfileType.url) {
+      return;
+    }
+
+    // Вариант B: Если есть сохраненные настройки и не force режим, загружаем их
+    // Сохраненные настройки имеют приоритет при переключении между профилями
+    if (!force && profile.overrideData.savedConfig != null) {
+      commonPrint.log("Loading saved config from profile overrideData");
+      await _applySavedConfig(profile.overrideData.savedConfig!);
+      return;
+    }
+
+    // Если нет сохраненных настроек или force режим - применяем из конфига
+
+    try {
+      final configMap = await getProfileConfig(profile.id);
+
+      // Читаем настройки из конфига
+      final mixedPort = configMap["mixed-port"] as int? ?? defaultMixedPort;
+      final socksPort = configMap["socks-port"] as int? ?? 0;
+      final port = configMap["port"] as int? ?? 0;
+      final redirPort = configMap["redir-port"] as int? ?? 0;
+      final tproxyPort = configMap["tproxy-port"] as int? ?? 0;
+      final allowLan = configMap["allow-lan"] as bool? ?? false;
+      final ipv6 = configMap["ipv6"] as bool? ?? false;
+      final keepAliveInterval = configMap["keep-alive-interval"] as int? ?? defaultKeepAliveInterval;
+      final unifiedDelay = configMap["unified-delay"] as bool? ?? true;
+      final tcpConcurrent = configMap["tcp-concurrent"] as bool? ?? true;
+
+      // Парсим Log Level
+      LogLevel logLevel = LogLevel.error;
+      final logLevelStr = configMap["log-level"];
+      if (logLevelStr != null) {
+        try {
+          logLevel = LogLevel.values.firstWhere(
+            (e) => e.name == logLevelStr,
+            orElse: () => LogLevel.error,
+          );
+        } catch (_) {}
+      }
+
+      // Парсим Find Process Mode
+      FindProcessMode findProcessMode = FindProcessMode.always;
+      final findProcessModeStr = configMap["find-process-mode"];
+      if (findProcessModeStr != null) {
+        try {
+          findProcessMode = FindProcessMode.values.firstWhere(
+            (e) => e.name == findProcessModeStr,
+            orElse: () => FindProcessMode.always,
+          );
+        } catch (_) {}
+      }
+
+      // Парсим Geodata Loader
+      GeodataLoader geodataLoader = GeodataLoader.memconservative;
+      final geodataLoaderStr = configMap["geodata-loader"];
+      if (geodataLoaderStr != null) {
+        try {
+          geodataLoader = GeodataLoader.values.firstWhere(
+            (e) => e.name == geodataLoaderStr,
+            orElse: () => GeodataLoader.memconservative,
+          );
+        } catch (_) {}
+      }
+
+      // Парсим Hosts
+      HostsMap hosts = {};
+      if (configMap["hosts"] is Map) {
+        final hostsMap = configMap["hosts"] as Map;
+        for (final entry in hostsMap.entries) {
+          hosts[entry.key.toString()] = entry.value.toString();
+        }
+      }
+
+      // Парсим TUN Stack (только stack, остальные настройки TUN остаются дефолтными)
+      TunStack? tunStack;
+      if (configMap["tun"] is Map) {
+        try {
+          final tunMap = Map<String, dynamic>.from(configMap["tun"] as Map);
+          final tunStackStr = tunMap["stack"];
+          if (tunStackStr != null) {
+            try {
+              // Сравниваем в lowercase, так как из конфига может прийти "System", а в enum "system"
+              final stackLower = tunStackStr.toString().toLowerCase();
+              tunStack = TunStack.values.firstWhere(
+                (e) => e.name.toLowerCase() == stackLower,
+                orElse: () => TunStack.mixed,
+              );
+            } catch (_) {
+              tunStack = TunStack.mixed;
+            }
+          }
+        } catch (e) {
+          commonPrint.log("Error parsing tun stack from config: $e");
+        }
+      }
+
+      // Применяем настройки через AppController
+      if (_appController != null) {
+        appController.applyClashConfigOverrides(
+          mixedPort: mixedPort,
+          socksPort: socksPort,
+          port: port,
+          redirPort: redirPort,
+          tproxyPort: tproxyPort,
+          allowLan: allowLan,
+          ipv6: ipv6,
+          keepAliveInterval: keepAliveInterval,
+          unifiedDelay: unifiedDelay,
+          tcpConcurrent: tcpConcurrent,
+          logLevel: logLevel,
+          findProcessMode: findProcessMode,
+          geodataLoader: geodataLoader,
+          hosts: hosts,
+          tunStack: tunStack,
+        );
+
+        commonPrint.log("Applied config overrides from profile: ${profile.label ?? profile.id}");
+      }
+    } catch (e) {
+      commonPrint.log("Error applying config overrides from profile: $e");
+    }
+  }
+
+  /// Применяет сохраненные настройки из overrideData.savedConfig (Variant B)
+  Future<void> _applySavedConfig(ClashConfig savedConfig) async {
+    if (_appController == null) return;
+
+    // Извлекаем только stack из TUN (остальное остается дефолтным)
+    final tunStack = savedConfig.tun.stack;
+
+    // Применяем все настройки из savedConfig
+    appController.applyClashConfigOverrides(
+      mixedPort: savedConfig.mixedPort,
+      socksPort: savedConfig.socksPort,
+      port: savedConfig.port,
+      redirPort: savedConfig.redirPort,
+      tproxyPort: savedConfig.tproxyPort,
+      allowLan: savedConfig.allowLan,
+      ipv6: savedConfig.ipv6,
+      keepAliveInterval: savedConfig.keepAliveInterval,
+      unifiedDelay: savedConfig.unifiedDelay,
+      tcpConcurrent: savedConfig.tcpConcurrent,
+      logLevel: savedConfig.logLevel,
+      findProcessMode: savedConfig.findProcessMode,
+      geodataLoader: savedConfig.geodataLoader,
+      hosts: savedConfig.hosts,
+      tunStack: tunStack,
+    );
+
+    commonPrint.log("Applied saved config from profile overrideData");
+  }
+
+  /// Сохраняет текущие настройки в overrideData.savedConfig профиля (Variant B)
+  Future<void> saveCurrentConfigToProfile(Profile profile, ClashConfig currentConfig) async {
+    if (_appController == null) return;
+
+    // Сохраняем в overrideData профиля
+    final updatedProfile = profile.copyWith(
+      overrideData: profile.overrideData.copyWith(
+        savedConfig: currentConfig,
+      ),
+    );
+
+    // Обновляем профиль через AppController
+    appController.setProfile(updatedProfile);
+    appController.savePreferencesDebounce();
+
+    commonPrint.log("Saved current config to profile overrideData");
   }
 
   Future<Map<String, dynamic>> handleEvaluate(

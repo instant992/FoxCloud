@@ -87,3 +87,11 @@ Future<T> retry<T>({
 final debouncer = Debouncer();
 
 final throttler = Throttler();
+
+bool isTelegramUrl(String url) {
+  final lowerUrl = url.toLowerCase();
+  return lowerUrl.contains('t.me') ||
+      lowerUrl.contains('telegram.me') ||
+      lowerUrl.contains('telegram.org') ||
+      lowerUrl.startsWith('tg://');
+}

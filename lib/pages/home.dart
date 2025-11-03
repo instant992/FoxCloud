@@ -214,8 +214,9 @@ class CommonNavigationBar extends ConsumerWidget {
           destinations: navigationItems
               .map(
                 (e) => NavigationDestination(
-                  icon: e.icon,
-                  label: Intl.message(e.label.name),
+                  icon: e.mobileIcon ?? e.icon,
+                  label: Intl.message((e.mobileLabel ?? e.label).name),
+                  tooltip: '',
                 ),
               )
               .toList(),
@@ -231,47 +232,67 @@ class CommonNavigationBar extends ConsumerWidget {
       color: context.colorScheme.surfaceContainer,
       child: Column(
         children: [
+          const SizedBox(height: 16),
+          const AppIconOnly(),
+          const SizedBox(height: 16),
           Expanded(
             child: ScrollConfiguration(
               behavior: HiddenBarScrollBehavior(),
               child: SingleChildScrollView(
                 child: IntrinsicHeight(
-                  child: NavigationRail(
-                    backgroundColor: context.colorScheme.surfaceContainer,
-                    selectedIconTheme: IconThemeData(
-                      color: Theme.of(context).iconTheme.color,
+                  child: NavigationRailTheme(
+                    data: NavigationRailThemeData(
+                      backgroundColor: context.colorScheme.surfaceContainer,
+                      indicatorColor: customTheme.navRailIndicator,
+                      selectedIconTheme: IconThemeData(
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                      unselectedIconTheme: IconThemeData(
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                      selectedLabelTextStyle:
+                          context.textTheme.labelLarge!.copyWith(
+                        color: context.colorScheme.onSurface,
+                      ),
+                      unselectedLabelTextStyle:
+                          context.textTheme.labelLarge!.copyWith(
+                        color: context.colorScheme.onSurface,
+                      ),
                     ),
-                    unselectedIconTheme: IconThemeData(
-                      color: Theme.of(context).iconTheme.color,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        colorScheme: Theme.of(context).colorScheme.copyWith(
+                          primary: Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFFFFFFFF).withValues(alpha: 0.08)
+                              : const Color(0xFF171717).withValues(alpha: 0.08),
+                        ),
+                      ),
+                      child: Builder(
+                        builder: (context) {
+                          return NavigationRail(
+                            destinations: navigationItems
+                                .map(
+                                  (e) => NavigationRailDestination(
+                                    icon: e.icon,
+                                    label: Text(
+                                      Intl.message(e.label.name),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            onDestinationSelected: (index) {
+                              globalState.appController
+                                  .toPage(navigationItems[index].label);
+                            },
+                            extended: false,
+                            selectedIndex: currentIndex,
+                            labelType: showLabel
+                                ? NavigationRailLabelType.all
+                                : NavigationRailLabelType.none,
+                          );
+                        },
+                      ),
                     ),
-                    indicatorColor: customTheme.navRailIndicator,
-                    selectedLabelTextStyle:
-                        context.textTheme.labelLarge!.copyWith(
-                      color: context.colorScheme.onSurface,
-                    ),
-                    unselectedLabelTextStyle:
-                        context.textTheme.labelLarge!.copyWith(
-                      color: context.colorScheme.onSurface,
-                    ),
-                    destinations: navigationItems
-                        .map(
-                          (e) => NavigationRailDestination(
-                            icon: e.icon,
-                            label: Text(
-                              Intl.message(e.label.name),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    onDestinationSelected: (index) {
-                      globalState.appController
-                          .toPage(navigationItems[index].label);
-                    },
-                    extended: false,
-                    selectedIndex: currentIndex,
-                    labelType: showLabel
-                        ? NavigationRailLabelType.all
-                        : NavigationRailLabelType.none,
                   ),
                 ),
               ),
@@ -289,6 +310,21 @@ class CommonNavigationBar extends ConsumerWidget {
                   );
             },
             icon: const Icon(Icons.menu_rounded),
+            style: ButtonStyle(
+              minimumSize: WidgetStateProperty.all(const Size(56, 32)),
+              padding: WidgetStateProperty.all(EdgeInsets.zero),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              overlayColor: WidgetStateProperty.all(
+                Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFFFFFFF).withValues(alpha: 0.08)
+                    : const Color(0xFF171717).withValues(alpha: 0.08),
+              ),
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
           ),
           const SizedBox(
             height: 16,
@@ -328,7 +364,7 @@ class _NavigationBarDefaultsM3 extends NavigationBarThemeData {
       return IconThemeData(
         size: 24.0,
         color: states.contains(WidgetState.disabled)
-            ? color?.withOpacity(0.38)
+            ? color?.withValues(alpha: 0.38)
             : color,
       );
     });
@@ -351,7 +387,7 @@ class _NavigationBarDefaultsM3 extends NavigationBarThemeData {
       return style.apply(
         overflow: TextOverflow.ellipsis,
         color: states.contains(WidgetState.disabled)
-            ? color.withOpacity(0.38)
+            ? color.withValues(alpha: 0.38)
             : color,
       );
     });
@@ -380,5 +416,27 @@ class HomeBackScope extends StatelessWidget {
       );
     }
     return child;
+  }
+}
+
+class AppIconOnly extends StatelessWidget {
+  const AppIconOnly({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    final String iconAsset = isDarkMode
+        ? "assets/images/icon.png"
+        : "assets/images/icon_black.png";
+
+    return SizedBox(
+      width: 32,
+      height: 32,
+      child: Image.asset(
+        iconAsset,
+        fit: BoxFit.contain,
+      ),
+    );
   }
 }

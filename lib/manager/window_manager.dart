@@ -261,16 +261,11 @@ class _WindowHeaderState extends State<WindowHeader> {
               const Text(
                 appName,
               )
-            else ...[
-              const Positioned(
-                left: 0,
-                child: AppIcon(),
-              ),
+            else
               Positioned(
                 right: 0,
                 child: _buildActions(),
               ),
-            ]
           ],
         ),
       ),

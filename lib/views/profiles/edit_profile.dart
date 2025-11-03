@@ -64,8 +64,27 @@ class _EditProfileViewState extends State<EditProfileView> {
             ),
           ),
         );
+
+    // Вариант B: Если autoUpdate был включен, очищаем savedConfig
+    if (autoUpdate && !widget.profile.autoUpdate) {
+      profile = profile.copyWith(
+        overrideData: profile.overrideData.copyWith(
+          savedConfig: null,
+        ),
+      );
+    }
+
     final hasUpdate = widget.profile.url != profile.url;
+
     if (fileData != null) {
+      // Загружен файл вручную - очищаем savedConfig, чтобы применить настройки из нового конфига
+      profile = profile.copyWith(
+        overrideData: profile.overrideData.copyWith(
+          savedConfig: null,
+        ),
+      );
+
+      // Если autoUpdate включен, предлагаем отключить его
       if (profile.type == ProfileType.url && autoUpdate) {
         final res = await globalState.showMessage(
           title: appLocalizations.tip,
@@ -74,12 +93,21 @@ class _EditProfileViewState extends State<EditProfileView> {
           ),
         );
         if (res == true) {
+          // Пользователь выбрал отключить автообновление
           profile = profile.copyWith(
             autoUpdate: false,
           );
         }
       }
-      appController.setProfileAndAutoApply(await profile.saveFile(fileData!));
+
+      final savedProfile = await profile.saveFile(fileData!);
+      appController.setProfile(savedProfile);
+
+      // Применяем настройки из нового загруженного конфига с force=true
+      if (savedProfile.id == widget.profile.id) {
+        await globalState.applyConfigOverridesFromProfile(savedProfile, force: true);
+        appController.applyProfileDebounce(silence: true);
+      }
     } else if (!hasUpdate) {
       appController.setProfileAndAutoApply(profile);
     } else {
@@ -89,7 +117,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             commonDuration,
           );
           if (hasUpdate) {
-            await appController.updateProfile(profile);
+            await appController.updateProfile(profile, isManualUpdate: true);
           }
         },
       );
@@ -196,6 +224,9 @@ class _EditProfileViewState extends State<EditProfileView> {
       size: fileData?.length ?? 0,
       lastModified: DateTime.now(),
     );
+    // Декодируем содержимое и открываем редактор сразу
+    rawText = utf8.decode(fileData!);
+    await _editProfileFile();
   }
 
   _handleBack() async {

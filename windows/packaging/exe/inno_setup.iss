@@ -19,7 +19,51 @@ ArchitecturesAllowed={{ARCH}}
 ArchitecturesInstallIn64BitMode={{ARCH}}
 LanguageDetectionMethod=uilanguage
 
+[CustomMessages]
+en.RemoveUserDataText=Do you want to remove saved settings and application data?%n%nThis action cannot be undone.
+ru.RemoveUserDataText=Удалить сохранённые настройки и данные приложения?%n%nЭто действие нельзя отменить.
+en.AppRunningError=Flowvy is currently running.%n%nPlease close the application before uninstalling.
+ru.AppRunningError=Приложение Flowvy запущено.%n%nЗакройте приложение перед удалением.
+
 [Code]
+function IsProcessRunning(ProcessName: string): Boolean;
+var
+  ResultCode: Integer;
+begin
+  Result := Exec('cmd', '/c tasklist /FI "IMAGENAME eq ' + ProcessName + '" | find /I "' + ProcessName + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  Result := Result and (ResultCode = 0);
+end;
+
+function InitializeUninstall(): Boolean;
+begin
+  // Добавляем отладочные сообщения
+  if IsProcessRunning('Flowvy.exe') then
+  begin
+    MsgBox('Найден процесс Flowvy.exe', mbInformation, MB_OK);
+    MsgBox(ExpandConstant('{cm:AppRunningError}'), mbError, MB_OK);
+    Result := False;
+    Exit;
+  end;
+
+  if IsProcessRunning('FlowvyCore.exe') then
+  begin
+    MsgBox('Найден процесс FlowvyCore.exe', mbInformation, MB_OK);
+    MsgBox(ExpandConstant('{cm:AppRunningError}'), mbError, MB_OK);
+    Result := False;
+    Exit;
+  end;
+
+  if IsProcessRunning('FlowvyHelperService.exe') then
+  begin
+    MsgBox('Найден процесс FlowvyHelperService.exe', mbInformation, MB_OK);
+    MsgBox(ExpandConstant('{cm:AppRunningError}'), mbError, MB_OK);
+    Result := False;
+    Exit;
+  end;
+
+  Result := True;
+end;
+
 procedure KillProcesses;
 var
   Processes: TArrayOfString;
@@ -38,6 +82,15 @@ function InitializeSetup(): Boolean;
 begin
   KillProcesses;
   Result := True;
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usPostUninstall then
+  begin
+    if MsgBox(ExpandConstant('{cm:RemoveUserDataText}'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
+      DelTree(ExpandConstant('{userappdata}\Flowvy'), True, True, True);
+  end;
 end;
 
 [Languages]

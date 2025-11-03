@@ -153,6 +153,34 @@ class _OverrideProfileViewState extends State<OverrideProfileView> {
                     height: 8,
                   ),
                 ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          appLocalizations.aboudOverrideTitle,
+                          style: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          appLocalizations.aboudOverride,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 16,
+                  ),
+                ),
                 SliverPadding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   sliver: SliverToBoxAdapter(
@@ -440,6 +468,10 @@ class RuleTitle extends ConsumerWidget {
 
     return ListHeader(
       title: appLocalizations.rule,
+      titleStyle: theme.textTheme.labelLarge?.copyWith(
+        color: colorScheme.onSurface,
+        fontWeight: FontWeight.w600,
+      ),
       subTitle: isOverrideRule
           ? appLocalizations.overrideOriginRules
           : appLocalizations.addedOriginRules,
@@ -456,7 +488,7 @@ class RuleTitle extends ConsumerWidget {
                       ? Icons.content_copy_rounded
                       : Icons.note_add_rounded,
                   size: 20,
-                  color: colorScheme.onSurface.withOpacity(0.88),
+                  color: colorScheme.onSurface.withValues(alpha: 0.88),
                 ),
                 onPressed: () {
                   _handleChangeType(ref, isOverrideRule);

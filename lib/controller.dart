@@ -195,8 +195,11 @@ class AppController {
 
   addProfile(Profile profile) async {
     _ref.read(profilesProvider.notifier).setProfile(profile);
-    if (_ref.read(currentProfileIdProvider) != null) return;
+    final isFirstProfile = _ref.read(currentProfileIdProvider) == null;
+    if (!isFirstProfile) return;
     _ref.read(currentProfileIdProvider.notifier).value = profile.id;
+    // При первом импорте профиля применяем настройки из конфига принудительно
+    await globalState.applyConfigOverridesFromProfile(profile, force: true);
   }
 
   deleteProfile(String id) async {
@@ -226,15 +229,31 @@ class AppController {
     _ref.read(localIpProvider.notifier).value = await utils.getLocalIpAddress();
   }
 
-  Future<void> updateProfile(Profile profile) async {
+  Future<void> updateProfile(Profile profile, {bool isManualUpdate = false}) async {
     final newProfile = await profile.update();
+
+    // Вариант B: При ручном обновлении или если autoUpdate включен - очищаем savedConfig
+    final shouldClearSavedConfig = isManualUpdate || newProfile.autoUpdate;
+    final profileToSave = shouldClearSavedConfig
+        ? newProfile.copyWith(
+            isUpdating: false,
+            overrideData: newProfile.overrideData.copyWith(
+              savedConfig: null,
+            ),
+          )
+        : newProfile.copyWith(isUpdating: false);
 
     _ref
         .read(profilesProvider.notifier)
-        .setProfile(newProfile.copyWith(isUpdating: false));
+        .setProfile(profileToSave);
     savePreferencesDebounce();
 
     if (profile.id == _ref.read(currentProfileIdProvider)) {
+      // Применяем настройки с force=true при ручном обновлении или если autoUpdate включен
+      await globalState.applyConfigOverridesFromProfile(
+        profileToSave,
+        force: shouldClearSavedConfig,
+      );
       applyProfileDebounce(silence: true);
     }
   }
@@ -367,7 +386,8 @@ class AppController {
   }
 
   _setupClashConfig() async {
-    await _ref.read(currentProfileProvider)?.checkAndUpdate();
+    // checkAndUpdate удален отсюда - автообновление должно происходить только по таймеру
+    // а не при каждом применении профиля
     final patchConfig = _ref.read(patchClashConfigProvider);
     final res = await _requestAdmin(patchConfig.tun.enable);
     if (res.isError) {
@@ -389,28 +409,34 @@ class AppController {
     }
   }
 
-  Future _applyProfile() async {
+  Future _applyProfile({bool forceApplyConfig = false}) async {
     await clashCore.requestGc();
+    // Применяем настройки из конфига: force при первом импорте, иначе по autoUpdate
+    await globalState.applyConfigOverridesFromProfile(
+      _ref.read(currentProfileProvider),
+      force: forceApplyConfig,
+    );
     await setupClashConfig();
     await updateGroups();
     await updateProviders();
   }
 
-  Future applyProfile({bool silence = false}) async {
+  Future applyProfile({bool silence = false, bool forceApplyConfig = false}) async {
     if (silence) {
-      await _applyProfile();
+      await _applyProfile(forceApplyConfig: forceApplyConfig);
     } else {
       final commonScaffoldState = globalState.homeScaffoldKey.currentState;
       if (commonScaffoldState?.mounted != true) return;
       await commonScaffoldState?.loadingRun(() async {
-        await _applyProfile();
+        await _applyProfile(forceApplyConfig: forceApplyConfig);
       });
     }
     addCheckIpNumDebounce();
   }
 
-  handleChangeProfile() {
+  handleChangeProfile() async {
     _ref.read(delayDataSourceProvider.notifier).value = {};
+    // applyProfile() уже вызывает applyConfigOverridesFromProfile внутри
     applyProfile();
     _ref.read(logsProvider.notifier).value = FixedList(500);
     _ref.read(requestsProvider.notifier).value = FixedList(500);
@@ -443,6 +469,11 @@ class AppController {
         },
         retryIf: (res) => res.isEmpty,
       );
+
+      // Инкрементируем версию для инвалидации UI
+      _ref.read(versionProvider.notifier).value =
+          _ref.read(versionProvider) + 1;
+
     } catch (_) {
       _ref.read(groupsProvider.notifier).value = [];
     }
@@ -953,6 +984,48 @@ Future handleClear() async {
       updateCurrentGroupName(GroupName.GLOBAL.name);
     }
     addCheckIpNumDebounce();
+  }
+
+  /// Применяет переопределения настроек из конфига профиля
+  applyClashConfigOverrides({
+    required int mixedPort,
+    required int socksPort,
+    required int port,
+    required int redirPort,
+    required int tproxyPort,
+    required bool allowLan,
+    required bool ipv6,
+    required int keepAliveInterval,
+    required bool unifiedDelay,
+    required bool tcpConcurrent,
+    required LogLevel logLevel,
+    required FindProcessMode findProcessMode,
+    required GeodataLoader geodataLoader,
+    required HostsMap hosts,
+    TunStack? tunStack,
+  }) {
+    _ref.read(patchClashConfigProvider.notifier).updateState(
+      (state) => state.copyWith(
+        mixedPort: mixedPort,
+        socksPort: socksPort,
+        port: port,
+        redirPort: redirPort,
+        tproxyPort: tproxyPort,
+        allowLan: allowLan,
+        ipv6: ipv6,
+        keepAliveInterval: keepAliveInterval,
+        unifiedDelay: unifiedDelay,
+        tcpConcurrent: tcpConcurrent,
+        logLevel: logLevel,
+        findProcessMode: findProcessMode,
+        geodataLoader: geodataLoader,
+        hosts: hosts,
+        // Применяем только TUN stack из профиля, остальные настройки TUN остаются из state
+        tun: tunStack != null
+            ? state.tun.copyWith(stack: tunStack)
+            : state.tun,
+      ),
+    );
   }
 
   updateAutoLaunch() {

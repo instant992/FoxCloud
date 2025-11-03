@@ -456,6 +456,7 @@ class ListHeader extends StatelessWidget {
   final List<Widget> actions;
   final EdgeInsets? padding;
   final double? space;
+  final TextStyle? titleStyle;
 
   const ListHeader({
     super.key,
@@ -464,6 +465,7 @@ class ListHeader extends StatelessWidget {
     this.padding,
     List<Widget>? actions,
     this.space,
+    this.titleStyle,
   }) : actions = actions ?? const [];
 
   @override
@@ -487,7 +489,7 @@ class ListHeader extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  style: titleStyle ?? Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
                             .onSurfaceVariant

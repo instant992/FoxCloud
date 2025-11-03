@@ -138,7 +138,7 @@ enum InvokeMessageType {
   process,
 }
 
-enum FindProcessMode { always, off }
+enum FindProcessMode { always, strict, off }
 
 enum RecoveryOption {
   all,
@@ -423,6 +423,7 @@ enum PageLabel {
   requests,
   resources,
   connections,
+  more,
 }
 
 enum RuleAction {

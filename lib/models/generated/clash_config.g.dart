@@ -369,7 +369,6 @@ _$ClashConfigImpl _$$ClashConfigImplFromJson(Map<String, dynamic> json) =>
       rule:
           (json['rule'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
-      globalUa: json['global-ua'] as String?,
       externalController: $enumDecodeNullable(
               _$ExternalControllerStatusEnumMap, json['external-controller']) ??
           ExternalControllerStatus.close,
@@ -400,7 +399,6 @@ Map<String, dynamic> _$$ClashConfigImplToJson(_$ClashConfigImpl instance) =>
       'geodata-loader': _$GeodataLoaderEnumMap[instance.geodataLoader]!,
       'proxy-groups': instance.proxyGroups,
       'rule': instance.rule,
-      'global-ua': instance.globalUa,
       'external-controller':
           _$ExternalControllerStatusEnumMap[instance.externalController]!,
       'hosts': instance.hosts,
@@ -423,6 +421,7 @@ const _$LogLevelEnumMap = {
 
 const _$FindProcessModeEnumMap = {
   FindProcessMode.always: 'always',
+  FindProcessMode.strict: 'strict',
   FindProcessMode.off: 'off',
 };
 

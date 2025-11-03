@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:path/path.dart';
 import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 
 enum Target {
   windows,
@@ -186,13 +187,74 @@ class Build {
       workingDirectory: workingDirectory,
       runInShell: runInShell,
     );
+
+    final stdoutBuffer = StringBuffer();
+    final stderrBuffer = StringBuffer();
+
+    // Buffer stdout without immediate output
     process.stdout.listen((data) {
-      print(utf8.decode(data));
+      stdoutBuffer.write(utf8.decode(data));
     });
+
+    // Buffer stderr without immediate output
     process.stderr.listen((data) {
-      print(utf8.decode(data));
+      stderrBuffer.write(utf8.decode(data));
     });
+
     final exitCode = await process.exitCode;
+
+    // Check for known flutter_distributor error (type cast exception after successful build)
+    final allOutput = stdoutBuffer.toString() + stderrBuffer.toString();
+    final hasKnownError = allOutput.contains('BuildAndroidApkResult') &&
+        allOutput.contains('BuildWindowsResult') &&
+        allOutput.contains('type cast');
+
+    if (hasKnownError && exitCode == 0) {
+      // Filter stdout lines to remove error stack trace
+      final stdoutLines = stdoutBuffer.toString().split('\n');
+      final filteredStdoutLines = stdoutLines.where((line) {
+        return !line.contains('type cast') &&
+               !line.contains('Unhandled exception') &&
+               !line.contains('asynchronous suspension') &&
+               !line.startsWith('#') &&
+               line.trim().isNotEmpty;
+      }).toList();
+
+      // Output filtered stdout
+      for (final line in filteredStdoutLines) {
+        print(line);
+      }
+
+      // Filter stderr lines to remove error stack trace
+      final stderrLines = stderrBuffer.toString().split('\n');
+      final filteredStderrLines = stderrLines.where((line) {
+        return !line.contains('type cast') &&
+               !line.contains('Unhandled exception') &&
+               !line.contains('asynchronous suspension') &&
+               !line.startsWith('#') &&
+               line.trim().isNotEmpty;
+      }).toList();
+
+      // Output filtered stderr
+      for (final line in filteredStderrLines) {
+        print(line);
+      }
+
+      print("\n✅ Build completed successfully! (flutter_distributor packaging warning ignored)");
+      return;
+    }
+
+    // For other cases, output all stdout and stderr normally
+    final stdoutText = stdoutBuffer.toString();
+    final stderrText = stderrBuffer.toString();
+
+    if (stdoutText.isNotEmpty) {
+      print(stdoutText);
+    }
+    if (stderrText.isNotEmpty) {
+      print(stderrText);
+    }
+
     if (exitCode != 0 && name != null) throw "$name error";
   }
 
@@ -205,12 +267,51 @@ class Build {
     return sha256.convert(await stream.reduce((a, b) => a + b)).toString();
   }
 
+  static Future<String> getMihomoVersion() async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.github.com/repos/MetaCubeX/mihomo/releases/latest'),
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body) as Map<String, dynamic>;
+        final version = (json['tag_name'] as String).replaceAll('v', '');
+        return version;
+      }
+    } catch (e) {
+      print("❌ Failed to get mihomo version: $e");
+    }
+    print("⚠️  Using fallback version: 1.10.0");
+    return "1.10.0";
+  }
+
+  static Future<void> writeCoreVersionToConstant(String version) async {
+    final constantFilePath = join(current, 'lib', 'common', 'constant.dart');
+    final constantFile = File(constantFilePath);
+
+    if (!constantFile.existsSync()) {
+      print("⚠️ constant.dart not found");
+      return;
+    }
+
+    var content = await constantFile.readAsString();
+    content = content.replaceAll(
+      RegExp(r'const coreVersion = "[^"]*"'),
+      'const coreVersion = "$version"',
+    );
+
+    await constantFile.writeAsString(content);
+    print("✅ Core version written to constant.dart: $version");
+  }
+
   static Future<List<String>> buildCore({
     required Mode mode,
     required Target target,
     Arch? arch,
   }) async {
     final isLib = mode == Mode.lib;
+    final mihomoVersion = await getMihomoVersion();
+    await writeCoreVersionToConstant(mihomoVersion);
 
     final items = buildItems.where(
       (element) {
@@ -258,7 +359,7 @@ class Build {
       final execLines = [
         "go",
         "build",
-        "-ldflags=-w -s",
+        "-ldflags=-w -s -X 'github.com/metacubex/mihomo/constant.Version=$mihomoVersion'",
         "-tags=$tags",
         if (isLib) "-buildmode=c-shared",
         "-o",

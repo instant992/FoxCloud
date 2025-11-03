@@ -30,7 +30,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Flowvy">
         <activity
-            android:name="com.follow.clash.MainActivity"
+            android:name="com.flowvy.app.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"

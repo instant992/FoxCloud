@@ -1,4 +1,4 @@
-package com.follow.clash.models
+package com.flowvy.app.models
 
 data class Process(
     val id: String,

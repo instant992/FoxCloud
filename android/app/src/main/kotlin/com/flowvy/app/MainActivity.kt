@@ -1,8 +1,8 @@
-package com.follow.clash
+package com.flowvy.app
 
-import com.follow.clash.plugins.AppPlugin
-import com.follow.clash.plugins.ServicePlugin
-import com.follow.clash.plugins.TilePlugin
+import com.flowvy.app.plugins.AppPlugin
+import com.flowvy.app.plugins.ServicePlugin
+import com.flowvy.app.plugins.TilePlugin
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 

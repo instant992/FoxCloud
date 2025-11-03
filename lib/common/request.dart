@@ -28,7 +28,7 @@ class Request {
     _clashDio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          options.headers["User-Agent"] = 'Mihomo/${globalState.ua}';
+          options.headers["User-Agent"] = globalState.packageInfo.ua;
           final deviceHeaders = await utils.getDeviceHeaders();
           options.headers.addAll(deviceHeaders);
 

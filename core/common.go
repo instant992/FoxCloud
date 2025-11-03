@@ -27,11 +27,12 @@ import (
 )
 
 var (
-	currentConfig *config.Config
-	version       = 0
-	isRunning     = false
-	runLock       sync.Mutex
-	mBatch, _     = batch.New[bool](context.Background(), batch.WithConcurrencyNum[bool](50))
+	currentConfig    *config.Config
+	version          = 0 //nolint:unused
+	isRunning        = false
+	runLock          sync.Mutex
+	mBatch, _        = batch.New[bool](context.Background(), batch.WithConcurrencyNum[bool](50))
+	rawProxiesConfig = make(map[string]map[string]interface{}) // Хранилище оригинальных данных прокси из конфига
 )
 
 type ExternalProviders []ExternalProvider
@@ -56,27 +57,25 @@ func getExternalProvidersRaw() map[string]cp.Provider {
 }
 
 func toExternalProvider(p cp.Provider) (*ExternalProvider, error) {
-	switch p.(type) {
+	switch prov := p.(type) {
 	case *provider.ProxySetProvider:
-		psp := p.(*provider.ProxySetProvider)
 		return &ExternalProvider{
-			Name:             psp.Name(),
-			Type:             psp.Type().String(),
-			VehicleType:      psp.VehicleType().String(),
-			Count:            psp.Count(),
-			UpdateAt:         psp.UpdatedAt(),
-			Path:             psp.Vehicle().Path(),
-			SubscriptionInfo: psp.GetSubscriptionInfo(),
+			Name:             prov.Name(),
+			Type:             prov.Type().String(),
+			VehicleType:      prov.VehicleType().String(),
+			Count:            prov.Count(),
+			UpdateAt:         prov.UpdatedAt(),
+			Path:             prov.Vehicle().Path(),
+			SubscriptionInfo: prov.GetSubscriptionInfo(),
 		}, nil
 	case *rp.RuleSetProvider:
-		rsp := p.(*rp.RuleSetProvider)
 		return &ExternalProvider{
-			Name:        rsp.Name(),
-			Type:        rsp.Type().String(),
-			VehicleType: rsp.VehicleType().String(),
-			Count:       rsp.Count(),
-			UpdateAt:    rsp.UpdatedAt(),
-			Path:        rsp.Vehicle().Path(),
+			Name:        prov.Name(),
+			Type:        prov.Type().String(),
+			VehicleType: prov.VehicleType().String(),
+			Count:       prov.Count(),
+			UpdateAt:    prov.UpdatedAt(),
+			Path:        prov.Vehicle().Path(),
 		}, nil
 	default:
 		return nil, errors.New("not external provider")
@@ -84,17 +83,15 @@ func toExternalProvider(p cp.Provider) (*ExternalProvider, error) {
 }
 
 func sideUpdateExternalProvider(p cp.Provider, bytes []byte) error {
-	switch p.(type) {
+	switch prov := p.(type) {
 	case *provider.ProxySetProvider:
-		psp := p.(*provider.ProxySetProvider)
-		_, _, err := psp.SideUpdate(bytes)
+		_, _, err := prov.SideUpdate(bytes)
 		if err == nil {
 			return err
 		}
 		return nil
-	case rp.RuleSetProvider:
-		rsp := p.(*rp.RuleSetProvider)
-		_, _, err := rsp.SideUpdate(bytes)
+	case *rp.RuleSetProvider:
+		_, _, err := prov.SideUpdate(bytes)
 		if err == nil {
 			return err
 		}
@@ -180,6 +177,12 @@ func readFile(path string) ([]byte, error) {
 func updateConfig(params *UpdateParams) {
 	runLock.Lock()
 	defer runLock.Unlock()
+	if currentConfig == nil {
+		return
+	}
+	if currentConfig.General == nil {
+		return
+	}
 	general := currentConfig.General
 	if params.MixedPort != nil {
 		general.MixedPort = *params.MixedPort
@@ -217,10 +220,12 @@ func updateConfig(params *UpdateParams) {
 		resolver.DisableIPv6 = !general.IPv6
 	}
 	if params.ExternalController != nil {
-		currentConfig.Controller.ExternalController = *params.ExternalController
-		route.ReCreateServer(&route.Config{
-			Addr: currentConfig.Controller.ExternalController,
-		})
+		if currentConfig.Controller != nil {
+			currentConfig.Controller.ExternalController = *params.ExternalController
+			route.ReCreateServer(&route.Config{
+				Addr: currentConfig.Controller.ExternalController,
+			})
+		}
 	}
 
 	if params.Tun != nil {
@@ -240,6 +245,24 @@ func setupConfig(params *SetupParams) error {
 	defer runLock.Unlock()
 	var err error
 	constant.DefaultTestURL = params.TestURL
+
+	// Сохраняем оригинальные данные прокси из конфига
+	rawProxiesConfig = make(map[string]map[string]interface{}) // очищаем старые данные
+	if params.Config != nil && len(params.Config.Proxy) > 0 {
+		for _, proxy := range params.Config.Proxy {
+			// Сериализуем прокси в JSON и обратно, чтобы получить map со всеми полями
+			proxyBytes, err := json.Marshal(proxy)
+			if err == nil {
+				var proxyMap map[string]interface{}
+				if err := json.Unmarshal(proxyBytes, &proxyMap); err == nil {
+					if name, ok := proxyMap["name"].(string); ok {
+						rawProxiesConfig[name] = proxyMap
+					}
+				}
+			}
+		}
+	}
+
 	currentConfig, err = config.ParseRawConfig(params.Config)
 	if err != nil {
 		currentConfig, _ = config.ParseRawConfig(config.DefaultRawConfig())

@@ -1,7 +1,7 @@
 name: flowvy
-description: A multi-platform proxy client based on the FlClash code (ClashMeta), simple and easy to use, open-source and ad-free.
+description: A cross-platform proxy client based on the FlClash project — simple, easy to use, open-source, and ad-free
 publish_to: 'none'
-version: 1.1.0+8
+version: 2.0.0+10
 environment:
   sdk: '>=3.1.0 <4.0.0'
 
@@ -85,6 +85,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/images/avatars/
+    - assets/images/xxx/
   fonts:
     - family: JetBrainsMono
       fonts:

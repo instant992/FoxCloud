@@ -87,6 +87,9 @@ class OverrideData with _$OverrideData {
   const factory OverrideData({
     @Default(false) bool enable,
     @Default(OverrideRule()) OverrideRule rule,
+    // Сохраненные настройки клиента для этого профиля (Variant B)
+    // Используются когда autoUpdate=false для сохранения пользовательских изменений
+    ClashConfig? savedConfig,
   }) = _OverrideData;
 
   factory OverrideData.fromJson(Map<String, Object?> json) =>
