@@ -126,6 +126,7 @@ init() async {
   }
 
   handleStart([UpdateTasks? tasks]) async {
+    sessionLog.write('Proxy started');
     startTime ??= DateTime.now();
     await clashCore.startListener();
     await service?.startVpn();
@@ -137,6 +138,7 @@ init() async {
   }
 
   Future handleStop() async {
+    sessionLog.write('Proxy stopped');
     startTime = null;
     await clashCore.stopListener();
     await service?.stopVpn();

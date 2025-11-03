@@ -16,6 +16,8 @@ class ClashService extends ClashHandlerInterface {
 
   bool isStarting = false;
 
+  bool _isShuttingDown = false;
+
   Process? process;
 
   factory ClashService() {
@@ -64,10 +66,13 @@ class ClashService extends ClashHandlerInterface {
         );
       }
     }, (error, stack) {
+      // Don't log socket errors during shutdown (expected behavior)
+      if (_isShuttingDown && error is SocketException) {
+        return;
+      }
       commonPrint.log(error.toString());
       if (error is SocketException) {
         globalState.showNotifier(error.toString());
-        // globalState.appController.restartCore();
       }
     });
   }
@@ -78,6 +83,7 @@ class ClashService extends ClashHandlerInterface {
       return;
     }
     isStarting = true;
+    _isShuttingDown = false;
     socketCompleter = Completer();
     if (process != null) {
       await shutdown();
@@ -141,11 +147,26 @@ class ClashService extends ClashHandlerInterface {
 
   @override
   shutdown() async {
-    if (Platform.isWindows) {
-      await request.stopCoreByHelper();
-    }
-    await _destroySocket();
+    _isShuttingDown = true;
+
+    // Kill process first (if still alive)
     process?.kill();
+
+    if (Platform.isWindows) {
+      try {
+        await request.stopCoreByHelper().timeout(Duration(seconds: 2));
+      } catch (_) {
+        // Ignore timeout/errors
+      }
+    }
+
+    // Close socket with timeout (may hang if process already dead)
+    try {
+      await _destroySocket().timeout(Duration(milliseconds: 500));
+    } catch (_) {
+      // Ignore timeout - socket will close when process dies
+    }
+
     process = null;
     return true;
   }

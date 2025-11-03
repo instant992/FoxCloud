@@ -133,6 +133,7 @@ class AppController {
     if (_ref.read(runTimeProvider.notifier).isStart) {
       await globalState.handleStart();
     }
+    sessionLog.write('Core restart completed successfully');
   }
 
   updateStatus(bool isStart) async {
@@ -396,10 +397,12 @@ class AppController {
   }
 
   Future _applyProfile({bool forceApplyConfig = false}) async {
+    final profile = _ref.read(currentProfileProvider);
+    sessionLog.write('Applying profile: ${profile?.label ?? "none"}');
     await clashCore.requestGc();
     // Apply config overrides: force on first import, otherwise based on autoUpdate
     await globalState.applyConfigOverridesFromProfile(
-      _ref.read(currentProfileProvider),
+      profile,
       force: forceApplyConfig,
     );
     await setupClashConfig();
@@ -517,25 +520,51 @@ class AppController {
   }
 
   handleExit() async {
+    sessionLog.write('Application shutdown initiated');
     _profileUpdateTimer?.cancel();
-    Future.delayed(commonDuration, () {
-      system.exit();
-    });
+
     try {
       await savePreferences();
+      sessionLog.write('Preferences saved');
+
       await system.setMacOSDns(true);
+      sessionLog.write('macOS DNS restored');
+
       await proxy?.stopProxy();
-      await clashCore.shutdown();
-      await clashService?.destroy();
+      sessionLog.write('System proxy stopped');
 
       try {
-        final url = Uri.parse('http://127.0.0.1:47890/shutdown');
-        await http.post(url).timeout(const Duration(seconds: 1));
+        await clashCore.shutdown();
+        sessionLog.write('ClashCore shutdown completed');
       } catch (e) {
-        // ...
+        sessionLog.write('ClashCore shutdown error: $e');
       }
+
+      try {
+        await clashService?.shutdown();
+        sessionLog.write('ClashService shutdown completed');
+      } catch (e) {
+        sessionLog.write('ClashService shutdown error: $e');
+      }
+
+      if (Platform.isWindows) {
+        try {
+          final url = Uri.parse('http://127.0.0.1:47890/shutdown');
+          final stopwatch = Stopwatch()..start();
+          await http.post(url).timeout(const Duration(seconds: 3));
+          stopwatch.stop();
+          sessionLog.write('FlowvyHelperService shutdown completed (${stopwatch.elapsedMilliseconds}ms)');
+        } catch (e) {
+          sessionLog.write('FlowvyHelperService shutdown failed: $e');
+        }
+      }
+
+      sessionLog.write('Application shutdown completed successfully');
+    } catch (e) {
+      sessionLog.write('Error during shutdown: $e');
     } finally {
-      system.exit();
+      sessionLog.write('Forcing process termination');
+      exit(0);
     }
   }
 
@@ -632,6 +661,7 @@ Future handleClear() async {
   }
 
   init() async {
+    await sessionLog.init();
     FlutterError.onError = (details) {
       commonPrint.log(details.stack.toString());
     };
