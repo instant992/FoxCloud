@@ -156,7 +156,7 @@ class ApplicationState extends ConsumerState<Application> {
           try {
             await globalState.appController.updateProfile(profile);
           } catch (e) {
-            commonPrint.log("Failed to auto-update profile ${profile.label}: $e");
+            commonPrint.log(appLocalizations.logProfileUpdateError(profile.label ?? profile.id, e.toString()));
           }
         }
 

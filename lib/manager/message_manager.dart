@@ -39,7 +39,7 @@ class MessageManagerState extends State<MessageManager> {
       id: utils.uuidV4,
       text: text,
     );
-    commonPrint.log(text);
+    commonPrint.log(appLocalizations.logDisplayMessage(text));
     _bufferMessages.add(commonMessage);
     await _showMessage();
   }

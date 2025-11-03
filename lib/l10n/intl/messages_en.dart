@@ -24,13 +24,58 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(label) => "Current ${label} already exists";
 
-  static String m2(label) => "${label} must be a number";
+  static String m2(error) =>
+      "Failed to decode announcement from subscription: ${error}";
 
-  static String m3(label) => "${label} must be between 1024 and 49151";
+  static String m3(profile) =>
+      "Applied configuration overrides from profile: ${profile}";
 
-  static String m4(count) => "${count} items have been selected";
+  static String m4(error) => "Clash core error: ${error}";
 
-  static String m5(label) => "${label} must be a url";
+  static String m5(id, error) =>
+      "Clash message processing error (ID: ${id}): ${error}";
+
+  static String m6(error) => "Clash service connection error: ${error}";
+
+  static String m7(error) => "Configuration validation error: ${error}";
+
+  static String m8(text) => "Displaying notification: ${text}";
+
+  static String m9(error) => "Error applying configuration overrides: ${error}";
+
+  static String m10(error) => "Error parsing TUN stack settings: ${error}";
+
+  static String m11(milliseconds) => "Execution time: ${milliseconds} ms";
+
+  static String m12(stack) =>
+      "Application error occurred (stack trace): ${stack}";
+
+  static String m13(error) => "Error: ${error}";
+
+  static String m14(url, status) => "HTTP request to ${url}, proxy: ${status}";
+
+  static String m15(error) =>
+      "Failed to decode profile title from subscription: ${error}";
+
+  static String m16(profile, error) =>
+      "Failed to auto-update profile ${profile}: ${error}";
+
+  static String m17(profile) => "Profile ${profile} updated successfully";
+
+  static String m18(uri) => "Received app link: ${uri}";
+
+  static String m19(error) => "Invalid regular expression: ${error}";
+
+  static String m20(command, arguments, resultCode) =>
+      "Executing command with admin rights: ${command} ${arguments} (result: ${resultCode})";
+
+  static String m21(label) => "${label} must be a number";
+
+  static String m22(label) => "${label} must be between 1024 and 49151";
+
+  static String m23(count) => "${count} items have been selected";
+
+  static String m24(label) => "${label} must be a url";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -392,7 +437,58 @@ class MessageLookup extends MessageLookupByLibrary {
     "localRecoveryDesc": MessageLookupByLibrary.simpleMessage(
       "Recovery data from file",
     ),
+    "logAnnounceDecodeError": m2,
+    "logAppliedConfigOverrides": m3,
+    "logAppliedSavedConfig": MessageLookupByLibrary.simpleMessage(
+      "Applied saved configuration from profile",
+    ),
+    "logClashCoreStderr": m4,
+    "logClashMessageError": m5,
+    "logClashServiceError": m6,
+    "logClearingPreferences": MessageLookupByLibrary.simpleMessage(
+      "Clearing all preferences...",
+    ),
+    "logConfigValidationError": m7,
+    "logDisplayMessage": m8,
+    "logErrorApplyingConfigOverrides": m9,
+    "logErrorParsingTunStack": m10,
+    "logExecutionTime": m11,
+    "logFlutterError": m12,
+    "logGenericError": m13,
+    "logHttpRequest": m14,
+    "logInitAppLinks": MessageLookupByLibrary.simpleMessage(
+      "Initializing app links listener...",
+    ),
     "logLevel": MessageLookupByLibrary.simpleMessage("LogLevel"),
+    "logLoadingSavedConfig": MessageLookupByLibrary.simpleMessage(
+      "Loading saved configuration from profile...",
+    ),
+    "logProfileTitleDecodeError": m15,
+    "logProfileUpdateError": m16,
+    "logProfileUpdateSuccess": m17,
+    "logProxyDisabled": MessageLookupByLibrary.simpleMessage("disabled"),
+    "logProxyEnabled": MessageLookupByLibrary.simpleMessage("enabled"),
+    "logQuickStart": MessageLookupByLibrary.simpleMessage(
+      "VPN service started in quick start mode (Android)",
+    ),
+    "logReceivedAppLink": m18,
+    "logRegexValidationError": m19,
+    "logRenderingPaused": MessageLookupByLibrary.simpleMessage(
+      "UI rendering paused to save resources",
+    ),
+    "logRenderingResumed": MessageLookupByLibrary.simpleMessage(
+      "UI rendering resumed",
+    ),
+    "logRestartCore": MessageLookupByLibrary.simpleMessage(
+      "Restarting Clash core...",
+    ),
+    "logSavedConfigToProfile": MessageLookupByLibrary.simpleMessage(
+      "Configuration saved to profile",
+    ),
+    "logSavingPreferences": MessageLookupByLibrary.simpleMessage(
+      "Saving preferences...",
+    ),
+    "logWindowsRunas": m20,
     "logcat": MessageLookupByLibrary.simpleMessage("Logcat"),
     "logcatDesc": MessageLookupByLibrary.simpleMessage(
       "Disabling will hide the log entry",
@@ -463,7 +559,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nullProfileDesc": MessageLookupByLibrary.simpleMessage(
       "You have not yet added any subscriptions",
     ),
-    "numberTip": m2,
+    "numberTip": m21,
     "off": MessageLookupByLibrary.simpleMessage("Off"),
     "oneColumn": MessageLookupByLibrary.simpleMessage("One column"),
     "onlyIcon": MessageLookupByLibrary.simpleMessage("Icon"),
@@ -516,7 +612,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "portConflictTip": MessageLookupByLibrary.simpleMessage(
       "Please enter a different port",
     ),
-    "portTip": m3,
+    "portTip": m22,
     "preferH3Desc": MessageLookupByLibrary.simpleMessage(
       "Prioritize the use of DOH\'s http/3",
     ),
@@ -639,7 +735,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "seconds": MessageLookupByLibrary.simpleMessage("Seconds"),
     "selectAll": MessageLookupByLibrary.simpleMessage("Select all"),
     "selected": MessageLookupByLibrary.simpleMessage("Selected"),
-    "selectedCountTitle": m4,
+    "selectedCountTitle": m23,
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "show": MessageLookupByLibrary.simpleMessage("Show"),
     "shrink": MessageLookupByLibrary.simpleMessage("Shrink"),
@@ -743,7 +839,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Obtain profile through URL",
     ),
-    "urlTip": m5,
+    "urlTip": m24,
     "useHosts": MessageLookupByLibrary.simpleMessage("Use hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("Use system hosts"),
     "value": MessageLookupByLibrary.simpleMessage("Value"),

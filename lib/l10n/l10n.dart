@@ -3458,6 +3458,311 @@ class AppLocalizations {
   String get off {
     return Intl.message('Off', name: 'off', desc: '', args: []);
   }
+
+  /// `Executing command with admin rights: {command} {arguments} (result: {resultCode})`
+  String logWindowsRunas(Object command, Object arguments, Object resultCode) {
+    return Intl.message(
+      'Executing command with admin rights: $command $arguments (result: $resultCode)',
+      name: 'logWindowsRunas',
+      desc: '',
+      args: [command, arguments, resultCode],
+    );
+  }
+
+  /// `VPN service started in quick start mode (Android)`
+  String get logQuickStart {
+    return Intl.message(
+      'VPN service started in quick start mode (Android)',
+      name: 'logQuickStart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Execution time: {milliseconds} ms`
+  String logExecutionTime(Object milliseconds) {
+    return Intl.message(
+      'Execution time: $milliseconds ms',
+      name: 'logExecutionTime',
+      desc: '',
+      args: [milliseconds],
+    );
+  }
+
+  /// `UI rendering paused to save resources`
+  String get logRenderingPaused {
+    return Intl.message(
+      'UI rendering paused to save resources',
+      name: 'logRenderingPaused',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UI rendering resumed`
+  String get logRenderingResumed {
+    return Intl.message(
+      'UI rendering resumed',
+      name: 'logRenderingResumed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restarting Clash core...`
+  String get logRestartCore {
+    return Intl.message(
+      'Restarting Clash core...',
+      name: 'logRestartCore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Configuration validation error: {error}`
+  String logConfigValidationError(Object error) {
+    return Intl.message(
+      'Configuration validation error: $error',
+      name: 'logConfigValidationError',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Saving preferences...`
+  String get logSavingPreferences {
+    return Intl.message(
+      'Saving preferences...',
+      name: 'logSavingPreferences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clearing all preferences...`
+  String get logClearingPreferences {
+    return Intl.message(
+      'Clearing all preferences...',
+      name: 'logClearingPreferences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading saved configuration from profile...`
+  String get logLoadingSavedConfig {
+    return Intl.message(
+      'Loading saved configuration from profile...',
+      name: 'logLoadingSavedConfig',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error parsing TUN stack settings: {error}`
+  String logErrorParsingTunStack(Object error) {
+    return Intl.message(
+      'Error parsing TUN stack settings: $error',
+      name: 'logErrorParsingTunStack',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Applied configuration overrides from profile: {profile}`
+  String logAppliedConfigOverrides(Object profile) {
+    return Intl.message(
+      'Applied configuration overrides from profile: $profile',
+      name: 'logAppliedConfigOverrides',
+      desc: '',
+      args: [profile],
+    );
+  }
+
+  /// `Error applying configuration overrides: {error}`
+  String logErrorApplyingConfigOverrides(Object error) {
+    return Intl.message(
+      'Error applying configuration overrides: $error',
+      name: 'logErrorApplyingConfigOverrides',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Applied saved configuration from profile`
+  String get logAppliedSavedConfig {
+    return Intl.message(
+      'Applied saved configuration from profile',
+      name: 'logAppliedSavedConfig',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Configuration saved to profile`
+  String get logSavedConfigToProfile {
+    return Intl.message(
+      'Configuration saved to profile',
+      name: 'logSavedConfigToProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Initializing app links listener...`
+  String get logInitAppLinks {
+    return Intl.message(
+      'Initializing app links listener...',
+      name: 'logInitAppLinks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Received app link: {uri}`
+  String logReceivedAppLink(Object uri) {
+    return Intl.message(
+      'Received app link: $uri',
+      name: 'logReceivedAppLink',
+      desc: '',
+      args: [uri],
+    );
+  }
+
+  /// `HTTP request to {url}, proxy: {status}`
+  String logHttpRequest(Object url, Object status) {
+    return Intl.message(
+      'HTTP request to $url, proxy: $status',
+      name: 'logHttpRequest',
+      desc: '',
+      args: [url, status],
+    );
+  }
+
+  /// `Failed to auto-update profile {profile}: {error}`
+  String logProfileUpdateError(Object profile, Object error) {
+    return Intl.message(
+      'Failed to auto-update profile $profile: $error',
+      name: 'logProfileUpdateError',
+      desc: '',
+      args: [profile, error],
+    );
+  }
+
+  /// `Profile {profile} updated successfully`
+  String logProfileUpdateSuccess(Object profile) {
+    return Intl.message(
+      'Profile $profile updated successfully',
+      name: 'logProfileUpdateSuccess',
+      desc: '',
+      args: [profile],
+    );
+  }
+
+  /// `Error: {error}`
+  String logGenericError(Object error) {
+    return Intl.message(
+      'Error: $error',
+      name: 'logGenericError',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `enabled`
+  String get logProxyEnabled {
+    return Intl.message('enabled', name: 'logProxyEnabled', desc: '', args: []);
+  }
+
+  /// `disabled`
+  String get logProxyDisabled {
+    return Intl.message(
+      'disabled',
+      name: 'logProxyDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clash service connection error: {error}`
+  String logClashServiceError(Object error) {
+    return Intl.message(
+      'Clash service connection error: $error',
+      name: 'logClashServiceError',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Clash core error: {error}`
+  String logClashCoreStderr(Object error) {
+    return Intl.message(
+      'Clash core error: $error',
+      name: 'logClashCoreStderr',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Failed to decode profile title from subscription: {error}`
+  String logProfileTitleDecodeError(Object error) {
+    return Intl.message(
+      'Failed to decode profile title from subscription: $error',
+      name: 'logProfileTitleDecodeError',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Failed to decode announcement from subscription: {error}`
+  String logAnnounceDecodeError(Object error) {
+    return Intl.message(
+      'Failed to decode announcement from subscription: $error',
+      name: 'logAnnounceDecodeError',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Clash message processing error (ID: {id}): {error}`
+  String logClashMessageError(Object id, Object error) {
+    return Intl.message(
+      'Clash message processing error (ID: $id): $error',
+      name: 'logClashMessageError',
+      desc: '',
+      args: [id, error],
+    );
+  }
+
+  /// `Invalid regular expression: {error}`
+  String logRegexValidationError(Object error) {
+    return Intl.message(
+      'Invalid regular expression: $error',
+      name: 'logRegexValidationError',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Displaying notification: {text}`
+  String logDisplayMessage(Object text) {
+    return Intl.message(
+      'Displaying notification: $text',
+      name: 'logDisplayMessage',
+      desc: '',
+      args: [text],
+    );
+  }
+
+  /// `Application error occurred (stack trace): {stack}`
+  String logFlutterError(Object stack) {
+    return Intl.message(
+      'Application error occurred (stack trace): $stack',
+      name: 'logFlutterError',
+      desc: '',
+      args: [stack],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

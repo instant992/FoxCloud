@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 
+import 'app_localizations.dart';
 import 'print.dart';
 
 typedef InstallConfigCallBack = void Function(String url);
@@ -16,11 +17,11 @@ class LinkManager {
   }
 
   initAppLinksListen(installConfigCallBack) async {
-    commonPrint.log("initAppLinksListen");
+    commonPrint.log(appLocalizations.logInitAppLinks);
     destroy();
     subscription = _appLinks.uriLinkStream.listen(
       (uri) {
-        commonPrint.log('onAppLink: $uri');
+        commonPrint.log(appLocalizations.logReceivedAppLink(uri.toString()));
         if (uri.host == 'install-config') {
           final parameters = uri.queryParameters;
           final url = parameters['url'];

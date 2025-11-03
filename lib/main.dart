@@ -69,7 +69,7 @@ Future<void> _service(List<String> flags) async {
   if (!quickStart) {
     _handleMainIpc(clashLibHandler);
   } else {
-    commonPrint.log("quick start");
+    commonPrint.log(appLocalizations.logQuickStart);
     await ClashCore.initGeo();
     app?.tip(appLocalizations.startVpn);
     final homeDirPath = await appPath.homeDirPath;

@@ -53,7 +53,7 @@ class Windows {
     calloc.free(argumentsPtr);
     calloc.free(operationPtr);
 
-    commonPrint.log("windows runas: $command $arguments resultCode:$result");
+    commonPrint.log(appLocalizations.logWindowsRunas(command, arguments, result.toString()));
 
     if (result < 42) {
       return false;

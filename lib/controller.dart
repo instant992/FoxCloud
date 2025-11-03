@@ -49,7 +49,7 @@ class AppController {
       try {
         updateProfile(profile);
       } catch (e) {
-        commonPrint.log(e.toString());
+        commonPrint.log(appLocalizations.logGenericError(e.toString()));
       }
     }
   }
@@ -100,7 +100,7 @@ class AppController {
   }
 
   restartCore() async {
-    commonPrint.log("restart core");
+    commonPrint.log(appLocalizations.logRestartCore);
 
     try {
       final String configPath = await appPath.getProfilePath(
@@ -125,7 +125,7 @@ class AppController {
         }
       }
     } catch (e) {
-      commonPrint.log("Error during config validation: $e");
+      commonPrint.log(appLocalizations.logConfigValidationError(e.toString()));
     }
 
     await clashService?.reStart();
@@ -444,7 +444,7 @@ class AppController {
       try {
         await updateProfile(profile);
       } catch (e) {
-        commonPrint.log(e.toString());
+        commonPrint.log(appLocalizations.logGenericError(e.toString()));
       }
     }
   }
@@ -477,7 +477,7 @@ class AppController {
   }
 
   savePreferences() async {
-    commonPrint.log("save preferences");
+    commonPrint.log(appLocalizations.logSavingPreferences);
     await preferences.saveConfig(globalState.config);
   }
 
@@ -570,7 +570,7 @@ class AppController {
 
 Future handleClear() async {
   await preferences.clearPreferences();
-  commonPrint.log("clear preferences");
+  commonPrint.log(appLocalizations.logClearingPreferences);
   globalState.config = Config(
     appSetting: AppSettingProps.safeFromJson(null),
     themeProps: ThemeProps.safeFromJson(null),
@@ -663,7 +663,7 @@ Future handleClear() async {
   init() async {
     await sessionLog.init();
     FlutterError.onError = (details) {
-      commonPrint.log(details.stack.toString());
+      commonPrint.log(appLocalizations.logFlutterError(details.stack.toString()));
     };
     updateTray(true);
     await _initCore();

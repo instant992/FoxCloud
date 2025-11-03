@@ -105,7 +105,7 @@ abstract class ClashHandlerInterface with ClashInterface {
           return;
       }
     } catch (e) {
-      commonPrint.log("${result.id} error $e");
+      commonPrint.log(appLocalizations.logClashMessageError(result.id ?? 'unknown', e.toString()));
     }
   }
 

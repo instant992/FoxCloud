@@ -24,13 +24,59 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(label) => "Текущий ${label} уже существует";
 
-  static String m2(label) => "${label} должно быть числом";
+  static String m2(error) =>
+      "Не удалось декодировать объявление от подписки: ${error}";
 
-  static String m3(label) => "${label} должен быть числом от 1024 до 49151";
+  static String m3(profile) =>
+      "Применены переопределения конфигурации из подписки: ${profile}";
 
-  static String m4(count) => "Выбрано ${count} элементов";
+  static String m4(error) => "Ошибка ядра Clash: ${error}";
 
-  static String m5(label) => "${label} должен быть URL";
+  static String m5(id, error) =>
+      "Ошибка обработки сообщения Clash (ID: ${id}): ${error}";
+
+  static String m6(error) => "Ошибка подключения к сервису Clash: ${error}";
+
+  static String m7(error) => "Ошибка валидации конфигурации: ${error}";
+
+  static String m8(text) => "Показ уведомления: ${text}";
+
+  static String m9(error) =>
+      "Ошибка применения переопределений конфигурации: ${error}";
+
+  static String m10(error) => "Ошибка разбора настроек TUN: ${error}";
+
+  static String m11(milliseconds) => "Время выполнения: ${milliseconds} мс";
+
+  static String m12(stack) =>
+      "Произошла ошибка приложения (трассировка стека): ${stack}";
+
+  static String m13(error) => "Ошибка: ${error}";
+
+  static String m14(url, status) => "HTTP-запрос к ${url}, прокси: ${status}";
+
+  static String m15(error) =>
+      "Не удалось декодировать название подписки: ${error}";
+
+  static String m16(profile, error) =>
+      "Не удалось автоматически обновить подписку ${profile}: ${error}";
+
+  static String m17(profile) => "Подписка ${profile} успешно обновлена";
+
+  static String m18(uri) => "Получена ссылка приложения: ${uri}";
+
+  static String m19(error) => "Неверное регулярное выражение: ${error}";
+
+  static String m20(command, arguments, resultCode) =>
+      "Выполнение команды с правами администратора: ${command} ${arguments} (результат: ${resultCode})";
+
+  static String m21(label) => "${label} должно быть числом";
+
+  static String m22(label) => "${label} должен быть числом от 1024 до 49151";
+
+  static String m23(count) => "Выбрано ${count} элементов";
+
+  static String m24(label) => "${label} должен быть URL";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -422,7 +468,58 @@ class MessageLookup extends MessageLookupByLibrary {
     "localRecoveryDesc": MessageLookupByLibrary.simpleMessage(
       "Восстановление данных из файла",
     ),
+    "logAnnounceDecodeError": m2,
+    "logAppliedConfigOverrides": m3,
+    "logAppliedSavedConfig": MessageLookupByLibrary.simpleMessage(
+      "Применена сохранённая конфигурация из подписки",
+    ),
+    "logClashCoreStderr": m4,
+    "logClashMessageError": m5,
+    "logClashServiceError": m6,
+    "logClearingPreferences": MessageLookupByLibrary.simpleMessage(
+      "Очистка всех настроек...",
+    ),
+    "logConfigValidationError": m7,
+    "logDisplayMessage": m8,
+    "logErrorApplyingConfigOverrides": m9,
+    "logErrorParsingTunStack": m10,
+    "logExecutionTime": m11,
+    "logFlutterError": m12,
+    "logGenericError": m13,
+    "logHttpRequest": m14,
+    "logInitAppLinks": MessageLookupByLibrary.simpleMessage(
+      "Инициализация обработчика ссылок приложения...",
+    ),
     "logLevel": MessageLookupByLibrary.simpleMessage("Уровень логов"),
+    "logLoadingSavedConfig": MessageLookupByLibrary.simpleMessage(
+      "Загрузка сохранённой конфигурации из подписки...",
+    ),
+    "logProfileTitleDecodeError": m15,
+    "logProfileUpdateError": m16,
+    "logProfileUpdateSuccess": m17,
+    "logProxyDisabled": MessageLookupByLibrary.simpleMessage("выключен"),
+    "logProxyEnabled": MessageLookupByLibrary.simpleMessage("включён"),
+    "logQuickStart": MessageLookupByLibrary.simpleMessage(
+      "VPN-сервис запущен в режиме быстрого старта (Android)",
+    ),
+    "logReceivedAppLink": m18,
+    "logRegexValidationError": m19,
+    "logRenderingPaused": MessageLookupByLibrary.simpleMessage(
+      "Отрисовка интерфейса приостановлена для экономии ресурсов",
+    ),
+    "logRenderingResumed": MessageLookupByLibrary.simpleMessage(
+      "Отрисовка интерфейса возобновлена",
+    ),
+    "logRestartCore": MessageLookupByLibrary.simpleMessage(
+      "Перезапуск ядра Clash...",
+    ),
+    "logSavedConfigToProfile": MessageLookupByLibrary.simpleMessage(
+      "Конфигурация сохранена в подписку",
+    ),
+    "logSavingPreferences": MessageLookupByLibrary.simpleMessage(
+      "Сохранение настроек...",
+    ),
+    "logWindowsRunas": m20,
     "logcat": MessageLookupByLibrary.simpleMessage("Logcat"),
     "logcatDesc": MessageLookupByLibrary.simpleMessage(
       "Отключение скроет запись логов",
@@ -501,7 +598,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "nullProfileDesc": MessageLookupByLibrary.simpleMessage(
       "Ты ещё не добавил ни одной подписки",
     ),
-    "numberTip": m2,
+    "numberTip": m21,
     "off": MessageLookupByLibrary.simpleMessage("Отключено"),
     "oneColumn": MessageLookupByLibrary.simpleMessage("Один столбец"),
     "onlyIcon": MessageLookupByLibrary.simpleMessage("Только иконка"),
@@ -554,7 +651,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "portConflictTip": MessageLookupByLibrary.simpleMessage(
       "Введи другой порт",
     ),
-    "portTip": m3,
+    "portTip": m22,
     "preferH3Desc": MessageLookupByLibrary.simpleMessage(
       "Приоритетное использование HTTP/3 для DOH",
     ),
@@ -685,7 +782,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "seconds": MessageLookupByLibrary.simpleMessage("Секунд"),
     "selectAll": MessageLookupByLibrary.simpleMessage("Выбрать все"),
     "selected": MessageLookupByLibrary.simpleMessage("Выбрано"),
-    "selectedCountTitle": m4,
+    "selectedCountTitle": m23,
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
     "show": MessageLookupByLibrary.simpleMessage("Показать"),
     "shrink": MessageLookupByLibrary.simpleMessage("Сжать"),
@@ -791,7 +888,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Добавить подписку по ссылке",
     ),
-    "urlTip": m5,
+    "urlTip": m24,
     "useHosts": MessageLookupByLibrary.simpleMessage("Использовать hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage(
       "Использовать системные hosts",

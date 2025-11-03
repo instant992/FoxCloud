@@ -362,7 +362,7 @@ class Utils {
       final stopwatch = Stopwatch()..start();
       final res = await function();
       stopwatch.stop();
-      commonPrint.log('耗时：${stopwatch.elapsedMilliseconds} ms');
+      commonPrint.log(appLocalizations.logExecutionTime(stopwatch.elapsedMilliseconds.toString()));
       return res;
     }
     return await function();

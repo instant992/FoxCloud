@@ -70,7 +70,7 @@ class ClashService extends ClashHandlerInterface {
       if (_isShuttingDown && error is SocketException) {
         return;
       }
-      commonPrint.log(error.toString());
+      commonPrint.log(appLocalizations.logClashServiceError(error.toString()));
       if (error is SocketException) {
         globalState.showNotifier(error.toString());
       }
@@ -108,7 +108,7 @@ class ClashService extends ClashHandlerInterface {
     process?.stderr.listen((e) {
       final error = utf8.decode(e);
       if (error.isNotEmpty) {
-        commonPrint.log(error);
+        commonPrint.log(appLocalizations.logClashCoreStderr(error));
       }
     });
     isStarting = false;

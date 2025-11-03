@@ -41,7 +41,7 @@ class Render {
     _drawFrame = _dispatcher.onDrawFrame;
     _dispatcher.onBeginFrame = null;
     _dispatcher.onDrawFrame = null;
-    commonPrint.log("pause");
+    commonPrint.log(appLocalizations.logRenderingPaused);
   }
 
   void _resume() {
@@ -50,7 +50,7 @@ class Render {
     _dispatcher.onBeginFrame = _beginFrame;
     _dispatcher.onDrawFrame = _drawFrame;
     _dispatcher.scheduleFrame();
-    commonPrint.log("resume");
+    commonPrint.log(appLocalizations.logRenderingResumed);
   }
 }
 

@@ -237,7 +237,7 @@ init() async {
       final res = await futureFunction();
       return res;
     } catch (e) {
-      commonPrint.log("$e");
+      commonPrint.log(appLocalizations.logGenericError(e.toString()));
       if (silence) {
         showNotifier(e.toString());
       } else {
@@ -470,7 +470,7 @@ init() async {
     // If there are saved settings and not force mode, load them
     // Saved settings have priority when switching between profiles
     if (!force && profile.overrideData.savedConfig != null) {
-      commonPrint.log("Loading saved config from profile overrideData");
+      commonPrint.log(appLocalizations.logLoadingSavedConfig);
       await _applySavedConfig(profile.overrideData.savedConfig!);
       return;
     }
@@ -555,7 +555,7 @@ init() async {
             }
           }
         } catch (e) {
-          commonPrint.log("Error parsing tun stack from config: $e");
+          commonPrint.log(appLocalizations.logErrorParsingTunStack(e.toString()));
         }
       }
 
@@ -579,10 +579,10 @@ init() async {
           tunStack: tunStack,
         );
 
-        commonPrint.log("Applied config overrides from profile: ${profile.label ?? profile.id}");
+        commonPrint.log(appLocalizations.logAppliedConfigOverrides(profile.label ?? profile.id));
       }
     } catch (e) {
-      commonPrint.log("Error applying config overrides from profile: $e");
+      commonPrint.log(appLocalizations.logErrorApplyingConfigOverrides(e.toString()));
     }
   }
 
@@ -612,7 +612,7 @@ init() async {
       tunStack: tunStack,
     );
 
-    commonPrint.log("Applied saved config from profile overrideData");
+    commonPrint.log(appLocalizations.logAppliedSavedConfig);
   }
 
   /// Saves current settings to profile's overrideData.savedConfig
@@ -630,7 +630,7 @@ init() async {
     appController.setProfile(updatedProfile);
     appController.savePreferencesDebounce();
 
-    commonPrint.log("Saved current config to profile overrideData");
+    commonPrint.log(appLocalizations.logSavedConfigToProfile);
   }
 
   Future<Map<String, dynamic>> handleEvaluate(

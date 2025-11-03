@@ -71,7 +71,6 @@ class Window {
 
   Future<bool> get isVisible async {
     final value = await windowManager.isVisible();
-    commonPrint.log("window visible check: $value");
     return value;
   }
 

@@ -83,6 +83,10 @@ class _ClashContainerState extends ConsumerState<ClashManager>
   @override
   void onLog(Log log) {
     ref.read(logsProvider.notifier).addLog(log);
+
+    // Write Clash Core logs to session log file
+    sessionLog.write(log.payload);
+
     if (log.logLevel == LogLevel.error) {
       globalState.showNotifier(log.payload);
     }

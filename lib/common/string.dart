@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
+import 'app_localizations.dart';
 import 'print.dart';
 
 extension StringExtension on String {
@@ -56,7 +57,7 @@ extension StringExtension on String {
       RegExp(this);
       return true;
     } catch (e) {
-      commonPrint.log(e.toString());
+      commonPrint.log(appLocalizations.logRegexValidationError(e.toString()));
       return false;
     }
   }

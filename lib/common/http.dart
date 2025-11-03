@@ -10,7 +10,8 @@ class FlowvyHttpOverrides extends HttpOverrides {
     }
     final port = globalState.config.patchClashConfig.mixedPort;
     final isStart = globalState.appState.runTime != null;
-    commonPrint.log("find $url proxy:$isStart");
+    final status = isStart ? appLocalizations.logProxyEnabled : appLocalizations.logProxyDisabled;
+    commonPrint.log(appLocalizations.logHttpRequest(url.toString(), status));
     if (!isStart) return "DIRECT";
     return "PROXY localhost:$port";
   }

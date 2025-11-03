@@ -215,7 +215,7 @@ extension ProfileExtension on Profile {
           final encoded = profileTitleHeader.substring(7);
           newLabel = utf8.decode(base64.decode(encoded));
         } catch (e) {
-          commonPrint.log('Error decoding profile-title: $e');
+          commonPrint.log(appLocalizations.logProfileTitleDecodeError(e.toString()));
         }
       } else {
         newLabel = profileTitleHeader;
@@ -229,7 +229,7 @@ extension ProfileExtension on Profile {
       try {
         announce = utf8.decode(base64.decode(encoded));
       } catch (e) {
-        commonPrint.log('Error decoding announce: $e');
+        commonPrint.log(appLocalizations.logAnnounceDecodeError(e.toString()));
       }
     }
 
