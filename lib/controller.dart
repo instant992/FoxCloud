@@ -42,27 +42,14 @@ class AppController {
   _checkProfilesForPeriodicUpdate() {
     final profiles = _ref.read(profilesProvider);
     for (final profile in profiles) {
-      if (!profile.autoUpdate || profile.type == ProfileType.file) {
+      if (!profile.shouldAutoUpdate()) {
         continue;
       }
 
-      bool needsUpdate = false;
-      if (profile.lastUpdateDate == null) {
-        needsUpdate = true;
-      } else {
-        final nextUpdateTime =
-            profile.lastUpdateDate!.add(profile.autoUpdateDuration);
-        if (nextUpdateTime.isBefore(DateTime.now())) {
-          needsUpdate = true;
-        }
-      }
-
-      if (needsUpdate) {
-        try {
-          updateProfile(profile);
-        } catch (e) {
-          commonPrint.log(e.toString());
-        }
+      try {
+        updateProfile(profile);
+      } catch (e) {
+        commonPrint.log(e.toString());
       }
     }
   }
@@ -138,7 +125,7 @@ class AppController {
         }
       }
     } catch (e) {
-      commonPrint.log("Ошибка во время проверки конфига: $e");
+      commonPrint.log("Error during config validation: $e");
     }
 
     await clashService?.reStart();
@@ -198,7 +185,7 @@ class AppController {
     final isFirstProfile = _ref.read(currentProfileIdProvider) == null;
     if (!isFirstProfile) return;
     _ref.read(currentProfileIdProvider.notifier).value = profile.id;
-    // При первом импорте профиля применяем настройки из конфига принудительно
+    // Force apply config overrides on first profile import
     await globalState.applyConfigOverridesFromProfile(profile, force: true);
   }
 
@@ -232,7 +219,7 @@ class AppController {
   Future<void> updateProfile(Profile profile, {bool isManualUpdate = false}) async {
     final newProfile = await profile.update();
 
-    // Вариант B: При ручном обновлении или если autoUpdate включен - очищаем savedConfig
+    // Clear savedConfig on manual update or if autoUpdate is enabled
     final shouldClearSavedConfig = isManualUpdate || newProfile.autoUpdate;
     final profileToSave = shouldClearSavedConfig
         ? newProfile.copyWith(
@@ -249,7 +236,7 @@ class AppController {
     savePreferencesDebounce();
 
     if (profile.id == _ref.read(currentProfileIdProvider)) {
-      // Применяем настройки с force=true при ручном обновлении или если autoUpdate включен
+      // Apply config overrides with force=true on manual update or if autoUpdate is enabled
       await globalState.applyConfigOverridesFromProfile(
         profileToSave,
         force: shouldClearSavedConfig,
@@ -386,8 +373,7 @@ class AppController {
   }
 
   _setupClashConfig() async {
-    // checkAndUpdate удален отсюда - автообновление должно происходить только по таймеру
-    // а не при каждом применении профиля
+    // Auto-update is handled by timer, not on every profile apply
     final patchConfig = _ref.read(patchClashConfigProvider);
     final res = await _requestAdmin(patchConfig.tun.enable);
     if (res.isError) {
@@ -411,7 +397,7 @@ class AppController {
 
   Future _applyProfile({bool forceApplyConfig = false}) async {
     await clashCore.requestGc();
-    // Применяем настройки из конфига: force при первом импорте, иначе по autoUpdate
+    // Apply config overrides: force on first import, otherwise based on autoUpdate
     await globalState.applyConfigOverridesFromProfile(
       _ref.read(currentProfileProvider),
       force: forceApplyConfig,
@@ -436,7 +422,6 @@ class AppController {
 
   handleChangeProfile() async {
     _ref.read(delayDataSourceProvider.notifier).value = {};
-    // applyProfile() уже вызывает applyConfigOverridesFromProfile внутри
     applyProfile();
     _ref.read(logsProvider.notifier).value = FixedList(500);
     _ref.read(requestsProvider.notifier).value = FixedList(500);
@@ -450,7 +435,7 @@ class AppController {
 
   autoUpdateProfilesOnStartup() async {
     for (final profile in _ref.read(profilesProvider)) {
-      if (!profile.autoUpdate || profile.type == ProfileType.file) {
+      if (!profile.shouldAutoUpdate()) {
         continue;
       }
       try {
@@ -470,7 +455,7 @@ class AppController {
         retryIf: (res) => res.isEmpty,
       );
 
-      // Инкрементируем версию для инвалидации UI
+      // Increment version to invalidate UI
       _ref.read(versionProvider.notifier).value =
           _ref.read(versionProvider) + 1;
 
@@ -986,7 +971,7 @@ Future handleClear() async {
     addCheckIpNumDebounce();
   }
 
-  /// Применяет переопределения настроек из конфига профиля
+  /// Applies config overrides from profile configuration
   applyClashConfigOverrides({
     required int mixedPort,
     required int socksPort,
@@ -1020,7 +1005,7 @@ Future handleClear() async {
         findProcessMode: findProcessMode,
         geodataLoader: geodataLoader,
         hosts: hosts,
-        // Применяем только TUN stack из профиля, остальные настройки TUN остаются из state
+        // Apply only TUN stack from profile, other TUN settings remain from state
         tun: tunStack != null
             ? state.tun.copyWith(stack: tunStack)
             : state.tun,

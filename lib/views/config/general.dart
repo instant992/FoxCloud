@@ -26,7 +26,7 @@ class LogLevelItem extends ConsumerWidget {
             return;
           }
 
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -36,7 +36,7 @@ class LogLevelItem extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -47,14 +47,14 @@ class LogLevelItem extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith(
                   logLevel: value,
                 ),
               );
 
-          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          // Save current config to profile
           final updatedProfile = ref.read(currentProfileProvider);
           if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
             final currentConfig = ref.read(patchClashConfigProvider);
@@ -99,7 +99,7 @@ class KeepAliveIntervalItem extends ConsumerWidget {
             return;
           }
 
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -109,7 +109,7 @@ class KeepAliveIntervalItem extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -120,7 +120,7 @@ class KeepAliveIntervalItem extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           final intValue = int.parse(value);
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith(
@@ -128,7 +128,7 @@ class KeepAliveIntervalItem extends ConsumerWidget {
                 ),
               );
 
-          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          // Save current config to profile
           final updatedProfile = ref.read(currentProfileProvider);
           if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
             final currentConfig = ref.read(patchClashConfigProvider);
@@ -255,7 +255,7 @@ class HostsItem extends StatelessWidget {
               titleBuilder: (item) => Text(item.key),
               subtitleBuilder: (item) => Text(item.value),
               onChange: (value) async {
-                // Проверяем автообновление профиля
+                // Check profile auto-update status
                 final currentProfile = ref.read(currentProfileProvider);
                 if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
                   final res = await globalState.showMessage(
@@ -265,7 +265,7 @@ class HostsItem extends StatelessWidget {
                     ),
                   );
                   if (res == true) {
-                    // Отключаем автообновление
+                    // Disable auto-update
                     if (currentProfile != null) {
                       final appController = globalState.appController;
                       appController.setProfile(
@@ -276,14 +276,14 @@ class HostsItem extends StatelessWidget {
                   }
                 }
 
-                // Настройка применяется всегда
+                // Setting is always applied
                 ref.read(patchClashConfigProvider.notifier).updateState(
                       (state) => state.copyWith(
                         hosts: value,
                       ),
                     );
 
-                // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+                // Save current config to profile
                 final updatedProfile = ref.read(currentProfileProvider);
                 if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
                   final currentConfig = ref.read(patchClashConfigProvider);
@@ -312,7 +312,7 @@ class Ipv6Item extends ConsumerWidget {
       delegate: SwitchDelegate(
         value: ipv6,
         onChanged: (bool value) async {
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -322,7 +322,7 @@ class Ipv6Item extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -333,14 +333,14 @@ class Ipv6Item extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith(
                   ipv6: value,
                 ),
               );
 
-          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          // Save current config to profile
           final updatedProfile = ref.read(currentProfileProvider);
           if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
             final currentConfig = ref.read(patchClashConfigProvider);
@@ -366,7 +366,7 @@ class AllowLanItem extends ConsumerWidget {
       delegate: SwitchDelegate(
         value: allowLan,
         onChanged: (bool value) async {
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -376,7 +376,7 @@ class AllowLanItem extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -387,14 +387,14 @@ class AllowLanItem extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith(
                   allowLan: value,
                 ),
               );
 
-          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          // Save current config to profile
           final updatedProfile = ref.read(currentProfileProvider);
           if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
             final currentConfig = ref.read(patchClashConfigProvider);
@@ -421,7 +421,7 @@ class UnifiedDelayItem extends ConsumerWidget {
       delegate: SwitchDelegate(
         value: unifiedDelay,
         onChanged: (bool value) async {
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -431,7 +431,7 @@ class UnifiedDelayItem extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -442,14 +442,14 @@ class UnifiedDelayItem extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith(
                   unifiedDelay: value,
                 ),
               );
 
-          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          // Save current config to profile
           final updatedProfile = ref.read(currentProfileProvider);
           if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
             final currentConfig = ref.read(patchClashConfigProvider);
@@ -491,7 +491,7 @@ class FindProcessItem extends ConsumerWidget {
             return;
           }
 
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -501,7 +501,7 @@ class FindProcessItem extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -512,7 +512,7 @@ class FindProcessItem extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith(
                   findProcessMode: value,
@@ -538,7 +538,7 @@ class TcpConcurrentItem extends ConsumerWidget {
       delegate: SwitchDelegate(
         value: tcpConcurrent,
         onChanged: (value) async {
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -548,7 +548,7 @@ class TcpConcurrentItem extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -559,14 +559,14 @@ class TcpConcurrentItem extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith(
                   tcpConcurrent: value,
                 ),
               );
 
-          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          // Save current config to profile
           final updatedProfile = ref.read(currentProfileProvider);
           if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
             final currentConfig = ref.read(patchClashConfigProvider);
@@ -592,7 +592,7 @@ class GeodataLoaderItem extends ConsumerWidget {
       delegate: SwitchDelegate(
         value: isMemconservative,
         onChanged: (bool value) async {
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -602,7 +602,7 @@ class GeodataLoaderItem extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -613,7 +613,7 @@ class GeodataLoaderItem extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith(
                   geodataLoader: value
@@ -622,7 +622,7 @@ class GeodataLoaderItem extends ConsumerWidget {
                 ),
               );
 
-          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          // Save current config to profile
           final updatedProfile = ref.read(currentProfileProvider);
           if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
             final currentConfig = ref.read(patchClashConfigProvider);
@@ -754,7 +754,7 @@ class _PortDialogState extends ConsumerState<_PortDialog> {
   _handleUpdate() async {
     if (_formKey.currentState?.validate() == false) return;
 
-    // Проверяем автообновление профиля
+    // Check profile auto-update status
     final currentProfile = ref.read(currentProfileProvider);
     if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
       final res = await globalState.showMessage(
@@ -764,7 +764,7 @@ class _PortDialogState extends ConsumerState<_PortDialog> {
         ),
       );
       if (res == true) {
-        // Отключаем автообновление
+        // Disable auto-update
         if (currentProfile != null) {
           final appController = globalState.appController;
           appController.setProfile(
@@ -775,7 +775,7 @@ class _PortDialogState extends ConsumerState<_PortDialog> {
       }
     }
 
-    // Настройка применяется всегда
+    // Setting is always applied
     ref.read(patchClashConfigProvider.notifier).updateState(
           (state) => state.copyWith(
             mixedPort: int.parse(_mixedPortController.text),
@@ -786,7 +786,7 @@ class _PortDialogState extends ConsumerState<_PortDialog> {
           ),
         );
 
-    // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+    // Save current config to profile
     final updatedProfile = ref.read(currentProfileProvider);
     if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
       final currentConfig = ref.read(patchClashConfigProvider);

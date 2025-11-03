@@ -55,7 +55,7 @@ class Profile with _$Profile {
     required Duration autoUpdateDuration,
     SubscriptionInfo? subscriptionInfo,
     String? supportUrl,
-    int? subscriptionRefillDate, // <--- ИЗМЕНЕНИЕ 1: ДОБАВЛЕНО ПОЛЕ
+    int? subscriptionRefillDate,
     @Default(true) bool autoUpdate,
     @Default({}) SelectedMap selectedMap,
     @Default({}) Set<String> unfoldSet,
@@ -87,8 +87,6 @@ class OverrideData with _$OverrideData {
   const factory OverrideData({
     @Default(false) bool enable,
     @Default(OverrideRule()) OverrideRule rule,
-    // Сохраненные настройки клиента для этого профиля (Variant B)
-    // Используются когда autoUpdate=false для сохранения пользовательских изменений
     ClashConfig? savedConfig,
   }) = _OverrideData;
 
@@ -144,6 +142,24 @@ extension ProfileExtension on Profile {
 
   bool get realAutoUpdate => url.isEmpty == true ? false : autoUpdate;
 
+  /// Checks if profile should be automatically updated
+  /// Returns true if:
+  /// - Profile has autoUpdate enabled
+  /// - Profile has URL (not local file)
+  /// - Enough time has passed since last update (>= autoUpdateDuration)
+  bool shouldAutoUpdate() {
+    if (!realAutoUpdate) {
+      return false;
+    }
+
+    if (lastUpdateDate == null) {
+      return true;
+    }
+
+    final timeSinceUpdate = DateTime.now().difference(lastUpdateDate!);
+    return timeSinceUpdate >= autoUpdateDuration;
+  }
+
   Future<void> checkAndUpdate() async {
     final isExists = await check();
     if (!isExists) {
@@ -173,7 +189,6 @@ extension ProfileExtension on Profile {
     return (await file.lastModified()).microsecondsSinceEpoch;
   }
 
-  // --- ИЗМЕНЕНИЕ 2: ОБНОВЛЕН МЕТОД UPDATE ---
   Future<Profile> update() async {
     final response = await request.getFileResponseForUrl(url);
 

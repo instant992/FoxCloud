@@ -1,4 +1,4 @@
-// lib/views/proxies/card.dart - ФИНАЛЬНАЯ ВЕРСИЯ
+// lib/views/proxies/card.dart
 
 import 'package:flowvy/common/common.dart';
 import 'package:flowvy/common/custom_theme.dart';
@@ -38,7 +38,7 @@ class ProxyCard extends StatelessWidget {
 
   Widget _buildDelayText(BuildContext context) {
     final customTheme = Theme.of(context).extension<CustomTheme>()!;
-    // Используем цвет пинга из кастомной темы
+
     final pingColor = customTheme.proxyPingColor;
 
     return SizedBox(

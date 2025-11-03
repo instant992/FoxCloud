@@ -147,23 +147,19 @@ class ApplicationState extends ConsumerState<Application> {
     _autoUpdateProfilesTaskTimer = Timer(const Duration(minutes: 5), () async {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final profiles = ref.read(profilesProvider);
-        final now = DateTime.now();
 
         for (final profile in profiles) {
-          // Проверяем нужно ли обновлять этот профиль
-          if (profile.realAutoUpdate && profile.lastUpdateDate != null) {
-            final timeSinceUpdate = now.difference(profile.lastUpdateDate!);
-            if (timeSinceUpdate >= profile.autoUpdateDuration) {
-              try {
-                await globalState.appController.updateProfile(profile);
-              } catch (e) {
-                commonPrint.log("Failed to auto-update profile ${profile.label}: $e");
-              }
-            }
+          if (!profile.shouldAutoUpdate()) {
+            continue;
+          }
+
+          try {
+            await globalState.appController.updateProfile(profile);
+          } catch (e) {
+            commonPrint.log("Failed to auto-update profile ${profile.label}: $e");
           }
         }
 
-        // Перезапускаем таймер
         _autoUpdateProfilesTask();
       });
     });

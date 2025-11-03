@@ -58,7 +58,7 @@ class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
       builder: (_, ref, __) {
         final isMobile = ref.watch(isMobileViewProvider);
 
-        // Показываем индикаторы только на мобильных устройствах
+        // Show indicators only on mobile devices
         if (!isMobile) {
           return const SizedBox.shrink();
         }
@@ -80,17 +80,17 @@ class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
           },
           onHorizontalDragUpdate: (details) {
             final deltaX = details.globalPosition.dx - _dragStartX;
-            final threshold = 40.0; // Пороговое значение для переключения
+            final threshold = 40.0; // Threshold value for switching
 
             if (deltaX > threshold && _dragStartIndex > 0) {
-              // Свайп вправо - переключаем на предыдущую группу
+              // Swipe right - switch to previous group
               final newIndex = _dragStartIndex - 1;
               _tabController?.animateTo(newIndex);
               globalState.appController.updateCurrentGroupName(groupNames[newIndex]);
               _dragStartX = details.globalPosition.dx;
               _dragStartIndex = newIndex;
             } else if (deltaX < -threshold && _dragStartIndex < groupNames.length - 1) {
-              // Свайп влево - переключаем на следующую группу
+              // Swipe left - switch to next group
               final newIndex = _dragStartIndex + 1;
               _tabController?.animateTo(newIndex);
               globalState.appController.updateCurrentGroupName(groupNames[newIndex]);
@@ -103,7 +103,7 @@ class ProxiesTabViewState extends ConsumerState<ProxiesTabView>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                min(count, 10), // Максимум 10 точек для большого количества групп
+                min(count, 10), // Max 10 dots for large number of groups
                 (index) {
                   final isActive = index == currentIndex;
                   return AnimatedContainer(

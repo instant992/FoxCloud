@@ -117,7 +117,7 @@ UpdateParams updateParams(Ref ref) {
         allowLan: state.allowLan,
         findProcessMode: state.findProcessMode,
         mode: state.mode,
-        // LogLevel.app не поддерживается mihomo, заменяем на info
+        // LogLevel.app is not supported by mihomo, replace with info
         logLevel: state.logLevel == LogLevel.app ? LogLevel.info : state.logLevel,
         ipv6: state.ipv6,
         tcpConcurrent: state.tcpConcurrent,
@@ -528,7 +528,7 @@ String? getSelectedProxyName(Ref ref, String groupName) {
 String getProxyDesc(Ref ref, Proxy proxy) {
   final groupTypeNamesList = GroupType.values.map((e) => e.name).toList();
   if (!groupTypeNamesList.contains(proxy.type)) {
-    // Если есть serverDescription, показываем его, иначе type
+    // Show serverDescription if available, otherwise type
     return proxy.serverDescription ?? proxy.type;
   } else {
     final groups = ref.watch(groupsProvider);

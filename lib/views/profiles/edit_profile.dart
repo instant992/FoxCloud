@@ -65,7 +65,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           ),
         );
 
-    // Вариант B: Если autoUpdate был включен, очищаем savedConfig
+    // If autoUpdate was enabled, clear savedConfig
     if (autoUpdate && !widget.profile.autoUpdate) {
       profile = profile.copyWith(
         overrideData: profile.overrideData.copyWith(
@@ -77,14 +77,14 @@ class _EditProfileViewState extends State<EditProfileView> {
     final hasUpdate = widget.profile.url != profile.url;
 
     if (fileData != null) {
-      // Загружен файл вручную - очищаем savedConfig, чтобы применить настройки из нового конфига
+      // File loaded manually - clear savedConfig to apply settings from new config
       profile = profile.copyWith(
         overrideData: profile.overrideData.copyWith(
           savedConfig: null,
         ),
       );
 
-      // Если autoUpdate включен, предлагаем отключить его
+      // If autoUpdate is enabled, suggest disabling it
       if (profile.type == ProfileType.url && autoUpdate) {
         final res = await globalState.showMessage(
           title: appLocalizations.tip,
@@ -93,7 +93,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           ),
         );
         if (res == true) {
-          // Пользователь выбрал отключить автообновление
+          // User chose to disable auto-update
           profile = profile.copyWith(
             autoUpdate: false,
           );
@@ -103,7 +103,7 @@ class _EditProfileViewState extends State<EditProfileView> {
       final savedProfile = await profile.saveFile(fileData!);
       appController.setProfile(savedProfile);
 
-      // Применяем настройки из нового загруженного конфига с force=true
+      // Apply settings from new loaded config with force=true
       if (savedProfile.id == widget.profile.id) {
         await globalState.applyConfigOverridesFromProfile(savedProfile, force: true);
         appController.applyProfileDebounce(silence: true);
@@ -224,7 +224,7 @@ class _EditProfileViewState extends State<EditProfileView> {
       size: fileData?.length ?? 0,
       lastModified: DateTime.now(),
     );
-    // Декодируем содержимое и открываем редактор сразу
+    // Decode content and open editor immediately
     rawText = utf8.decode(fileData!);
     await _editProfileFile();
   }

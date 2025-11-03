@@ -169,7 +169,6 @@ class BackupAndRecovery extends ConsumerWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // --- 1. ОПРЕДЕЛЯЕМ СТИЛЬ ДЛЯ КНОПОК ---
     final buttonStyle = ButtonStyle(
       foregroundColor: WidgetStatePropertyAll(colorScheme.onSurface),
       backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
@@ -189,7 +188,6 @@ class BackupAndRecovery extends ConsumerWidget {
       ),
     );
 
-    // --- 2. СОЗДАЕМ ФУНКЦИЮ-ХЕЛПЕР ДЛЯ ПОСТРОЕНИЯ КНОПКИ ---
     Widget buildStyledButton(
         {required VoidCallback onPressed, required Widget child}) {
       return SizedBox(

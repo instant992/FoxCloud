@@ -440,7 +440,6 @@ class RuleTitle extends ConsumerWidget {
       shape: const WidgetStatePropertyAll(CircleBorder()),
     );
 
-    // В ЭТОМ СТИЛЕ ТЕПЕРЬ НЕТ ОТСТУПОВ
     final textButtonStyle = baseButtonStyle.copyWith(
       foregroundColor: WidgetStatePropertyAll(colorScheme.onSurface),
       padding: const WidgetStatePropertyAll(EdgeInsets.zero),
@@ -451,7 +450,6 @@ class RuleTitle extends ConsumerWidget {
       ),
     );
 
-    // Создаем виджет текстовой кнопки, чтобы не дублировать код
     Widget buildTextButton({required VoidCallback onPressed, required String text}) {
       return SizedBox(
         height: 34,

@@ -35,7 +35,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
   List<double> _headerOffset = [];
   GroupNameProxiesMap _lastGroupNameProxiesMap = {};
 
-  int _lastVersion = 0; // Отслеживаем версию для инвалидации кэша
+  int _lastVersion = 0; // Track version for cache invalidation
 
   @override
   void initState() {
@@ -263,7 +263,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
 
         ref.watch(themeSettingProvider.select((state) => state.textScale));
 
-        // Если версия изменилась - сбрасываем кэш
+        // Reset cache if version changed
         if (_lastVersion != currentVersion) {
           _lastVersion = currentVersion;
           _lastGroupNameProxiesMap.clear();

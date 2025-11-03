@@ -55,7 +55,6 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
     required this.profileCardBackgroundSelected,
     required this.profileCardBorderSelected,
     required this.profileCardProgressTrack,
-    // --- НОВОЕ ---
     required this.trafficChartDownloadColor,
   });
 
@@ -91,7 +90,6 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
       profileCardBackgroundSelected: Color.lerp(profileCardBackgroundSelected, other.profileCardBackgroundSelected, t),
       profileCardBorderSelected: Color.lerp(profileCardBorderSelected, other.profileCardBorderSelected, t),
       profileCardProgressTrack: Color.lerp(profileCardProgressTrack, other.profileCardProgressTrack, t),
-      // --- НОВОЕ ---
       trafficChartDownloadColor: Color.lerp(trafficChartDownloadColor, other.trafficChartDownloadColor, t),
     );
   }
@@ -121,7 +119,6 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
     Color? profileCardBackgroundSelected,
     Color? profileCardBorderSelected,
     Color? profileCardProgressTrack,
-    // --- НОВОЕ ---
     Color? trafficChartDownloadColor,
   }) {
     return CustomTheme(
@@ -148,7 +145,6 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
       profileCardBackgroundSelected: profileCardBackgroundSelected ?? this.profileCardBackgroundSelected,
       profileCardBorderSelected: profileCardBorderSelected ?? this.profileCardBorderSelected,
       profileCardProgressTrack: profileCardProgressTrack ?? this.profileCardProgressTrack,
-      // --- НОВОЕ ---
       trafficChartDownloadColor: trafficChartDownloadColor ?? this.trafficChartDownloadColor,
     );
   }

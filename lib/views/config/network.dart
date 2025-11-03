@@ -198,7 +198,7 @@ class TunStackItem extends ConsumerWidget {
             return;
           }
 
-          // Проверяем автообновление профиля
+          // Check profile auto-update status
           final currentProfile = ref.read(currentProfileProvider);
           if (currentProfile?.autoUpdate == true && currentProfile?.type == ProfileType.url) {
             final res = await globalState.showMessage(
@@ -208,7 +208,7 @@ class TunStackItem extends ConsumerWidget {
               ),
             );
             if (res == true) {
-              // Отключаем автообновление
+              // Disable auto-update
               if (currentProfile != null) {
                 final appController = globalState.appController;
                 appController.setProfile(
@@ -219,14 +219,14 @@ class TunStackItem extends ConsumerWidget {
             }
           }
 
-          // Настройка применяется всегда
+          // Setting is always applied
           ref.read(patchClashConfigProvider.notifier).updateState(
                 (state) => state.copyWith.tun(
                   stack: value,
                 ),
               );
 
-          // Вариант B: Сохраняем текущий конфиг в профиль (независимо от autoUpdate)
+          // Save current config to profile
           final updatedProfile = ref.read(currentProfileProvider);
           if (updatedProfile != null && updatedProfile.type == ProfileType.url) {
             final currentConfig = ref.read(patchClashConfigProvider);

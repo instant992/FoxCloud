@@ -2,11 +2,8 @@
 
 import 'package:flowvy/common/app_localizations.dart';
 
-// ------------------------------------------------------------------
-// ШАГ 1.1: ВОТ НОВЫЙ EXTENSION ДЛЯ ЧИСЕЛ (ПЕРЕИСПОЛЬЗУЕМ ТВОЮ ЛОГИКУ)
-// ------------------------------------------------------------------
 extension IntPluralExtension on int {
-  /// Возвращает правильную форму слова (один, два, пять) для числа.
+  /// Returns correct plural form for number (one, two, five).
   String plural(String one, String two, String five) {
     int n = abs();
     n %= 100;
@@ -43,11 +40,6 @@ extension DateTimeExtension on DateTime {
   }
 
   String get lastUpdateTimeDesc {
-    // ------------------------------------------------------------------
-    // ШАГ 1.2: ТУТ МЫ УБРАЛИ СТАРУЮ ЛОГИКУ PLURAL
-    // ТЕПЕРЬ ОНА ВЫЗЫВАЕТСЯ НАПРЯМУЮ ИЗ НОВОГО EXTENSION
-    // ------------------------------------------------------------------
-
     final difference = DateTime.now().difference(this);
     final ago = appLocalizations.ago.trim();
 

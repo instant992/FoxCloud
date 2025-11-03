@@ -324,7 +324,7 @@ init() async {
     rawConfig["tcp-concurrent"] = realPatchConfig.tcpConcurrent;
     rawConfig["unified-delay"] = realPatchConfig.unifiedDelay;
     rawConfig["ipv6"] = realPatchConfig.ipv6;
-    // LogLevel.app используется только для Flutter логов, mihomo его не поддерживает
+    // LogLevel.app is for Flutter logs only, mihomo doesn't support it
     rawConfig["log-level"] = realPatchConfig.logLevel == LogLevel.app
         ? LogLevel.info.name
         : realPatchConfig.logLevel.name;
@@ -449,36 +449,35 @@ init() async {
     return configMap;
   }
 
-  /// Применяет настройки из конфига профиля в patchClashConfigProvider
-  /// Вызывается при загрузке/обновлении профиля
+  /// Applies profile config settings to patchClashConfigProvider
+  /// Called on profile load/update
   ///
-  /// [force] - если true, игнорирует savedConfig и применяет настройки из конфига
-  /// (используется при первом импорте профиля или обновлении с сервера)
+  /// [force] - if true, ignores savedConfig and applies settings from config
+  /// (used on first profile import or server update)
   Future<void> applyConfigOverridesFromProfile(
     Profile? profile, {
     bool force = false,
   }) async {
     if (profile == null) return;
 
-    // Применяем настройки только для URL-профилей
+    // Apply settings only for URL profiles
     if (profile.type != ProfileType.url) {
       return;
     }
 
-    // Вариант B: Если есть сохраненные настройки и не force режим, загружаем их
-    // Сохраненные настройки имеют приоритет при переключении между профилями
+    // If there are saved settings and not force mode, load them
+    // Saved settings have priority when switching between profiles
     if (!force && profile.overrideData.savedConfig != null) {
       commonPrint.log("Loading saved config from profile overrideData");
       await _applySavedConfig(profile.overrideData.savedConfig!);
       return;
     }
 
-    // Если нет сохраненных настроек или force режим - применяем из конфига
-
+    // If no saved settings or force mode - apply from config
     try {
       final configMap = await getProfileConfig(profile.id);
 
-      // Читаем настройки из конфига
+      // Read settings from config
       final mixedPort = configMap["mixed-port"] as int? ?? defaultMixedPort;
       final socksPort = configMap["socks-port"] as int? ?? 0;
       final port = configMap["port"] as int? ?? 0;
@@ -490,7 +489,7 @@ init() async {
       final unifiedDelay = configMap["unified-delay"] as bool? ?? true;
       final tcpConcurrent = configMap["tcp-concurrent"] as bool? ?? true;
 
-      // Парсим Log Level
+      // Parse Log Level
       LogLevel logLevel = LogLevel.error;
       final logLevelStr = configMap["log-level"];
       if (logLevelStr != null) {
@@ -502,7 +501,7 @@ init() async {
         } catch (_) {}
       }
 
-      // Парсим Find Process Mode
+      // Parse Find Process Mode
       FindProcessMode findProcessMode = FindProcessMode.always;
       final findProcessModeStr = configMap["find-process-mode"];
       if (findProcessModeStr != null) {
@@ -514,7 +513,7 @@ init() async {
         } catch (_) {}
       }
 
-      // Парсим Geodata Loader
+      // Parse Geodata Loader
       GeodataLoader geodataLoader = GeodataLoader.memconservative;
       final geodataLoaderStr = configMap["geodata-loader"];
       if (geodataLoaderStr != null) {
@@ -526,7 +525,7 @@ init() async {
         } catch (_) {}
       }
 
-      // Парсим Hosts
+      // Parse Hosts
       HostsMap hosts = {};
       if (configMap["hosts"] is Map) {
         final hostsMap = configMap["hosts"] as Map;
@@ -535,7 +534,7 @@ init() async {
         }
       }
 
-      // Парсим TUN Stack (только stack, остальные настройки TUN остаются дефолтными)
+      // Parse TUN Stack (only stack, other TUN settings remain default)
       TunStack? tunStack;
       if (configMap["tun"] is Map) {
         try {
@@ -543,7 +542,7 @@ init() async {
           final tunStackStr = tunMap["stack"];
           if (tunStackStr != null) {
             try {
-              // Сравниваем в lowercase, так как из конфига может прийти "System", а в enum "system"
+              // Compare in lowercase since config might have "System" while enum has "system"
               final stackLower = tunStackStr.toString().toLowerCase();
               tunStack = TunStack.values.firstWhere(
                 (e) => e.name.toLowerCase() == stackLower,
@@ -558,7 +557,7 @@ init() async {
         }
       }
 
-      // Применяем настройки через AppController
+      // Apply settings through AppController
       if (_appController != null) {
         appController.applyClashConfigOverrides(
           mixedPort: mixedPort,
@@ -585,14 +584,14 @@ init() async {
     }
   }
 
-  /// Применяет сохраненные настройки из overrideData.savedConfig (Variant B)
+  /// Applies saved settings from overrideData.savedConfig
   Future<void> _applySavedConfig(ClashConfig savedConfig) async {
     if (_appController == null) return;
 
-    // Извлекаем только stack из TUN (остальное остается дефолтным)
+    // Extract only stack from TUN (other settings remain default)
     final tunStack = savedConfig.tun.stack;
 
-    // Применяем все настройки из savedConfig
+    // Apply all settings from savedConfig
     appController.applyClashConfigOverrides(
       mixedPort: savedConfig.mixedPort,
       socksPort: savedConfig.socksPort,
@@ -614,18 +613,18 @@ init() async {
     commonPrint.log("Applied saved config from profile overrideData");
   }
 
-  /// Сохраняет текущие настройки в overrideData.savedConfig профиля (Variant B)
+  /// Saves current settings to profile's overrideData.savedConfig
   Future<void> saveCurrentConfigToProfile(Profile profile, ClashConfig currentConfig) async {
     if (_appController == null) return;
 
-    // Сохраняем в overrideData профиля
+    // Save to profile's overrideData
     final updatedProfile = profile.copyWith(
       overrideData: profile.overrideData.copyWith(
         savedConfig: currentConfig,
       ),
     );
 
-    // Обновляем профиль через AppController
+    // Update profile through AppController
     appController.setProfile(updatedProfile);
     appController.savePreferencesDebounce();
 

@@ -333,7 +333,7 @@ class ProfileItem extends StatelessWidget {
     final commonScaffoldState = context.commonScaffoldState;
     final res = await commonScaffoldState?.loadingRun<bool>(() async {
       final file = await profile.getFile();
-      // Добавляем расширение .yaml к имени файла
+      // Add .yaml extension to filename
       final fileName = '${profile.label ?? profile.id}.yaml';
       final value = await picker.saveFile(
         fileName,

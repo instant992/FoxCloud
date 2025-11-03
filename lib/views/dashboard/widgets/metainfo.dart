@@ -227,7 +227,7 @@ class MetainfoWidget extends ConsumerWidget {
                               )
                             : LayoutBuilder(
                                 builder: (context, constraints) {
-                                  // Вычисляем ширину полного текста
+                                  // Calculate full text width
                                   final fullText = '${appLocalizations.traffic} ${_formatBytes(usedTraffic, 2)} / ${_formatBytes(totalTraffic, 2)}';
                                   final textPainter = TextPainter(
                                     text: TextSpan(
@@ -238,7 +238,7 @@ class MetainfoWidget extends ConsumerWidget {
                                     textDirection: TextDirection.ltr,
                                   )..layout(maxWidth: constraints.maxWidth);
 
-                                  // Если помещается — показываем полный текст
+                                  // If it fits - show full text
                                   if (textPainter.didExceedMaxLines == false) {
                                     return Text.rich(
                                       TextSpan(
@@ -257,7 +257,7 @@ class MetainfoWidget extends ConsumerWidget {
                                     );
                                   }
 
-                                  // Если не помещается — показываем только цифры
+                                  // If doesn't fit - show only numbers
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
