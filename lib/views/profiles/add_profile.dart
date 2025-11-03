@@ -6,23 +6,25 @@ import 'package:flutter/material.dart';
 
 class AddProfileView extends StatelessWidget {
   final BuildContext context;
+  final bool navigateToProfiles;
 
   const AddProfileView({
     super.key,
     required this.context,
+    this.navigateToProfiles = true,
   });
 
   _handleAddProfileFormFile() async {
-    globalState.appController.addProfileFormFile();
+    globalState.appController.addProfileFormFile(navigateToProfiles: navigateToProfiles);
   }
 
   _handleAddProfileFormURL(String url) async {
-    globalState.appController.addProfileFormURL(url);
+    globalState.appController.addProfileFormURL(url, navigateToProfiles: navigateToProfiles);
   }
 
   _toScan() async {
     if (system.isDesktop) {
-      globalState.appController.addProfileFormQrCode();
+      globalState.appController.addProfileFormQrCode(navigateToProfiles: navigateToProfiles);
       return;
     }
     final url = await BaseNavigator.push(

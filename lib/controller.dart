@@ -767,11 +767,13 @@ Future handleClear() async {
     return;
   }
 
-  addProfileFormURL(String url) async {
+  addProfileFormURL(String url, {bool navigateToProfiles = true}) async {
     if (globalState.navigatorKey.currentState?.canPop() ?? false) {
       globalState.navigatorKey.currentState?.popUntil((route) => route.isFirst);
     }
-    toProfiles();
+    if (navigateToProfiles) {
+      toProfiles();
+    }
     final commonScaffoldState = globalState.homeScaffoldKey.currentState;
     if (commonScaffoldState?.mounted != true) return;
     final profile = await commonScaffoldState?.loadingRun<Profile>(
@@ -797,7 +799,7 @@ Future handleClear() async {
     }
   }
 
-  addProfileFormFile() async {
+  addProfileFormFile({bool navigateToProfiles = true}) async {
     final platformFile = await globalState.safeRun(picker.pickerFile);
     final bytes = platformFile?.bytes;
     if (bytes == null) {
@@ -805,7 +807,9 @@ Future handleClear() async {
     }
     if (!context.mounted) return;
     globalState.navigatorKey.currentState?.popUntil((route) => route.isFirst);
-    toProfiles();
+    if (navigateToProfiles) {
+      toProfiles();
+    }
     final commonScaffoldState = globalState.homeScaffoldKey.currentState;
     if (commonScaffoldState?.mounted != true) return;
     final profile = await commonScaffoldState?.loadingRun<Profile?>(
@@ -820,10 +824,10 @@ Future handleClear() async {
     }
   }
 
-  addProfileFormQrCode() async {
+  addProfileFormQrCode({bool navigateToProfiles = true}) async {
     final url = await globalState.safeRun(picker.pickerConfigQRCode);
     if (url == null) return;
-    addProfileFormURL(url);
+    addProfileFormURL(url, navigateToProfiles: navigateToProfiles);
   }
 
   updateViewSize(Size size) {

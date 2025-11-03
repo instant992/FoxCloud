@@ -236,8 +236,7 @@ mixin _$Profile {
   Duration get autoUpdateDuration => throw _privateConstructorUsedError;
   SubscriptionInfo? get subscriptionInfo => throw _privateConstructorUsedError;
   String? get supportUrl => throw _privateConstructorUsedError;
-  int? get subscriptionRefillDate =>
-      throw _privateConstructorUsedError; // <--- ИЗМЕНЕНИЕ 1: ДОБАВЛЕНО ПОЛЕ
+  int? get subscriptionRefillDate => throw _privateConstructorUsedError;
   bool get autoUpdate => throw _privateConstructorUsedError;
   Map<String, String> get selectedMap => throw _privateConstructorUsedError;
   Set<String> get unfoldSet => throw _privateConstructorUsedError;
@@ -570,7 +569,6 @@ class _$ProfileImpl implements _Profile {
   final String? supportUrl;
   @override
   final int? subscriptionRefillDate;
-// <--- ИЗМЕНЕНИЕ 1: ДОБАВЛЕНО ПОЛЕ
   @override
   @JsonKey()
   final bool autoUpdate;
@@ -714,7 +712,7 @@ abstract class _Profile implements Profile {
   @override
   String? get supportUrl;
   @override
-  int? get subscriptionRefillDate; // <--- ИЗМЕНЕНИЕ 1: ДОБАВЛЕНО ПОЛЕ
+  int? get subscriptionRefillDate;
   @override
   bool get autoUpdate;
   @override
@@ -744,9 +742,7 @@ OverrideData _$OverrideDataFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$OverrideData {
   bool get enable => throw _privateConstructorUsedError;
-  OverrideRule get rule =>
-      throw _privateConstructorUsedError; // Сохраненные настройки клиента для этого профиля (Variant B)
-// Используются когда autoUpdate=false для сохранения пользовательских изменений
+  OverrideRule get rule => throw _privateConstructorUsedError;
   ClashConfig? get savedConfig => throw _privateConstructorUsedError;
 
   /// Serializes this OverrideData to a JSON map.
@@ -898,8 +894,6 @@ class _$OverrideDataImpl implements _OverrideData {
   @override
   @JsonKey()
   final OverrideRule rule;
-// Сохраненные настройки клиента для этого профиля (Variant B)
-// Используются когда autoUpdate=false для сохранения пользовательских изменений
   @override
   final ClashConfig? savedConfig;
 
@@ -951,9 +945,7 @@ abstract class _OverrideData implements OverrideData {
   @override
   bool get enable;
   @override
-  OverrideRule
-      get rule; // Сохраненные настройки клиента для этого профиля (Variant B)
-// Используются когда autoUpdate=false для сохранения пользовательских изменений
+  OverrideRule get rule;
   @override
   ClashConfig? get savedConfig;
 

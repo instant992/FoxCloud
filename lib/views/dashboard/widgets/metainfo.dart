@@ -47,6 +47,7 @@ class MetainfoWidget extends ConsumerWidget {
                 type: type,
                 body: AddProfileView(
                   context: context,
+                  navigateToProfiles: false,
                 ),
                 title: appLocalizations.addProfileTitle,
               );
