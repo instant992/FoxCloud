@@ -93,7 +93,7 @@ class Windows {
     return WindowsHelperServiceStatus.presence;
   }
 
-  Future<bool> registerService() async {
+  Future<bool> registerService({bool autoStart = false}) async {
     final status = await checkService();
 
     if (status == WindowsHelperServiceStatus.running) {
@@ -102,6 +102,7 @@ class Windows {
 
     await _killProcess(helperPort);
 
+    final startType = autoStart ? 'auto' : 'demand';
     final command = [
       "/c",
       if (status == WindowsHelperServiceStatus.presence) ...[
@@ -115,7 +116,7 @@ class Windows {
       "create",
       appHelperService,
       'binPath= "${appPath.helperPath}"',
-      'start= auto',
+      'start= $startType',
       "&&",
       "sc",
       "start",
@@ -129,6 +130,25 @@ class Windows {
     );
 
     return res;
+  }
+
+  Future<bool> updateServiceStartType(bool autoStart) async {
+    final status = await checkService();
+
+    if (status == WindowsHelperServiceStatus.none) {
+      return true; // Service not registered yet, will be set on first registration
+    }
+
+    final startType = autoStart ? 'auto' : 'demand';
+    final command = [
+      "/c",
+      "sc",
+      "config",
+      appHelperService,
+      'start= $startType',
+    ].join(" ");
+
+    return runas("cmd.exe", command);
   }
 
   Future<bool> registerTask(String appName) async {

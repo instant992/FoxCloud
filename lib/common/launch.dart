@@ -6,6 +6,7 @@ import 'package:launch_at_startup/launch_at_startup.dart';
 
 import 'constant.dart';
 import 'system.dart';
+import 'windows.dart';
 
 class AutoLaunch {
   static AutoLaunch? _instance;
@@ -43,6 +44,11 @@ class AutoLaunch {
       enable();
     } else {
       disable();
+    }
+
+    // Update Windows service startup type to match auto-launch setting
+    if (Platform.isWindows) {
+      await windows?.updateServiceStartType(isAutoLaunch);
     }
   }
 }

@@ -349,7 +349,8 @@ class AppController {
   Future<Result<bool>> _requestAdmin(bool enableTun) async {
     final realTunEnable = _ref.read(realTunEnableProvider);
     if (enableTun != realTunEnable && realTunEnable == false) {
-      final code = await system.authorizeCore();
+      final autoStart = _ref.read(appSettingProvider).autoLaunch;
+      final code = await system.authorizeCore(autoStart: autoStart);
       switch (code) {
         case AuthorizeCode.success:
           await restartCore();

@@ -55,7 +55,7 @@ class System {
     return true;
   }
 
-  Future<AuthorizeCode> authorizeCore() async {
+  Future<AuthorizeCode> authorizeCore({bool autoStart = false}) async {
     if (Platform.isAndroid) {
       return AuthorizeCode.error;
     }
@@ -66,7 +66,7 @@ class System {
     }
 
     if (Platform.isWindows) {
-      final result = await windows?.registerService();
+      final result = await windows?.registerService(autoStart: autoStart);
       if (result == true) {
         return AuthorizeCode.success;
       }
