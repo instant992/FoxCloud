@@ -30,6 +30,15 @@ class NotificationManager {
       const linuxSettings = LinuxInitializationSettings(defaultActionName: 'Open notification');
       const initSettings = InitializationSettings(linux: linuxSettings);
       await _notifications.initialize(initSettings);
+    } else if (Platform.isMacOS) {
+      const darwinSettings = DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      );
+      const initSettings = InitializationSettings(macOS: darwinSettings);
+      await _notifications.initialize(initSettings);
+      commonPrint.log('macOS notification manager initialized');
     } else if (Platform.isWindows) {
       commonPrint.log('Initializing Windows notifications...');
 
@@ -232,10 +241,25 @@ Write-Output "Shortcut updated with AppUserModelID"
       } else if (Platform.isLinux) {
         const linuxDetails = LinuxNotificationDetails();
         const details = NotificationDetails(linux: linuxDetails);
+        final displayBody = percentage != null ? 'Использовано $percentage%' : body;
         await _notifications.show(
           percentage ?? 100,
           title,
-          body,
+          displayBody,
+          details,
+        );
+      } else if (Platform.isMacOS) {
+        const darwinDetails = DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        );
+        const details = NotificationDetails(macOS: darwinDetails);
+        final displayBody = percentage != null ? 'Использовано $percentage%' : body;
+        await _notifications.show(
+          percentage ?? 100,
+          title,
+          displayBody,
           details,
         );
       }
@@ -314,6 +338,20 @@ Write-Output "Shortcut updated with AppUserModelID"
       } else if (Platform.isLinux) {
         const linuxDetails = LinuxNotificationDetails();
         const details = NotificationDetails(linux: linuxDetails);
+        await _notifications.show(
+          1000,
+          title,
+          body,
+          details,
+        );
+      } else if (Platform.isMacOS) {
+        final darwinDetails = DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+          subtitle: buttonUrl != null && buttonUrl.isNotEmpty ? buttonUrl : null,
+        );
+        final details = NotificationDetails(macOS: darwinDetails);
         await _notifications.show(
           1000,
           title,
