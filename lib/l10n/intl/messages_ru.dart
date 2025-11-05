@@ -249,6 +249,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "connectivity": MessageLookupByLibrary.simpleMessage("Связь："),
     "contactMe": MessageLookupByLibrary.simpleMessage("Свяжитесь со мной"),
+    "contactSupport": MessageLookupByLibrary.simpleMessage(
+      "Связаться с поддержкой",
+    ),
     "content": MessageLookupByLibrary.simpleMessage("Содержание"),
     "contentScheme": MessageLookupByLibrary.simpleMessage("Контентная тема"),
     "copy": MessageLookupByLibrary.simpleMessage("Копировать"),
@@ -739,6 +742,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Удалить"),
     "rename": MessageLookupByLibrary.simpleMessage("Переименовать"),
+    "renewSubscription": MessageLookupByLibrary.simpleMessage("Продлить"),
     "requests": MessageLookupByLibrary.simpleMessage("Запросы"),
     "requestsDesc": MessageLookupByLibrary.simpleMessage(
       "Просмотр последних записей запросов",
@@ -814,8 +818,41 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscriptionEternal": MessageLookupByLibrary.simpleMessage(
       "Subscription is perpetual",
     ),
+    "subscriptionExpired": MessageLookupByLibrary.simpleMessage(
+      "Подписка истекла",
+    ),
     "subscriptionExpires": MessageLookupByLibrary.simpleMessage(
       "Подписка действительна до",
+    ),
+    "subscriptionExpires1Day": MessageLookupByLibrary.simpleMessage(
+      "Подписка заканчивается завтра",
+    ),
+    "subscriptionExpires3Days": MessageLookupByLibrary.simpleMessage(
+      "Подписка заканчивается через 3 дня",
+    ),
+    "subscriptionExpires7Days": MessageLookupByLibrary.simpleMessage(
+      "Подписка заканчивается через 7 дней",
+    ),
+    "subscriptionExpiresToday": MessageLookupByLibrary.simpleMessage(
+      "Подписка истекает сегодня",
+    ),
+    "subscriptionExpiryDefaultBody": MessageLookupByLibrary.simpleMessage(
+      "Продлите подписку, чтобы продолжить пользоваться сервисом",
+    ),
+    "subscriptionExpirySuffix1Day": MessageLookupByLibrary.simpleMessage(
+      "завтра",
+    ),
+    "subscriptionExpirySuffix3Days": MessageLookupByLibrary.simpleMessage(
+      "через 3 дня",
+    ),
+    "subscriptionExpirySuffix7Days": MessageLookupByLibrary.simpleMessage(
+      "через 7 дней",
+    ),
+    "subscriptionExpirySuffixExpired": MessageLookupByLibrary.simpleMessage(
+      "истекла",
+    ),
+    "subscriptionExpirySuffixToday": MessageLookupByLibrary.simpleMessage(
+      "сегодня",
     ),
     "subscriptionTo": MessageLookupByLibrary.simpleMessage("Подписка до"),
     "subscriptionUnlimited": MessageLookupByLibrary.simpleMessage(
@@ -859,6 +896,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "tools": MessageLookupByLibrary.simpleMessage("Настройки"),
     "tproxyPort": MessageLookupByLibrary.simpleMessage("Tproxy-порт"),
     "traffic": MessageLookupByLibrary.simpleMessage("Трафик"),
+    "trafficLimit80Notification": MessageLookupByLibrary.simpleMessage(
+      "Трафик заканчивается",
+    ),
+    "trafficLimit90Notification": MessageLookupByLibrary.simpleMessage(
+      "Трафик почти закончился",
+    ),
+    "trafficLimitExceeded": MessageLookupByLibrary.simpleMessage(
+      "Лимит трафика превышен",
+    ),
+    "trafficLimitExceededMessage": MessageLookupByLibrary.simpleMessage(
+      "Весь доступный трафик по подписке исчерпан. Подключение невозможно.",
+    ),
+    "trafficLimitExceededNotification": MessageLookupByLibrary.simpleMessage(
+      "Весь трафик использован",
+    ),
     "trafficUnlimited": MessageLookupByLibrary.simpleMessage(
       "Трафик безлимитный",
     ),

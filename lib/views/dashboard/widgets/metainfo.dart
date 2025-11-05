@@ -77,6 +77,7 @@ class MetainfoWidget extends ConsumerWidget {
       final BigInt usedTraffic = download + upload;
 
       final isUnlimitedTraffic = totalTraffic <= BigInt.zero;
+      final isOverLimit = !isUnlimitedTraffic && usedTraffic >= totalTraffic;
 
       double progress = 0.0;
       if (!isUnlimitedTraffic) {
@@ -85,6 +86,7 @@ class MetainfoWidget extends ConsumerWidget {
         if (progress < 0) progress = 0.0;
         if (progress > 1) progress = 1.0;
       }
+      final isNearLimit = !isUnlimitedTraffic && progress >= 0.8 && !isOverLimit;
 
       final hasExpireDate = subscriptionInfo.expire > 0;
       final expireDate = hasExpireDate
@@ -215,9 +217,13 @@ class MetainfoWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(
-                        Icons.data_usage_rounded,
+                        isOverLimit
+                            ? Icons.error_rounded
+                            : (isNearLimit ? Icons.warning_rounded : Icons.data_usage_rounded),
                         size: 16,
-                        color: iconTheme.color,
+                        color: isOverLimit
+                            ? Colors.red
+                            : (isNearLimit ? Colors.orange : iconTheme.color),
                       ),
                       const SizedBox(width: 6),
                       Expanded(
@@ -292,7 +298,9 @@ class MetainfoWidget extends ConsumerWidget {
                         child: LinearProgressIndicator(
                           value: progress,
                           minHeight: 6,
-                          color: colorScheme.primary,
+                          color: isOverLimit
+                              ? Colors.red
+                              : (isNearLimit ? Colors.orange : colorScheme.primary),
                           backgroundColor: customTheme.profileCardProgressTrack,
                         ),
                       ),

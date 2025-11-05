@@ -13,6 +13,9 @@ _$SubscriptionInfoImpl _$$SubscriptionInfoImplFromJson(
       download: (json['download'] as num?)?.toInt() ?? 0,
       total: (json['total'] as num?)?.toInt() ?? 0,
       expire: (json['expire'] as num?)?.toInt() ?? 0,
+      expiryNotificationTitle: json['expiryNotificationTitle'] as String?,
+      expiryNotificationBody: json['expiryNotificationBody'] as String?,
+      renewUrl: json['renewUrl'] as String?,
     );
 
 Map<String, dynamic> _$$SubscriptionInfoImplToJson(
@@ -22,6 +25,9 @@ Map<String, dynamic> _$$SubscriptionInfoImplToJson(
       'download': instance.download,
       'total': instance.total,
       'expire': instance.expire,
+      'expiryNotificationTitle': instance.expiryNotificationTitle,
+      'expiryNotificationBody': instance.expiryNotificationBody,
+      'renewUrl': instance.renewUrl,
     };
 
 _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>

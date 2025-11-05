@@ -238,6 +238,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "connectivity": MessageLookupByLibrary.simpleMessage("Connectivity："),
     "contactMe": MessageLookupByLibrary.simpleMessage("Contact me"),
+    "contactSupport": MessageLookupByLibrary.simpleMessage("Contact support"),
     "content": MessageLookupByLibrary.simpleMessage("Content"),
     "contentScheme": MessageLookupByLibrary.simpleMessage("Content"),
     "copy": MessageLookupByLibrary.simpleMessage("Copy"),
@@ -694,6 +695,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "rename": MessageLookupByLibrary.simpleMessage("Rename"),
+    "renewSubscription": MessageLookupByLibrary.simpleMessage("Renew"),
     "requests": MessageLookupByLibrary.simpleMessage("Requests"),
     "requestsDesc": MessageLookupByLibrary.simpleMessage(
       "View recently request records",
@@ -765,8 +767,41 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscriptionEternal": MessageLookupByLibrary.simpleMessage(
       "The subscription is permanent",
     ),
+    "subscriptionExpired": MessageLookupByLibrary.simpleMessage(
+      "Subscription expired",
+    ),
     "subscriptionExpires": MessageLookupByLibrary.simpleMessage(
       "Subscription expires on",
+    ),
+    "subscriptionExpires1Day": MessageLookupByLibrary.simpleMessage(
+      "Subscription expires tomorrow",
+    ),
+    "subscriptionExpires3Days": MessageLookupByLibrary.simpleMessage(
+      "Subscription expires in 3 days",
+    ),
+    "subscriptionExpires7Days": MessageLookupByLibrary.simpleMessage(
+      "Subscription expires in 7 days",
+    ),
+    "subscriptionExpiresToday": MessageLookupByLibrary.simpleMessage(
+      "Subscription expires today",
+    ),
+    "subscriptionExpiryDefaultBody": MessageLookupByLibrary.simpleMessage(
+      "Renew your subscription to continue using the service",
+    ),
+    "subscriptionExpirySuffix1Day": MessageLookupByLibrary.simpleMessage(
+      "tomorrow",
+    ),
+    "subscriptionExpirySuffix3Days": MessageLookupByLibrary.simpleMessage(
+      "in 3 days",
+    ),
+    "subscriptionExpirySuffix7Days": MessageLookupByLibrary.simpleMessage(
+      "in 7 days",
+    ),
+    "subscriptionExpirySuffixExpired": MessageLookupByLibrary.simpleMessage(
+      "expired",
+    ),
+    "subscriptionExpirySuffixToday": MessageLookupByLibrary.simpleMessage(
+      "today",
     ),
     "subscriptionTo": MessageLookupByLibrary.simpleMessage(
       "Subscription until",
@@ -812,6 +847,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "tools": MessageLookupByLibrary.simpleMessage("Tools"),
     "tproxyPort": MessageLookupByLibrary.simpleMessage("Tproxy Port"),
     "traffic": MessageLookupByLibrary.simpleMessage("Traffic"),
+    "trafficLimit80Notification": MessageLookupByLibrary.simpleMessage(
+      "Traffic running out",
+    ),
+    "trafficLimit90Notification": MessageLookupByLibrary.simpleMessage(
+      "Traffic almost gone",
+    ),
+    "trafficLimitExceeded": MessageLookupByLibrary.simpleMessage(
+      "Traffic limit exceeded",
+    ),
+    "trafficLimitExceededMessage": MessageLookupByLibrary.simpleMessage(
+      "All available subscription traffic has been exhausted. Connection is not possible.",
+    ),
+    "trafficLimitExceededNotification": MessageLookupByLibrary.simpleMessage(
+      "All traffic used",
+    ),
     "trafficUnlimited": MessageLookupByLibrary.simpleMessage(
       "Unlimited traffic",
     ),

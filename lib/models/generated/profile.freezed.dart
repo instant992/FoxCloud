@@ -24,6 +24,9 @@ mixin _$SubscriptionInfo {
   int get download => throw _privateConstructorUsedError;
   int get total => throw _privateConstructorUsedError;
   int get expire => throw _privateConstructorUsedError;
+  String? get expiryNotificationTitle => throw _privateConstructorUsedError;
+  String? get expiryNotificationBody => throw _privateConstructorUsedError;
+  String? get renewUrl => throw _privateConstructorUsedError;
 
   /// Serializes this SubscriptionInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,7 +44,14 @@ abstract class $SubscriptionInfoCopyWith<$Res> {
           SubscriptionInfo value, $Res Function(SubscriptionInfo) then) =
       _$SubscriptionInfoCopyWithImpl<$Res, SubscriptionInfo>;
   @useResult
-  $Res call({int upload, int download, int total, int expire});
+  $Res call(
+      {int upload,
+      int download,
+      int total,
+      int expire,
+      String? expiryNotificationTitle,
+      String? expiryNotificationBody,
+      String? renewUrl});
 }
 
 /// @nodoc
@@ -63,6 +73,9 @@ class _$SubscriptionInfoCopyWithImpl<$Res, $Val extends SubscriptionInfo>
     Object? download = null,
     Object? total = null,
     Object? expire = null,
+    Object? expiryNotificationTitle = freezed,
+    Object? expiryNotificationBody = freezed,
+    Object? renewUrl = freezed,
   }) {
     return _then(_value.copyWith(
       upload: null == upload
@@ -81,6 +94,18 @@ class _$SubscriptionInfoCopyWithImpl<$Res, $Val extends SubscriptionInfo>
           ? _value.expire
           : expire // ignore: cast_nullable_to_non_nullable
               as int,
+      expiryNotificationTitle: freezed == expiryNotificationTitle
+          ? _value.expiryNotificationTitle
+          : expiryNotificationTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expiryNotificationBody: freezed == expiryNotificationBody
+          ? _value.expiryNotificationBody
+          : expiryNotificationBody // ignore: cast_nullable_to_non_nullable
+              as String?,
+      renewUrl: freezed == renewUrl
+          ? _value.renewUrl
+          : renewUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -93,7 +118,14 @@ abstract class _$$SubscriptionInfoImplCopyWith<$Res>
       __$$SubscriptionInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int upload, int download, int total, int expire});
+  $Res call(
+      {int upload,
+      int download,
+      int total,
+      int expire,
+      String? expiryNotificationTitle,
+      String? expiryNotificationBody,
+      String? renewUrl});
 }
 
 /// @nodoc
@@ -113,6 +145,9 @@ class __$$SubscriptionInfoImplCopyWithImpl<$Res>
     Object? download = null,
     Object? total = null,
     Object? expire = null,
+    Object? expiryNotificationTitle = freezed,
+    Object? expiryNotificationBody = freezed,
+    Object? renewUrl = freezed,
   }) {
     return _then(_$SubscriptionInfoImpl(
       upload: null == upload
@@ -131,6 +166,18 @@ class __$$SubscriptionInfoImplCopyWithImpl<$Res>
           ? _value.expire
           : expire // ignore: cast_nullable_to_non_nullable
               as int,
+      expiryNotificationTitle: freezed == expiryNotificationTitle
+          ? _value.expiryNotificationTitle
+          : expiryNotificationTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expiryNotificationBody: freezed == expiryNotificationBody
+          ? _value.expiryNotificationBody
+          : expiryNotificationBody // ignore: cast_nullable_to_non_nullable
+              as String?,
+      renewUrl: freezed == renewUrl
+          ? _value.renewUrl
+          : renewUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -139,7 +186,13 @@ class __$$SubscriptionInfoImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SubscriptionInfoImpl implements _SubscriptionInfo {
   const _$SubscriptionInfoImpl(
-      {this.upload = 0, this.download = 0, this.total = 0, this.expire = 0});
+      {this.upload = 0,
+      this.download = 0,
+      this.total = 0,
+      this.expire = 0,
+      this.expiryNotificationTitle,
+      this.expiryNotificationBody,
+      this.renewUrl});
 
   factory _$SubscriptionInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$SubscriptionInfoImplFromJson(json);
@@ -156,10 +209,16 @@ class _$SubscriptionInfoImpl implements _SubscriptionInfo {
   @override
   @JsonKey()
   final int expire;
+  @override
+  final String? expiryNotificationTitle;
+  @override
+  final String? expiryNotificationBody;
+  @override
+  final String? renewUrl;
 
   @override
   String toString() {
-    return 'SubscriptionInfo(upload: $upload, download: $download, total: $total, expire: $expire)';
+    return 'SubscriptionInfo(upload: $upload, download: $download, total: $total, expire: $expire, expiryNotificationTitle: $expiryNotificationTitle, expiryNotificationBody: $expiryNotificationBody, renewUrl: $renewUrl)';
   }
 
   @override
@@ -171,12 +230,20 @@ class _$SubscriptionInfoImpl implements _SubscriptionInfo {
             (identical(other.download, download) ||
                 other.download == download) &&
             (identical(other.total, total) || other.total == total) &&
-            (identical(other.expire, expire) || other.expire == expire));
+            (identical(other.expire, expire) || other.expire == expire) &&
+            (identical(
+                    other.expiryNotificationTitle, expiryNotificationTitle) ||
+                other.expiryNotificationTitle == expiryNotificationTitle) &&
+            (identical(other.expiryNotificationBody, expiryNotificationBody) ||
+                other.expiryNotificationBody == expiryNotificationBody) &&
+            (identical(other.renewUrl, renewUrl) ||
+                other.renewUrl == renewUrl));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, upload, download, total, expire);
+  int get hashCode => Object.hash(runtimeType, upload, download, total, expire,
+      expiryNotificationTitle, expiryNotificationBody, renewUrl);
 
   /// Create a copy of SubscriptionInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -200,7 +267,10 @@ abstract class _SubscriptionInfo implements SubscriptionInfo {
       {final int upload,
       final int download,
       final int total,
-      final int expire}) = _$SubscriptionInfoImpl;
+      final int expire,
+      final String? expiryNotificationTitle,
+      final String? expiryNotificationBody,
+      final String? renewUrl}) = _$SubscriptionInfoImpl;
 
   factory _SubscriptionInfo.fromJson(Map<String, dynamic> json) =
       _$SubscriptionInfoImpl.fromJson;
@@ -213,6 +283,12 @@ abstract class _SubscriptionInfo implements SubscriptionInfo {
   int get total;
   @override
   int get expire;
+  @override
+  String? get expiryNotificationTitle;
+  @override
+  String? get expiryNotificationBody;
+  @override
+  String? get renewUrl;
 
   /// Create a copy of SubscriptionInfo
   /// with the given fields replaced by the non-null parameter values.

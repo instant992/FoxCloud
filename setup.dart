@@ -203,48 +203,7 @@ class Build {
 
     final exitCode = await process.exitCode;
 
-    // Check for known flutter_distributor error (type cast exception after successful build)
-    final allOutput = stdoutBuffer.toString() + stderrBuffer.toString();
-    final hasKnownError = allOutput.contains('BuildAndroidApkResult') &&
-        allOutput.contains('BuildWindowsResult') &&
-        allOutput.contains('type cast');
-
-    if (hasKnownError && exitCode == 0) {
-      // Filter stdout lines to remove error stack trace
-      final stdoutLines = stdoutBuffer.toString().split('\n');
-      final filteredStdoutLines = stdoutLines.where((line) {
-        return !line.contains('type cast') &&
-               !line.contains('Unhandled exception') &&
-               !line.contains('asynchronous suspension') &&
-               !line.startsWith('#') &&
-               line.trim().isNotEmpty;
-      }).toList();
-
-      // Output filtered stdout
-      for (final line in filteredStdoutLines) {
-        print(line);
-      }
-
-      // Filter stderr lines to remove error stack trace
-      final stderrLines = stderrBuffer.toString().split('\n');
-      final filteredStderrLines = stderrLines.where((line) {
-        return !line.contains('type cast') &&
-               !line.contains('Unhandled exception') &&
-               !line.contains('asynchronous suspension') &&
-               !line.startsWith('#') &&
-               line.trim().isNotEmpty;
-      }).toList();
-
-      // Output filtered stderr
-      for (final line in filteredStderrLines) {
-        print(line);
-      }
-
-      print("\n✅ Build completed successfully! (flutter_distributor packaging warning ignored)");
-      return;
-    }
-
-    // For other cases, output all stdout and stderr normally
+    // Output all stdout and stderr
     final stdoutText = stdoutBuffer.toString();
     final stderrText = stderrBuffer.toString();
 

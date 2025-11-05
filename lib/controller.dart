@@ -21,6 +21,7 @@ import 'package:http/http.dart' as http;
 import 'common/common.dart';
 import 'models/models.dart';
 import 'views/profiles/override_profile.dart';
+import 'manager/notification_manager.dart';
 
 class AppController {
   int? lastProfileModified;
@@ -236,6 +237,9 @@ class AppController {
         .setProfile(profileToSave);
     savePreferencesDebounce();
 
+    // Проверить лимит трафика и показать системное уведомление если нужно
+    await _checkTrafficLimitAndNotify(profileToSave);
+
     if (profile.id == _ref.read(currentProfileIdProvider)) {
       // Apply config overrides with force=true on manual update or if autoUpdate is enabled
       await globalState.applyConfigOverridesFromProfile(
@@ -243,6 +247,82 @@ class AppController {
         force: shouldClearSavedConfig,
       );
       applyProfileDebounce(silence: true);
+    }
+  }
+
+  Future<void> _checkTrafficLimitAndNotify(Profile profile) async {
+    final info = profile.subscriptionInfo;
+    if (info == null) return;
+
+    // Check traffic only if limit exists
+    if (info.total > 0) {
+      final use = info.upload + info.download;
+      final total = info.total;
+      final percentage = (use / total * 100).round();
+
+      if (percentage >= 100) {
+        await notificationManager.showTrafficLimitNotification(
+          title: '${profile.label}: ${appLocalizations.trafficLimitExceededNotification}',
+          body: '',
+          percentage: percentage,
+        );
+      } else if (percentage >= 90) {
+        await notificationManager.showTrafficLimitNotification(
+          title: '${profile.label}: ${appLocalizations.trafficLimit90Notification}',
+          body: '',
+          percentage: percentage,
+        );
+      } else if (percentage >= 80) {
+        await notificationManager.showTrafficLimitNotification(
+          title: '${profile.label}: ${appLocalizations.trafficLimit80Notification}',
+          body: '',
+          percentage: percentage,
+        );
+      }
+    }
+
+    // Check subscription expiry regardless of traffic limit
+    if (info.expire > 0) {
+      final expireDate = DateTime.fromMillisecondsSinceEpoch(info.expire * 1000);
+      final now = DateTime.now();
+      final daysUntilExpiry = expireDate.difference(now).inDays;
+
+      String? defaultTitle;
+      String? suffix;
+      final customTitle = info.expiryNotificationTitle;
+
+      if (daysUntilExpiry < 0) {
+        defaultTitle = appLocalizations.subscriptionExpired;
+        suffix = appLocalizations.subscriptionExpirySuffixExpired;
+      } else if (daysUntilExpiry == 0) {
+        defaultTitle = appLocalizations.subscriptionExpiresToday;
+        suffix = appLocalizations.subscriptionExpirySuffixToday;
+      } else if (daysUntilExpiry == 1) {
+        defaultTitle = appLocalizations.subscriptionExpires1Day;
+        suffix = appLocalizations.subscriptionExpirySuffix1Day;
+      } else if (daysUntilExpiry <= 3) {
+        defaultTitle = appLocalizations.subscriptionExpires3Days;
+        suffix = appLocalizations.subscriptionExpirySuffix3Days;
+      } else if (daysUntilExpiry <= 7) {
+        defaultTitle = appLocalizations.subscriptionExpires7Days;
+        suffix = appLocalizations.subscriptionExpirySuffix7Days;
+      }
+
+      if (defaultTitle != null && suffix != null) {
+        // Use custom header title with suffix, or default full text
+        final titleText = customTitle != null ? '$customTitle $suffix' : defaultTitle;
+        final notificationTitle = '${profile.label}: $titleText';
+        final notificationBody = info.expiryNotificationBody ?? appLocalizations.subscriptionExpiryDefaultBody;
+
+        await notificationManager.showSubscriptionExpiryNotification(
+          title: notificationTitle,
+          body: notificationBody,
+          buttonText: info.renewUrl != null && info.renewUrl!.isNotEmpty
+              ? appLocalizations.renewSubscription
+              : null,
+          buttonUrl: info.renewUrl,
+        );
+      }
     }
   }
 

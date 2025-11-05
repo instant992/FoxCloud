@@ -3763,6 +3763,181 @@ class AppLocalizations {
       args: [stack],
     );
   }
+
+  /// `Traffic limit exceeded`
+  String get trafficLimitExceeded {
+    return Intl.message(
+      'Traffic limit exceeded',
+      name: 'trafficLimitExceeded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All available subscription traffic has been exhausted. Connection is not possible.`
+  String get trafficLimitExceededMessage {
+    return Intl.message(
+      'All available subscription traffic has been exhausted. Connection is not possible.',
+      name: 'trafficLimitExceededMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All traffic used`
+  String get trafficLimitExceededNotification {
+    return Intl.message(
+      'All traffic used',
+      name: 'trafficLimitExceededNotification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Traffic almost gone`
+  String get trafficLimit90Notification {
+    return Intl.message(
+      'Traffic almost gone',
+      name: 'trafficLimit90Notification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Traffic running out`
+  String get trafficLimit80Notification {
+    return Intl.message(
+      'Traffic running out',
+      name: 'trafficLimit80Notification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription expires in 7 days`
+  String get subscriptionExpires7Days {
+    return Intl.message(
+      'Subscription expires in 7 days',
+      name: 'subscriptionExpires7Days',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription expires in 3 days`
+  String get subscriptionExpires3Days {
+    return Intl.message(
+      'Subscription expires in 3 days',
+      name: 'subscriptionExpires3Days',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription expires tomorrow`
+  String get subscriptionExpires1Day {
+    return Intl.message(
+      'Subscription expires tomorrow',
+      name: 'subscriptionExpires1Day',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription expires today`
+  String get subscriptionExpiresToday {
+    return Intl.message(
+      'Subscription expires today',
+      name: 'subscriptionExpiresToday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription expired`
+  String get subscriptionExpired {
+    return Intl.message(
+      'Subscription expired',
+      name: 'subscriptionExpired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `in 7 days`
+  String get subscriptionExpirySuffix7Days {
+    return Intl.message(
+      'in 7 days',
+      name: 'subscriptionExpirySuffix7Days',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `in 3 days`
+  String get subscriptionExpirySuffix3Days {
+    return Intl.message(
+      'in 3 days',
+      name: 'subscriptionExpirySuffix3Days',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `tomorrow`
+  String get subscriptionExpirySuffix1Day {
+    return Intl.message(
+      'tomorrow',
+      name: 'subscriptionExpirySuffix1Day',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `today`
+  String get subscriptionExpirySuffixToday {
+    return Intl.message(
+      'today',
+      name: 'subscriptionExpirySuffixToday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `expired`
+  String get subscriptionExpirySuffixExpired {
+    return Intl.message(
+      'expired',
+      name: 'subscriptionExpirySuffixExpired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Renew your subscription to continue using the service`
+  String get subscriptionExpiryDefaultBody {
+    return Intl.message(
+      'Renew your subscription to continue using the service',
+      name: 'subscriptionExpiryDefaultBody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Renew`
+  String get renewSubscription {
+    return Intl.message('Renew', name: 'renewSubscription', desc: '', args: []);
+  }
+
+  /// `Contact support`
+  String get contactSupport {
+    return Intl.message(
+      'Contact support',
+      name: 'contactSupport',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

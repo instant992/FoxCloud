@@ -39,7 +39,39 @@ class _StartButtonState extends ConsumerState<StartButton> {
     );
   }
 
-  void handleSwitchStart() {
+  void handleSwitchStart() async {
+    // Проверка лимита только при попытке ВКЛЮЧИТЬ прокси
+    if (!isStart) {
+      final profile = ref.read(currentProfileProvider);
+      final info = profile?.subscriptionInfo;
+
+      // Если есть информация о подписке и установлен лимит трафика
+      if (info != null && info.total > 0) {
+        final use = info.upload + info.download;
+        final total = info.total;
+
+        // Блокируем подключение если лимит превышен
+        if (use >= total) {
+          final supportUrl = profile?.supportUrl;
+          await globalState.showMessage(
+            title: appLocalizations.trafficLimitExceeded,
+            message: TextSpan(
+              text: appLocalizations.trafficLimitExceededMessage,
+            ),
+            confirmText: supportUrl != null && supportUrl.isNotEmpty
+                ? appLocalizations.contactSupport
+                : appLocalizations.confirm,
+          ).then((result) {
+            // Если есть ссылка на поддержку и пользователь нажал кнопку
+            if (result == true && supportUrl != null && supportUrl.isNotEmpty) {
+              globalState.openUrl(supportUrl);
+            }
+          });
+          return; // НЕ разрешаем подключение
+        }
+      }
+    }
+
     setState(() {
       isStart = !isStart;
     });

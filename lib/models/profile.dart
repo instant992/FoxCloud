@@ -22,12 +22,20 @@ class SubscriptionInfo with _$SubscriptionInfo {
     @Default(0) int download,
     @Default(0) int total,
     @Default(0) int expire,
+    String? expiryNotificationTitle,
+    String? expiryNotificationBody,
+    String? renewUrl,
   }) = _SubscriptionInfo;
 
   factory SubscriptionInfo.fromJson(Map<String, Object?> json) =>
       _$SubscriptionInfoFromJson(json);
 
-  factory SubscriptionInfo.formHString(String? info) {
+  factory SubscriptionInfo.formHString(
+    String? info, {
+    String? expiryNotificationTitle,
+    String? expiryNotificationBody,
+    String? renewUrl,
+  }) {
     if (info == null) return const SubscriptionInfo();
     final list = info.split(";");
     Map<String, int?> map = {};
@@ -40,6 +48,9 @@ class SubscriptionInfo with _$SubscriptionInfo {
       download: map["download"] ?? 0,
       total: map["total"] ?? 0,
       expire: map["expire"] ?? 0,
+      expiryNotificationTitle: expiryNotificationTitle,
+      expiryNotificationBody: expiryNotificationBody,
+      renewUrl: renewUrl,
     );
   }
 }
@@ -199,6 +210,9 @@ extension ProfileExtension on Profile {
     final profileTitleHeader = response.headers.value('profile-title');
     final supportUrlHeader = response.headers.value('support-url');
     final refillDateHeader = response.headers.value('subscription-refill-date');
+    final expiryNotificationTitleHeader = response.headers.value('expiry-notification-title');
+    final expiryNotificationBodyHeader = response.headers.value('expiry-notification-body');
+    final renewUrlHeader = response.headers.value('renew-url');
 
     Duration newUpdateDuration = const Duration(hours: 12);
     if (updateIntervalHeader != null) {
@@ -238,9 +252,44 @@ extension ProfileExtension on Profile {
       newRefillDate = int.tryParse(refillDateHeader);
     }
 
+    String? decodedExpiryTitle;
+    if (expiryNotificationTitleHeader != null && expiryNotificationTitleHeader.startsWith('base64:')) {
+      final encoded = expiryNotificationTitleHeader.substring(7);
+      try {
+        decodedExpiryTitle = utf8.decode(base64.decode(encoded));
+      } catch (e) {
+        commonPrint.log('Failed to decode expiry notification title: $e');
+      }
+    }
+
+    String? decodedExpiryBody;
+    if (expiryNotificationBodyHeader != null && expiryNotificationBodyHeader.startsWith('base64:')) {
+      final encoded = expiryNotificationBodyHeader.substring(7);
+      try {
+        decodedExpiryBody = utf8.decode(base64.decode(encoded));
+      } catch (e) {
+        commonPrint.log('Failed to decode expiry notification body: $e');
+      }
+    }
+
+    String? decodedRenewUrl;
+    if (renewUrlHeader != null && renewUrlHeader.startsWith('base64:')) {
+      final encoded = renewUrlHeader.substring(7);
+      try {
+        decodedRenewUrl = utf8.decode(base64.decode(encoded));
+      } catch (e) {
+        commonPrint.log('Failed to decode renew URL: $e');
+      }
+    }
+
     return await copyWith(
       label: newLabel ?? utils.getFileNameForDisposition(disposition) ?? label ?? id,
-      subscriptionInfo: SubscriptionInfo.formHString(userinfo),
+      subscriptionInfo: SubscriptionInfo.formHString(
+        userinfo,
+        expiryNotificationTitle: decodedExpiryTitle,
+        expiryNotificationBody: decodedExpiryBody,
+        renewUrl: decodedRenewUrl,
+      ),
       announce: announce,
       autoUpdateDuration: newUpdateDuration,
       supportUrl: supportUrlHeader,
