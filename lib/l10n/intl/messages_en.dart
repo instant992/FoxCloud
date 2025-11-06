@@ -901,6 +901,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "updateAborted": MessageLookupByLibrary.simpleMessage("Operation aborted"),
     "updated": MessageLookupByLibrary.simpleMessage("Updated:"),
     "upload": MessageLookupByLibrary.simpleMessage("Upload"),
+    "uploadConfig": MessageLookupByLibrary.simpleMessage("Upload config"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Obtain profile through URL",

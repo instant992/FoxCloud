@@ -350,7 +350,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                             ),
                             CommonChip(
                               avatar: const Icon(Icons.upload_rounded),
-                              label: appLocalizations.upload,
+                              label: appLocalizations.uploadConfig,
                               onPressed: _uploadProfileFile,
                             ),
                           ],

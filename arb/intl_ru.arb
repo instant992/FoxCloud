@@ -19,7 +19,7 @@
   "networkSpeed": "Скорость сети",
   "outboundMode": "Исходящий режим",
   "networkDetection": "IP-адрес",
-  "upload": "Загрузить конфиг",
+  "upload": "Отправлено",
   "download": "Получено",
   "noProxy": "Нет прокси",
   "noProxyDesc": "Пожалуйста, создай подписку или добавь действительный подписку",
@@ -507,5 +507,6 @@
   "subscriptionExpirySuffixExpired": "истекла",
   "subscriptionExpiryDefaultBody": "Продлите подписку, чтобы продолжить пользоваться сервисом",
   "renewSubscription": "Продлить",
-  "contactSupport": "Связаться с поддержкой"
+  "contactSupport": "Связаться с поддержкой",
+  "uploadConfig": "Загрузить конфиг"
 }

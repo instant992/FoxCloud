@@ -953,7 +953,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "update": MessageLookupByLibrary.simpleMessage("Обновить"),
     "updateAborted": MessageLookupByLibrary.simpleMessage("Операция прервана"),
     "updated": MessageLookupByLibrary.simpleMessage("Обновлено:"),
-    "upload": MessageLookupByLibrary.simpleMessage("Загрузить конфиг"),
+    "upload": MessageLookupByLibrary.simpleMessage("Отправлено"),
+    "uploadConfig": MessageLookupByLibrary.simpleMessage("Загрузить конфиг"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Добавить подписку по ссылке",

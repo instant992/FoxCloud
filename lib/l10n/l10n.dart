@@ -4013,6 +4013,16 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Upload config`
+  String get uploadConfig {
+    return Intl.message(
+      'Upload config',
+      name: 'uploadConfig',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -506,5 +506,6 @@
   "subscriptionExpirySuffixExpired": "expired",
   "subscriptionExpiryDefaultBody": "Renew your subscription to continue using the service",
   "renewSubscription": "Renew",
-  "contactSupport": "Contact support"
+  "contactSupport": "Contact support",
+  "uploadConfig": "Upload config"
 }
