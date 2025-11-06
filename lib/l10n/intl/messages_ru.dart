@@ -322,6 +322,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "dnsMode": MessageLookupByLibrary.simpleMessage("Режим DNS"),
     "domain": MessageLookupByLibrary.simpleMessage("Домен"),
     "download": MessageLookupByLibrary.simpleMessage("Получено"),
+    "downloadAndInstall": MessageLookupByLibrary.simpleMessage(
+      "Скачать и установить",
+    ),
+    "downloadComplete": MessageLookupByLibrary.simpleMessage(
+      "Скачивание завершено",
+    ),
+    "downloadFailed": MessageLookupByLibrary.simpleMessage("Ошибка скачивания"),
+    "downloading": MessageLookupByLibrary.simpleMessage("В процессе..."),
+    "downloadingUpdate": MessageLookupByLibrary.simpleMessage(
+      "Скачивание обновления",
+    ),
     "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
     "editProfileTitle": MessageLookupByLibrary.simpleMessage(
       "Редактировать подписку",
@@ -438,6 +449,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "init": MessageLookupByLibrary.simpleMessage("Инициализация"),
     "inputCorrectHotkey": MessageLookupByLibrary.simpleMessage(
       "Пожалуйста, введи правильную горячую клавишу",
+    ),
+    "installingUpdate": MessageLookupByLibrary.simpleMessage(
+      "Установка обновления...",
     ),
     "intelligentSelected": MessageLookupByLibrary.simpleMessage(
       "Интеллектуальный выбор",
@@ -710,6 +724,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Сканируйте QR-код для получения подписки",
     ),
     "rainbowScheme": MessageLookupByLibrary.simpleMessage("Радужные"),
+    "readyToInstall": MessageLookupByLibrary.simpleMessage(
+      "Готово к установке",
+    ),
     "recovery": MessageLookupByLibrary.simpleMessage("Восстановление"),
     "recoveryAll": MessageLookupByLibrary.simpleMessage(
       "Восстановить все данные",
@@ -906,7 +923,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Лимит трафика превышен",
     ),
     "trafficLimitExceededMessage": MessageLookupByLibrary.simpleMessage(
-      "Весь доступный трафик по подписке исчерпан. Подключение невозможно.",
+      "Весь доступный трафик по подписке исчерпан. Подключение невозможно.",
     ),
     "trafficLimitExceededNotification": MessageLookupByLibrary.simpleMessage(
       "Весь трафик использован",
@@ -915,6 +932,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Трафик безлимитный",
     ),
     "trafficUsage": MessageLookupByLibrary.simpleMessage("Трафик"),
+    "trafficUsedStatus": MessageLookupByLibrary.simpleMessage("Использовано"),
     "tun": MessageLookupByLibrary.simpleMessage("TUN"),
     "tunDesc": MessageLookupByLibrary.simpleMessage(
       "действительно только в режиме администратора",

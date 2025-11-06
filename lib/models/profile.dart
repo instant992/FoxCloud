@@ -23,6 +23,7 @@ class SubscriptionInfo with _$SubscriptionInfo {
     @Default(0) int total,
     @Default(0) int expire,
     String? expiryNotificationTitle,
+    String? expiryNotificationTitleExpired,
     String? expiryNotificationBody,
     String? renewUrl,
   }) = _SubscriptionInfo;
@@ -33,6 +34,7 @@ class SubscriptionInfo with _$SubscriptionInfo {
   factory SubscriptionInfo.formHString(
     String? info, {
     String? expiryNotificationTitle,
+    String? expiryNotificationTitleExpired,
     String? expiryNotificationBody,
     String? renewUrl,
   }) {
@@ -49,6 +51,7 @@ class SubscriptionInfo with _$SubscriptionInfo {
       total: map["total"] ?? 0,
       expire: map["expire"] ?? 0,
       expiryNotificationTitle: expiryNotificationTitle,
+      expiryNotificationTitleExpired: expiryNotificationTitleExpired,
       expiryNotificationBody: expiryNotificationBody,
       renewUrl: renewUrl,
     );
@@ -211,6 +214,7 @@ extension ProfileExtension on Profile {
     final supportUrlHeader = response.headers.value('support-url');
     final refillDateHeader = response.headers.value('subscription-refill-date');
     final expiryNotificationTitleHeader = response.headers.value('expiry-notification-title');
+    final expiryNotificationTitleExpiredHeader = response.headers.value('expiry-notification-title-expired');
     final expiryNotificationBodyHeader = response.headers.value('expiry-notification-body');
     final renewUrlHeader = response.headers.value('renew-url');
 
@@ -262,6 +266,16 @@ extension ProfileExtension on Profile {
       }
     }
 
+    String? decodedExpiryTitleExpired;
+    if (expiryNotificationTitleExpiredHeader != null && expiryNotificationTitleExpiredHeader.startsWith('base64:')) {
+      final encoded = expiryNotificationTitleExpiredHeader.substring(7);
+      try {
+        decodedExpiryTitleExpired = utf8.decode(base64.decode(encoded));
+      } catch (e) {
+        commonPrint.log('Failed to decode expiry notification title (expired): $e');
+      }
+    }
+
     String? decodedExpiryBody;
     if (expiryNotificationBodyHeader != null && expiryNotificationBodyHeader.startsWith('base64:')) {
       final encoded = expiryNotificationBodyHeader.substring(7);
@@ -287,6 +301,7 @@ extension ProfileExtension on Profile {
       subscriptionInfo: SubscriptionInfo.formHString(
         userinfo,
         expiryNotificationTitle: decodedExpiryTitle,
+        expiryNotificationTitleExpired: decodedExpiryTitleExpired,
         expiryNotificationBody: decodedExpiryBody,
         renewUrl: decodedRenewUrl,
       ),

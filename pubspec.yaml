@@ -1,7 +1,7 @@
 name: flowvy
 description: A cross-platform proxy client based on the FlClash project — simple, easy to use, open-source, and ad-free
 publish_to: 'none'
-version: 2.0.0+10
+version: 2.0.0+1
 environment:
   sdk: '>=3.1.0 <4.0.0'
 
@@ -65,7 +65,9 @@ dependencies:
   crypto: ^3.0.3
   http: ^1.4.0
   flutter_local_notifications: ^18.0.1
-  windows_notification: ^1.3.0
+  flowvy_notification:
+    path: plugins/flowvy_notification
+  flutter_markdown: ^0.7.4+1
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -25,6 +25,8 @@ mixin _$SubscriptionInfo {
   int get total => throw _privateConstructorUsedError;
   int get expire => throw _privateConstructorUsedError;
   String? get expiryNotificationTitle => throw _privateConstructorUsedError;
+  String? get expiryNotificationTitleExpired =>
+      throw _privateConstructorUsedError;
   String? get expiryNotificationBody => throw _privateConstructorUsedError;
   String? get renewUrl => throw _privateConstructorUsedError;
 
@@ -50,6 +52,7 @@ abstract class $SubscriptionInfoCopyWith<$Res> {
       int total,
       int expire,
       String? expiryNotificationTitle,
+      String? expiryNotificationTitleExpired,
       String? expiryNotificationBody,
       String? renewUrl});
 }
@@ -74,6 +77,7 @@ class _$SubscriptionInfoCopyWithImpl<$Res, $Val extends SubscriptionInfo>
     Object? total = null,
     Object? expire = null,
     Object? expiryNotificationTitle = freezed,
+    Object? expiryNotificationTitleExpired = freezed,
     Object? expiryNotificationBody = freezed,
     Object? renewUrl = freezed,
   }) {
@@ -97,6 +101,10 @@ class _$SubscriptionInfoCopyWithImpl<$Res, $Val extends SubscriptionInfo>
       expiryNotificationTitle: freezed == expiryNotificationTitle
           ? _value.expiryNotificationTitle
           : expiryNotificationTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expiryNotificationTitleExpired: freezed == expiryNotificationTitleExpired
+          ? _value.expiryNotificationTitleExpired
+          : expiryNotificationTitleExpired // ignore: cast_nullable_to_non_nullable
               as String?,
       expiryNotificationBody: freezed == expiryNotificationBody
           ? _value.expiryNotificationBody
@@ -124,6 +132,7 @@ abstract class _$$SubscriptionInfoImplCopyWith<$Res>
       int total,
       int expire,
       String? expiryNotificationTitle,
+      String? expiryNotificationTitleExpired,
       String? expiryNotificationBody,
       String? renewUrl});
 }
@@ -146,6 +155,7 @@ class __$$SubscriptionInfoImplCopyWithImpl<$Res>
     Object? total = null,
     Object? expire = null,
     Object? expiryNotificationTitle = freezed,
+    Object? expiryNotificationTitleExpired = freezed,
     Object? expiryNotificationBody = freezed,
     Object? renewUrl = freezed,
   }) {
@@ -170,6 +180,10 @@ class __$$SubscriptionInfoImplCopyWithImpl<$Res>
           ? _value.expiryNotificationTitle
           : expiryNotificationTitle // ignore: cast_nullable_to_non_nullable
               as String?,
+      expiryNotificationTitleExpired: freezed == expiryNotificationTitleExpired
+          ? _value.expiryNotificationTitleExpired
+          : expiryNotificationTitleExpired // ignore: cast_nullable_to_non_nullable
+              as String?,
       expiryNotificationBody: freezed == expiryNotificationBody
           ? _value.expiryNotificationBody
           : expiryNotificationBody // ignore: cast_nullable_to_non_nullable
@@ -191,6 +205,7 @@ class _$SubscriptionInfoImpl implements _SubscriptionInfo {
       this.total = 0,
       this.expire = 0,
       this.expiryNotificationTitle,
+      this.expiryNotificationTitleExpired,
       this.expiryNotificationBody,
       this.renewUrl});
 
@@ -212,13 +227,15 @@ class _$SubscriptionInfoImpl implements _SubscriptionInfo {
   @override
   final String? expiryNotificationTitle;
   @override
+  final String? expiryNotificationTitleExpired;
+  @override
   final String? expiryNotificationBody;
   @override
   final String? renewUrl;
 
   @override
   String toString() {
-    return 'SubscriptionInfo(upload: $upload, download: $download, total: $total, expire: $expire, expiryNotificationTitle: $expiryNotificationTitle, expiryNotificationBody: $expiryNotificationBody, renewUrl: $renewUrl)';
+    return 'SubscriptionInfo(upload: $upload, download: $download, total: $total, expire: $expire, expiryNotificationTitle: $expiryNotificationTitle, expiryNotificationTitleExpired: $expiryNotificationTitleExpired, expiryNotificationBody: $expiryNotificationBody, renewUrl: $renewUrl)';
   }
 
   @override
@@ -234,6 +251,10 @@ class _$SubscriptionInfoImpl implements _SubscriptionInfo {
             (identical(
                     other.expiryNotificationTitle, expiryNotificationTitle) ||
                 other.expiryNotificationTitle == expiryNotificationTitle) &&
+            (identical(other.expiryNotificationTitleExpired,
+                    expiryNotificationTitleExpired) ||
+                other.expiryNotificationTitleExpired ==
+                    expiryNotificationTitleExpired) &&
             (identical(other.expiryNotificationBody, expiryNotificationBody) ||
                 other.expiryNotificationBody == expiryNotificationBody) &&
             (identical(other.renewUrl, renewUrl) ||
@@ -242,8 +263,16 @@ class _$SubscriptionInfoImpl implements _SubscriptionInfo {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, upload, download, total, expire,
-      expiryNotificationTitle, expiryNotificationBody, renewUrl);
+  int get hashCode => Object.hash(
+      runtimeType,
+      upload,
+      download,
+      total,
+      expire,
+      expiryNotificationTitle,
+      expiryNotificationTitleExpired,
+      expiryNotificationBody,
+      renewUrl);
 
   /// Create a copy of SubscriptionInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -269,6 +298,7 @@ abstract class _SubscriptionInfo implements SubscriptionInfo {
       final int total,
       final int expire,
       final String? expiryNotificationTitle,
+      final String? expiryNotificationTitleExpired,
       final String? expiryNotificationBody,
       final String? renewUrl}) = _$SubscriptionInfoImpl;
 
@@ -285,6 +315,8 @@ abstract class _SubscriptionInfo implements SubscriptionInfo {
   int get expire;
   @override
   String? get expiryNotificationTitle;
+  @override
+  String? get expiryNotificationTitleExpired;
   @override
   String? get expiryNotificationBody;
   @override

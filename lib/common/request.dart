@@ -136,6 +136,18 @@ class Request {
     return res;
   }
 
+  Future<void> downloadFile(
+    String url,
+    String savePath, {
+    void Function(int, int)? onReceiveProgress,
+  }) async {
+    await _dio.download(
+      url,
+      savePath,
+      onReceiveProgress: onReceiveProgress,
+    );
+  }
+
   Future<bool> pingHelper() async {
     try {
       final response = await _dio

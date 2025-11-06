@@ -1244,6 +1244,76 @@ class AppLocalizations {
     );
   }
 
+  /// `Download and install`
+  String get downloadAndInstall {
+    return Intl.message(
+      'Download and install',
+      name: 'downloadAndInstall',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In progress...`
+  String get downloading {
+    return Intl.message(
+      'In progress...',
+      name: 'downloading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download failed`
+  String get downloadFailed {
+    return Intl.message(
+      'Download failed',
+      name: 'downloadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Installing update...`
+  String get installingUpdate {
+    return Intl.message(
+      'Installing update...',
+      name: 'installingUpdate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloading update`
+  String get downloadingUpdate {
+    return Intl.message(
+      'Downloading update',
+      name: 'downloadingUpdate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download complete`
+  String get downloadComplete {
+    return Intl.message(
+      'Download complete',
+      name: 'downloadComplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ready to install`
+  String get readyToInstall {
+    return Intl.message(
+      'Ready to install',
+      name: 'readyToInstall',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Unknown`
   String get unknown {
     return Intl.message('Unknown', name: 'unknown', desc: '', args: []);
@@ -3812,6 +3882,11 @@ class AppLocalizations {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Used`
+  String get trafficUsedStatus {
+    return Intl.message('Used', name: 'trafficUsedStatus', desc: '', args: []);
   }
 
   /// `Subscription expires in 7 days`

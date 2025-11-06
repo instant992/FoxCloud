@@ -222,8 +222,8 @@ class MetainfoWidget extends ConsumerWidget {
                             : (isNearLimit ? Icons.warning_rounded : Icons.data_usage_rounded),
                         size: 16,
                         color: isOverLimit
-                            ? Colors.red
-                            : (isNearLimit ? Colors.orange : iconTheme.color),
+                            ? customTheme.trafficDangerColor
+                            : (isNearLimit ? customTheme.trafficWarningColor : iconTheme.color),
                       ),
                       const SizedBox(width: 6),
                       Expanded(
@@ -299,8 +299,8 @@ class MetainfoWidget extends ConsumerWidget {
                           value: progress,
                           minHeight: 6,
                           color: isOverLimit
-                              ? Colors.red
-                              : (isNearLimit ? Colors.orange : colorScheme.primary),
+                              ? customTheme.trafficDangerColor
+                              : (isNearLimit ? customTheme.trafficWarningColor : colorScheme.primary),
                           backgroundColor: customTheme.profileCardProgressTrack,
                         ),
                       ),
@@ -364,20 +364,29 @@ class MetainfoWidget extends ConsumerWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: hasExpireDate && expireDate != null
-                            ? Text.rich(
-                                TextSpan(
-                                  style: subtitleStyle,
-                                  children: [
-                                    TextSpan(text: '${appLocalizations.subscriptionTo} '),
+                            ? Builder(
+                                builder: (context) {
+                                  final isExpired = expireDate.isBefore(DateTime.now());
+                                  return Text.rich(
                                     TextSpan(
-                                      text: expireDate.ddMMyyyy,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: subtitleStyle?.color,
-                                      ),
+                                      style: subtitleStyle,
+                                      children: [
+                                        TextSpan(
+                                          text: isExpired
+                                              ? '${appLocalizations.subscriptionExpired}: '
+                                              : '${appLocalizations.subscriptionTo} ',
+                                        ),
+                                        TextSpan(
+                                          text: expireDate.ddMMyyyy,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: subtitleStyle?.color,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  );
+                                },
                               )
                             : Text(
                                 appLocalizations.subscriptionUnlimited,

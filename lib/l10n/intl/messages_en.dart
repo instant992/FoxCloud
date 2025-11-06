@@ -305,6 +305,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "dnsMode": MessageLookupByLibrary.simpleMessage("DNS mode"),
     "domain": MessageLookupByLibrary.simpleMessage("Domain"),
     "download": MessageLookupByLibrary.simpleMessage("Download"),
+    "downloadAndInstall": MessageLookupByLibrary.simpleMessage(
+      "Download and install",
+    ),
+    "downloadComplete": MessageLookupByLibrary.simpleMessage(
+      "Download complete",
+    ),
+    "downloadFailed": MessageLookupByLibrary.simpleMessage("Download failed"),
+    "downloading": MessageLookupByLibrary.simpleMessage("In progress..."),
+    "downloadingUpdate": MessageLookupByLibrary.simpleMessage(
+      "Downloading update",
+    ),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "editProfileTitle": MessageLookupByLibrary.simpleMessage("Edit Profile"),
     "emptyStateMessage": MessageLookupByLibrary.simpleMessage(
@@ -405,6 +416,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "init": MessageLookupByLibrary.simpleMessage("Init"),
     "inputCorrectHotkey": MessageLookupByLibrary.simpleMessage(
       "Please enter the correct hotkey",
+    ),
+    "installingUpdate": MessageLookupByLibrary.simpleMessage(
+      "Installing update...",
     ),
     "intelligentSelected": MessageLookupByLibrary.simpleMessage(
       "Intelligent selection",
@@ -667,6 +681,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Scan QR code to obtain profile",
     ),
     "rainbowScheme": MessageLookupByLibrary.simpleMessage("Rainbow"),
+    "readyToInstall": MessageLookupByLibrary.simpleMessage("Ready to install"),
     "recovery": MessageLookupByLibrary.simpleMessage("Recovery"),
     "recoveryAll": MessageLookupByLibrary.simpleMessage("Recovery all data"),
     "recoveryProfiles": MessageLookupByLibrary.simpleMessage(
@@ -866,6 +881,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Unlimited traffic",
     ),
     "trafficUsage": MessageLookupByLibrary.simpleMessage("Traffic usage"),
+    "trafficUsedStatus": MessageLookupByLibrary.simpleMessage("Used"),
     "tun": MessageLookupByLibrary.simpleMessage("TUN"),
     "tunDesc": MessageLookupByLibrary.simpleMessage(
       "only effective in administrator mode",

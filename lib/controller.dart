@@ -237,7 +237,7 @@ class AppController {
         .setProfile(profileToSave);
     savePreferencesDebounce();
 
-    // Проверить лимит трафика и показать системное уведомление если нужно
+    // Check traffic limit and show system notification if needed
     await _checkTrafficLimitAndNotify(profileToSave);
 
     if (profile.id == _ref.read(currentProfileIdProvider)) {
@@ -265,18 +265,21 @@ class AppController {
           title: '${profile.label}: ${appLocalizations.trafficLimitExceededNotification}',
           body: '',
           percentage: percentage,
+          status: appLocalizations.trafficUsedStatus,
         );
       } else if (percentage >= 90) {
         await notificationManager.showTrafficLimitNotification(
           title: '${profile.label}: ${appLocalizations.trafficLimit90Notification}',
           body: '',
           percentage: percentage,
+          status: appLocalizations.trafficUsedStatus,
         );
       } else if (percentage >= 80) {
         await notificationManager.showTrafficLimitNotification(
           title: '${profile.label}: ${appLocalizations.trafficLimit80Notification}',
           body: '',
           percentage: percentage,
+          status: appLocalizations.trafficUsedStatus,
         );
       }
     }
@@ -289,28 +292,38 @@ class AppController {
 
       String? defaultTitle;
       String? suffix;
-      final customTitle = info.expiryNotificationTitle;
+      String? customTitle;
 
-      if (daysUntilExpiry < 0) {
+      if (expireDate.isBefore(now)) {
         defaultTitle = appLocalizations.subscriptionExpired;
         suffix = appLocalizations.subscriptionExpirySuffixExpired;
-      } else if (daysUntilExpiry == 0) {
-        defaultTitle = appLocalizations.subscriptionExpiresToday;
-        suffix = appLocalizations.subscriptionExpirySuffixToday;
-      } else if (daysUntilExpiry == 1) {
-        defaultTitle = appLocalizations.subscriptionExpires1Day;
-        suffix = appLocalizations.subscriptionExpirySuffix1Day;
-      } else if (daysUntilExpiry <= 3) {
-        defaultTitle = appLocalizations.subscriptionExpires3Days;
-        suffix = appLocalizations.subscriptionExpirySuffix3Days;
-      } else if (daysUntilExpiry <= 7) {
-        defaultTitle = appLocalizations.subscriptionExpires7Days;
-        suffix = appLocalizations.subscriptionExpirySuffix7Days;
+        customTitle = info.expiryNotificationTitleExpired;
+      } else {
+        customTitle = info.expiryNotificationTitle;
+        if (daysUntilExpiry == 0) {
+          defaultTitle = appLocalizations.subscriptionExpiresToday;
+          suffix = appLocalizations.subscriptionExpirySuffixToday;
+        } else if (daysUntilExpiry == 1) {
+          defaultTitle = appLocalizations.subscriptionExpires1Day;
+          suffix = appLocalizations.subscriptionExpirySuffix1Day;
+        } else if (daysUntilExpiry <= 3) {
+          defaultTitle = appLocalizations.subscriptionExpires3Days;
+          suffix = appLocalizations.subscriptionExpirySuffix3Days;
+        } else if (daysUntilExpiry <= 7) {
+          defaultTitle = appLocalizations.subscriptionExpires7Days;
+          suffix = appLocalizations.subscriptionExpirySuffix7Days;
+        }
       }
 
-      if (defaultTitle != null && suffix != null) {
-        // Use custom header title with suffix, or default full text
-        final titleText = customTitle != null ? '$customTitle $suffix' : defaultTitle;
+      if (defaultTitle != null) {
+        String titleText;
+        if (expireDate.isBefore(now)) {
+          // For expired: use custom title as-is (without suffix), or default title
+          titleText = customTitle ?? defaultTitle;
+        } else {
+          // For active: add suffix to custom title, or use default full text
+          titleText = customTitle != null && suffix != null ? '$customTitle $suffix' : defaultTitle;
+        }
         final notificationTitle = '${profile.label}: $titleText';
         final notificationBody = info.expiryNotificationBody ?? appLocalizations.subscriptionExpiryDefaultBody;
 
@@ -674,34 +687,29 @@ Future handleClear() async {
     }
     if (data != null) {
       final tagName = data['tag_name'];
-      final body = data['body'];
-      final submits = utils.parseReleaseBody(body);
-      final textTheme = context.textTheme;
-      final res = await globalState.showMessage(
-        title: appLocalizations.discoverNewVersion,
-        message: TextSpan(
-          text: "$tagName \n",
-          style: textTheme.headlineSmall,
-          children: [
-            TextSpan(
-              text: "\n",
-              style: textTheme.bodyMedium,
-            ),
-            for (final submit in submits)
-              TextSpan(
-                text: "- $submit \n",
-                style: textTheme.bodyMedium,
-              ),
-          ],
-        ),
-        confirmText: appLocalizations.goDownload,
+      final body = data['body'] ?? '';
+
+      // Determine if we can auto-install
+      final canAutoInstall = Platform.isWindows || Platform.isAndroid;
+
+      final res = await globalState.showMarkdownMessage(
+        title: '${appLocalizations.discoverNewVersion} - $tagName',
+        markdown: body,
+        confirmText: canAutoInstall
+            ? appLocalizations.downloadAndInstall
+            : appLocalizations.goDownload,
       );
       if (res != true) {
         return;
       }
-      launchUrl(
-        Uri.parse("https://github.com/$repository/releases/latest"),
-      );
+
+      if (canAutoInstall) {
+        await _downloadAndInstallUpdate();
+      } else {
+        launchUrl(
+          Uri.parse("https://github.com/$repository/releases/latest"),
+        );
+      }
     } else if (handleError) {
       globalState.showMessage(
         title: appLocalizations.checkUpdate,
@@ -709,6 +717,82 @@ Future handleClear() async {
           text: appLocalizations.checkUpdateError,
         ),
       );
+    }
+  }
+
+  Future<void> _downloadAndInstallUpdate() async {
+    // Save message function before async operations
+    final showMessage = context.showNotifier;
+
+    try {
+      // Determine download URL based on platform
+      final fileName = Platform.isWindows
+          ? 'Flowvy-windows-amd64-setup.exe'
+          : 'Flowvy-arm64-v8a.apk';
+      final downloadUrl = 'https://github.com/$repository/releases/latest/download/$fileName';
+
+      // Get temporary directory path
+      final tempDir = await appPath.tempDir.future;
+      final savePath = join(tempDir.path, fileName);
+
+      // Log download start
+      commonPrint.log('Starting update download: $fileName from $downloadUrl');
+
+      // Show initial notification
+      await notificationManager.showDownloadProgressNotification(
+        title: appLocalizations.downloadingUpdate,
+        percentage: 0,
+        status: appLocalizations.downloading,
+      );
+
+      // Download the file with progress updates
+      await request.downloadFile(
+        downloadUrl,
+        savePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            final progress = ((received / total) * 100).round();
+            // Update notification with progress (no logging to avoid spam)
+            notificationManager.showDownloadProgressNotification(
+              title: appLocalizations.downloadingUpdate,
+              percentage: progress,
+              status: appLocalizations.downloading,
+            );
+          }
+        },
+      );
+
+      // Log download completion
+      commonPrint.log('Update download completed: $savePath');
+
+      // Show completion notification
+      await notificationManager.showDownloadProgressNotification(
+        title: appLocalizations.downloadComplete,
+        percentage: 100,
+        status: appLocalizations.readyToInstall,
+      );
+
+      // Small delay to show completion
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Cancel notification before installing
+      await notificationManager.cancelDownloadNotification();
+
+      // Install based on platform
+      if (Platform.isWindows) {
+        commonPrint.log('Launching Windows installer: $savePath');
+        // Launch installer (it will handle closing the app)
+        await Process.start(savePath, []);
+      } else if (Platform.isAndroid) {
+        commonPrint.log('Opening APK for installation: $savePath');
+        // Open APK for installation
+        await app?.openFile(savePath);
+      }
+    } catch (e) {
+      commonPrint.log('${appLocalizations.downloadFailed}: $e');
+      // Cancel progress notification and show error
+      await notificationManager.cancelDownloadNotification();
+      showMessage(appLocalizations.downloadFailed);
     }
   }
 

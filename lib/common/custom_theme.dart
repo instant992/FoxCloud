@@ -29,6 +29,8 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
   final Color? profileCardBorderSelected;
   final Color? profileCardProgressTrack;
   final Color? trafficChartDownloadColor;
+  final Color? trafficWarningColor;
+  final Color? trafficDangerColor;
 
 
   const CustomTheme({
@@ -56,6 +58,8 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
     required this.profileCardBorderSelected,
     required this.profileCardProgressTrack,
     required this.trafficChartDownloadColor,
+    required this.trafficWarningColor,
+    required this.trafficDangerColor,
   });
 
   @override
@@ -91,6 +95,8 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
       profileCardBorderSelected: Color.lerp(profileCardBorderSelected, other.profileCardBorderSelected, t),
       profileCardProgressTrack: Color.lerp(profileCardProgressTrack, other.profileCardProgressTrack, t),
       trafficChartDownloadColor: Color.lerp(trafficChartDownloadColor, other.trafficChartDownloadColor, t),
+      trafficWarningColor: Color.lerp(trafficWarningColor, other.trafficWarningColor, t),
+      trafficDangerColor: Color.lerp(trafficDangerColor, other.trafficDangerColor, t),
     );
   }
 
@@ -120,6 +126,8 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
     Color? profileCardBorderSelected,
     Color? profileCardProgressTrack,
     Color? trafficChartDownloadColor,
+    Color? trafficWarningColor,
+    Color? trafficDangerColor,
   }) {
     return CustomTheme(
       connectButtonBackground: connectButtonBackground ?? this.connectButtonBackground,
@@ -146,6 +154,8 @@ class CustomTheme extends ThemeExtension<CustomTheme> {
       profileCardBorderSelected: profileCardBorderSelected ?? this.profileCardBorderSelected,
       profileCardProgressTrack: profileCardProgressTrack ?? this.profileCardProgressTrack,
       trafficChartDownloadColor: trafficChartDownloadColor ?? this.trafficChartDownloadColor,
+      trafficWarningColor: trafficWarningColor ?? this.trafficWarningColor,
+      trafficDangerColor: trafficDangerColor ?? this.trafficDangerColor,
     );
   }
 }

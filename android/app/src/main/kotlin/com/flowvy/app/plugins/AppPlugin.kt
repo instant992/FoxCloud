@@ -223,38 +223,54 @@ class AppPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware 
     }
 
     private fun openFile(path: String) {
-        val file = File(path)
-        val uri = FileProvider.getUriForFile(
-            FlowvyApplication.getAppContext(),
-            "${FlowvyApplication.getAppContext().packageName}.fileProvider",
-            file
-        )
-
-        val intent = Intent(Intent.ACTION_VIEW).setDataAndType(
-            uri,
-            "text/plain"
-        )
-
-        val flags =
-            Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
-
-        val resInfoList = FlowvyApplication.getAppContext().packageManager.queryIntentActivities(
-            intent, PackageManager.MATCH_DEFAULT_ONLY
-        )
-
-        for (resolveInfo in resInfoList) {
-            val packageName = resolveInfo.activityInfo.packageName
-            FlowvyApplication.getAppContext().grantUriPermission(
-                packageName,
-                uri,
-                flags
-            )
-        }
-
         try {
-            activityRef?.get()?.startActivity(intent)
+            val file = File(path)
+            println("openFile: path=$path, exists=${file.exists()}, size=${file.length()}")
+
+            if (!file.exists()) {
+                println("openFile: File does not exist at $path")
+                return
+            }
+
+            val uri = FileProvider.getUriForFile(
+                FlowvyApplication.getAppContext(),
+                "${FlowvyApplication.getAppContext().packageName}.fileProvider",
+                file
+            )
+            println("openFile: Created URI: $uri")
+
+            val isApk = file.extension.lowercase() == "apk"
+
+            val intent = if (isApk && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                println("openFile: Using ACTION_INSTALL_PACKAGE")
+                Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+                    setData(uri)
+                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                }
+            } else {
+                println("openFile: Using ACTION_VIEW")
+                val mimeType = when (file.extension.lowercase()) {
+                    "apk" -> "application/vnd.android.package-archive"
+                    else -> "text/plain"
+                }
+                Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(uri, mimeType)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                }
+            }
+
+            val activity = activityRef?.get()
+            if (activity != null) {
+                println("openFile: Starting activity from activity context")
+                activity.startActivity(intent)
+            } else {
+                println("openFile: Starting activity from application context")
+                FlowvyApplication.getAppContext().startActivity(intent)
+            }
+            println("openFile: Activity started successfully")
         } catch (e: Exception) {
-            println(e)
+            println("openFile: Exception occurred: ${e.message}")
+            e.printStackTrace()
         }
     }
 

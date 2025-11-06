@@ -55,6 +55,8 @@ const darkThemeExtension = CustomTheme(
   profileCardBackgroundSelected: Color(0x2449DD93),
   profileCardBorderSelected: Color(0x5949DD93),
   profileCardProgressTrack: Color(0x1FFFFFFF),
+  trafficWarningColor: Color(0xFFFFCB2F),
+  trafficDangerColor: Color(0xFFF84235),
 );
 
 const lightThemeExtension = CustomTheme(
@@ -82,6 +84,8 @@ const lightThemeExtension = CustomTheme(
   profileCardBackgroundSelected: Color(0x2449DD93),
   profileCardBorderSelected: Color(0x5949DD93),
   profileCardProgressTrack: Color(0x1F171717),
+  trafficWarningColor: Color(0xFFFFCB2F),
+  trafficDangerColor: Color(0xFFF84235),
 );
 
 

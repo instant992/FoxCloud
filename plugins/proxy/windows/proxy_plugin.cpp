@@ -3,7 +3,7 @@
 // This must be included before many other Windows headers.
 #include <windows.h>
 
-// ---> 1. ДОБАВЛЕНО ДЛЯ УПРАВЛЕНИЯ СЛУЖБАМИ <---
+// Windows service management
 #include <winsvc.h>
 
 #include <WinInet.h>

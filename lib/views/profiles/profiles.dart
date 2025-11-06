@@ -483,8 +483,8 @@ class ProfileItem extends StatelessWidget {
                             : (isNearLimit ? Icons.warning_rounded : Icons.data_usage_rounded),
                         size: 16,
                         color: isOverLimit
-                            ? Colors.red
-                            : (isNearLimit ? Colors.orange : iconTheme.color),
+                            ? customTheme.trafficDangerColor
+                            : (isNearLimit ? customTheme.trafficWarningColor : iconTheme.color),
                       ),
                       const SizedBox(width: 6),
                       Expanded(
@@ -520,8 +520,8 @@ class ProfileItem extends StatelessWidget {
                           value: progress,
                           minHeight: 6,
                           color: isOverLimit
-                              ? Colors.red
-                              : (isNearLimit ? Colors.orange : colorScheme.primary),
+                              ? customTheme.trafficDangerColor
+                              : (isNearLimit ? customTheme.trafficWarningColor : colorScheme.primary),
                           backgroundColor: customTheme.profileCardProgressTrack,
                         ),
                       ),
@@ -534,20 +534,29 @@ class ProfileItem extends StatelessWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: hasExpireDate && expireDate != null
-                            ? Text.rich(
-                                TextSpan(
-                                  style: subtitleStyle,
-                                  children: [
+                            ? Builder(
+                                builder: (context) {
+                                  final isExpired = expireDate.isBefore(DateTime.now());
+                                  return Text.rich(
                                     TextSpan(
-                                        text:
-                                            '${appLocalizations.subscriptionExpires} '),
-                                    TextSpan(
-                                      text: expireDate.ddMMyyyy,
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.w500, color: subtitleStyle?.color),
+                                      style: subtitleStyle,
+                                      children: [
+                                        TextSpan(
+                                          text: isExpired
+                                              ? '${appLocalizations.subscriptionExpired}: '
+                                              : '${appLocalizations.subscriptionExpires} ',
+                                        ),
+                                        TextSpan(
+                                          text: expireDate.ddMMyyyy,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: subtitleStyle?.color,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  );
+                                },
                               )
                             : Text(
                                 appLocalizations.subscriptionUnlimited,

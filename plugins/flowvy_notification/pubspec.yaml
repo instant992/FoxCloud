@@ -1,0 +1,23 @@
+name: flowvy_notification
+description: Native Windows Toast notification plugin with progress bar support
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.3.0"
+
+flutter:
+  plugin:
+    platforms:
+      windows:
+        pluginClass: FlowvyNotificationPluginCApi
+        fileName: flowvy_notification_plugin_c_api.h
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

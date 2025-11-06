@@ -14,6 +14,8 @@ _$SubscriptionInfoImpl _$$SubscriptionInfoImplFromJson(
       total: (json['total'] as num?)?.toInt() ?? 0,
       expire: (json['expire'] as num?)?.toInt() ?? 0,
       expiryNotificationTitle: json['expiryNotificationTitle'] as String?,
+      expiryNotificationTitleExpired:
+          json['expiryNotificationTitleExpired'] as String?,
       expiryNotificationBody: json['expiryNotificationBody'] as String?,
       renewUrl: json['renewUrl'] as String?,
     );
@@ -26,6 +28,7 @@ Map<String, dynamic> _$$SubscriptionInfoImplToJson(
       'total': instance.total,
       'expire': instance.expire,
       'expiryNotificationTitle': instance.expiryNotificationTitle,
+      'expiryNotificationTitleExpired': instance.expiryNotificationTitleExpired,
       'expiryNotificationBody': instance.expiryNotificationBody,
       'renewUrl': instance.renewUrl,
     };

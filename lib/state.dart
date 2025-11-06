@@ -14,6 +14,7 @@ import 'package:flowvy/widgets/dialog.dart';
 import 'package:flowvy/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_js/flutter_js.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:material_color_utilities/palettes/core_palette.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -185,6 +186,51 @@ init() async {
                   ),
                 ),
               ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Future<bool?> showMarkdownMessage({
+    String? title,
+    required String markdown,
+    String? confirmText,
+    bool cancelable = true,
+  }) async {
+    return await showCommonDialog<bool>(
+      child: Builder(
+        builder: (context) {
+          return CommonDialog(
+            title: title ?? appLocalizations.tip,
+            overrideScroll: true,
+            actions: [
+              if (cancelable)
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(appLocalizations.cancel),
+                ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text(confirmText ?? appLocalizations.confirm),
+              )
+            ],
+            child: Container(
+              width: 300,
+              constraints: const BoxConstraints(maxHeight: 400),
+              child: markdown.isEmpty
+                  ? Text(appLocalizations.emptyStateMessage)
+                  : Markdown(
+                      data: markdown,
+                      shrinkWrap: true,
+                      selectable: true,
+                      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+                    ),
             ),
           );
         },

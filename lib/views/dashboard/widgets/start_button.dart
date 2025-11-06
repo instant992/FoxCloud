@@ -40,17 +40,16 @@ class _StartButtonState extends ConsumerState<StartButton> {
   }
 
   void handleSwitchStart() async {
-    // Проверка лимита только при попытке ВКЛЮЧИТЬ прокси
+    // Check limits only when trying to ENABLE proxy
     if (!isStart) {
       final profile = ref.read(currentProfileProvider);
       final info = profile?.subscriptionInfo;
 
-      // Если есть информация о подписке и установлен лимит трафика
+      // Check traffic limit if subscription has one
       if (info != null && info.total > 0) {
         final use = info.upload + info.download;
         final total = info.total;
 
-        // Блокируем подключение если лимит превышен
         if (use >= total) {
           final supportUrl = profile?.supportUrl;
           await globalState.showMessage(
@@ -62,12 +61,41 @@ class _StartButtonState extends ConsumerState<StartButton> {
                 ? appLocalizations.contactSupport
                 : appLocalizations.confirm,
           ).then((result) {
-            // Если есть ссылка на поддержку и пользователь нажал кнопку
             if (result == true && supportUrl != null && supportUrl.isNotEmpty) {
               globalState.openUrl(supportUrl);
             }
           });
-          return; // НЕ разрешаем подключение
+          return;
+        }
+      }
+
+      // Check subscription expiry
+      if (info != null && info.expire > 0) {
+        final expireDate = DateTime.fromMillisecondsSinceEpoch(info.expire * 1000);
+        final now = DateTime.now();
+
+        if (expireDate.isBefore(now)) {
+          final titleText = info.expiryNotificationTitleExpired ?? appLocalizations.subscriptionExpired;
+          final bodyText = info.expiryNotificationBody ?? appLocalizations.subscriptionExpiryDefaultBody;
+
+          final renewUrl = info.renewUrl;
+          final hasRenewUrl = renewUrl != null && renewUrl.isNotEmpty;
+
+          await globalState.showMessage(
+            title: titleText,
+            message: TextSpan(
+              text: bodyText,
+            ),
+            confirmText: hasRenewUrl
+                ? appLocalizations.renewSubscription
+                : appLocalizations.confirm,
+            cancelable: hasRenewUrl,
+          ).then((result) {
+            if (result == true && hasRenewUrl) {
+              globalState.openUrl(renewUrl);
+            }
+          });
+          return;
         }
       }
     }
