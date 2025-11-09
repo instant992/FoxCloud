@@ -53,6 +53,7 @@ app.*.map.json
 *.jks
 *.keystore
 keystore.base64.txt
+keystore.txt
 /android/app/keystore.jks
 /android/local.properties
 
