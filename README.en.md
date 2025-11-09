@@ -8,9 +8,9 @@
 </p>
 
 <p align="center">
-  <strong>A modern, cross-platform client for Clash.</strong>
+  <strong>A modern cross-platform Mihomo client</strong>
   <br>
-  With a focus on improved user experience and integration with modern control panels like <a href="https://github.com/remnawave/panel">Remnawave</a>.
+  With a focus on improved user experience and integration with modern <a href="https://github.com/remnawave/panel">Remnawave</a> panel.
 </p>
 
 <p align="center">
@@ -19,26 +19,33 @@
 
 ## About The Project
 
-**Flowvy** is a heavily modified fork of the open-source project [FlClash](https://github.com/chen08209/FlClash), aimed at improving the user experience and adding unique functionality for advanced users.
+**Flowvy** is a multi-platform proxy client based on the FlClash project — simple, easy to use, open-source, and ad-free. Currently supports Windows and Android.
 
 ---
 
 ## ✨ Features
 
-* **Enhanced Panel Integration:** Built-in **HWID** support for control panels (e.g., Remnawave).
-* **Dynamic Announcements:** Receive important messages from your provider (e.g., about subscription expiration or device limits) directly in the application's UI.
-* **Smart Defaults:** Customized out-of-the-box settings for a quick start.
-* **Russian Localization:** Full translation of the interface and installer.
+* **Enhanced Remnawave integration:** Support for **HWID**, Auto-update interval, Support link, Announce.
+* **Dynamic notifications:** Receive important messages from your provider.
+* Traffic: system notifications at 80%, 90%, and 100% of traffic usage.
+* Subscription: system notifications 7, 3, 1 day before subscription expires. To customize notifications, use headers: expiry-notification-title (notification title), expiry-notification-body (notification body), renew-url (if specified, the notification will have a "Renew" button), expiry-notification-title-expired (title for expired subscription notification).
+* **Smart default settings:** Pre-configured parameters for quick start without extra configuration.
+* **Core settings override from config:** if the config specifies parameters: log-level, keep-alive-interval, ipv6, mixed-port, allow-lan, unified-delay, find-process-mode — the client will use settings from the config, not its own.
+* **Russian localization:** Full translation of the interface and installer to Russian.
+* **Redesign:** Numerous UI/UX changes compared to the original.
+* **New widget on Home screen:** Metainfo widget displays subscription information directly on the home page.
+* **Bug fixes from the original client**
 
 ---
 
 ## 🚀 Getting Started
 
-Pre-built binaries for all platforms can be found on the [**Releases**](https://github.com/this-xkit/Flowvy/releases) page.
+Pre-built binaries for all platforms are available on the [**Releases**](https://github.com/this-xkit/Flowvy/releases) page.
 
 ---
 
-## 🛠️ Building From Source
+<details>
+<summary>🛠️ Building From Source</summary>
 
 If you want to build the project yourself, follow these steps.
 
@@ -52,9 +59,10 @@ Ensure you have all the necessary tools installed:
 * **Git**
 
 As well as the tools for your target platform:
+
 * **For Windows:** [**Visual Studio**](https://visualstudio.microsoft.com/downloads/) with the **"Desktop development with C++"** workload and [**Inno Setup**](https://jrsoftware.org/isinfo.php).
 * **For Android:** **Android SDK** and **Android NDK**.
-* **For Linux:** `libayatana-appindicator3-dev` and `libkeybinder-3.0-dev`.
+* **For Linux:** `libayatana-appindicator3-dev` and `libkeybinder-3.0-dev` packages.
 
 ### 2. Cloning the Repository
 
@@ -67,9 +75,9 @@ cd Flowvy
 
 # Download the Clash.Meta core and other dependencies. Do not skip this step!
 git submodule update --init --recursive
-````
+```
 
-### 3\. Install Project Dependencies
+### 3. Install Project Dependencies
 
 Before the first build, you need to fetch all Dart packages:
 
@@ -77,7 +85,7 @@ Before the first build, you need to fetch all Dart packages:
 flutter pub get
 ```
 
-### 4\. Running the Build
+### 4. Running the Build
 
 Use the built-in `setup.dart` script to build for a specific platform. For most modern PCs, you will need the `amd64` architecture.
 
@@ -106,3 +114,5 @@ Ensure the `ANDROID_NDK` environment variable is set.
 ```bash
 dart .\setup.dart android
 ```
+
+</details>
