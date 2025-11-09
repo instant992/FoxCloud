@@ -25,7 +25,7 @@ val isRelease = mStoreFile.exists()
 android {
     namespace = "com.flowvy.app"
     compileSdk = 35
-    ndkVersion = "28.0.13004108"
+    ndkVersion = "26.1.10909125"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.flowvy.app.core"
     compileSdk = 35
-    ndkVersion = "28.0.13004108"
+    ndkVersion = "26.1.10909125"
 
     defaultConfig {
         minSdk = 21
