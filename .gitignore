@@ -49,6 +49,13 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Android signing keystore
+*.jks
+*.keystore
+keystore.base64.txt
+/android/app/keystore.jks
+/android/local.properties
+
 
 
 #libclash
