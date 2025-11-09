@@ -604,7 +604,7 @@ class BuildCommand extends Command {
             .toList();
 
         // Build split APKs (one per architecture)
-        _buildDistributor(
+        await _buildDistributor(
           target: target,
           targets: "apk",
           args:
@@ -613,7 +613,7 @@ class BuildCommand extends Command {
         );
 
         // Build universal APK (all architectures in one file)
-        _buildDistributor(
+        await _buildDistributor(
           target: target,
           targets: "apk",
           args: " --build-target-platform ${defaultTargets.join(",")}",
