@@ -78,30 +78,16 @@ jobs:
 
       - name: Generate release.md
         run: |
-          tags=($(git tag --merged $(git rev-parse HEAD) --sort=-creatordate))
-          preTag=$(curl --silent "https://api.github.com/repos/this-xkit/Flowvy/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")' || echo "")
-          currentTag=""
-          for ((i = 0; i <= ${#tags[@]}; i++)); do
-            if (( i < ${#tags[@]} )); then
-              tag=${tags[$i]}
-            else
-              tag=""
-            fi
-            if [ -n "$currentTag" ]; then
-              if [ "$(echo -e "$currentTag\n$preTag" | sort -V | head -n 1)" == "$currentTag" ]; then
-                break
-              fi
-            fi
-            if [ -n "$currentTag" ]; then
-              if [ -n "$tag" ]; then
-                git log --pretty=format:"%B" "$tag..$currentTag" | awk 'NF {print "- " $0} !NF {print ""}' >> release.md
-              else
-                git log --pretty=format:"%B" "$currentTag" | awk 'NF {print "- " $0} !NF {print ""}' >> release.md
-              fi
-              echo "" >> release.md
-            fi
-            currentTag=$tag
-          done
+          version="${{ github.ref_name }}"
+          # Extract changelog for current version from CHANGELOG.md
+          awk "/^## ${version}$/,/^## v[0-9]/" CHANGELOG.md | sed '$d' > release.md
+          # If nothing found, create empty release notes
+          if [ ! -s release.md ]; then
+            echo "## ${version}" > release.md
+            echo "" >> release.md
+            echo "Release notes not available." >> release.md
+            echo "" >> release.md
+          fi
 
       - name: Patch release.md
         run: |
