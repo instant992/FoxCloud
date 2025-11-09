@@ -602,6 +602,8 @@ class BuildCommand extends Command {
             .where((element) => arch == null ? true : element == arch)
             .map((e) => targetMap[e])
             .toList();
+
+        // Build split APKs (one per architecture)
         _buildDistributor(
           target: target,
           targets: "apk",
@@ -609,6 +611,15 @@ class BuildCommand extends Command {
               ",split-per-abi --build-target-platform ${defaultTargets.join(",")}",
           env: env,
         );
+
+        // Build universal APK (all architectures in one file)
+        _buildDistributor(
+          target: target,
+          targets: "apk",
+          args: " --build-target-platform ${defaultTargets.join(",")}",
+          env: env,
+        );
+
         return;
       case Target.macos:
         await _getMacosDependencies();
