@@ -80,7 +80,8 @@ jobs:
         run: |
           version="${{ github.ref_name }}"
           # Extract changelog for current version from CHANGELOG.md
-          awk "/^## ${version}$/,/^## v[0-9]/" CHANGELOG.md | sed '$d' > release.md
+          # Takes everything from version header until next version header (or EOF)
+          awk "/^## ${version}$/{flag=1; next} /^## v[0-9]/{flag=0} flag" CHANGELOG.md > release.md
           # If nothing found, create empty release notes
           if [ ! -s release.md ]; then
             echo "## ${version}" > release.md
