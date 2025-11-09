@@ -728,7 +728,7 @@ Future handleClear() async {
       // Determine download URL based on platform
       final fileName = Platform.isWindows
           ? 'Flowvy-windows-amd64-setup.exe'
-          : 'Flowvy-arm64-v8a.apk';
+          : 'Flowvy-android-universal.apk';
       final downloadUrl = 'https://github.com/$repository/releases/latest/download/$fileName';
 
       // Get temporary directory path
