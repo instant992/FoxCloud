@@ -1,5 +1,7 @@
 [![ru](https://img.shields.io/badge/lang-ru-blue)](https://github.com/this-xkit/Flowvy/blob/main/README.md)
 [![en](https://img.shields.io/badge/lang-en-red)](https://github.com/this-xkit/Flowvy/blob/main/README.en.md)
+[![Downloads](https://img.shields.io/github/downloads/this-xkit/Flowvy/total?style=flat-square&logo=github)](https://github.com/this-xkit/Flowvy/releases/)
+[![Last Version](https://img.shields.io/github/release/this-xkit/Flowvy/all.svg?style=flat-square)](https://github.com/this-xkit/Flowvy/releases/)
 
 # Flowvy
 
