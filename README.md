@@ -1,7 +1,7 @@
 [![ru](https://img.shields.io/badge/lang-ru-blue)](https://github.com/this-xkit/Flowvy/blob/main/README.md)
 [![en](https://img.shields.io/badge/lang-en-red)](https://github.com/this-xkit/Flowvy/blob/main/README.en.md)
-[![Downloads](https://badgen.net/github/downloads/this-xkit/Flowvy/total?icon=github)](https://github.com/this-xkit/Flowvy/releases/)
-[![Last Version](https://badgen.net/github/release/this-xkit/Flowvy)](https://github.com/this-xkit/Flowvy/releases/)
+[![Downloads](https://img.shields.io/github/downloads/this-xkit/Flowvy/total?style=flat-square&logo=github&cacheSeconds=3600)](https://github.com/this-xkit/Flowvy/releases/)
+[![Release](https://img.shields.io/github/v/release/this-xkit/Flowvy?style=flat-square&cacheSeconds=3600)](https://github.com/this-xkit/Flowvy/releases/)
 
 # Flowvy
 
@@ -28,7 +28,6 @@
 ## ✨ Возможности
 
 * **Расширенная интеграция с Remnawave:** Поддержка **HWID**, Auto-update interval, Support link, Announce.
-* **Динамические уведомления:** Получение важных сообщений от провайдера.
 * Трафик: системные уведомления при достижении 80%, 90% и 100% использованного трафика.
 * Подписка: системные уведомления за 7, 3, 1 день до окончания подписки. Для кастомизации уведомлений используйте хедеры: expiry-notification-title (заголовок уведомления), expiry-notification-body (тело уведомления), renew-url (если указать, то в уведомлении будет кнопка "Продлить"), expiry-notification-title-expired (заголовок уведомления о том, что подписка истекла).
 * **Умные настройки по умолчанию:** Преднастроенные параметры для быстрого запуска без лишней конфигурации.
