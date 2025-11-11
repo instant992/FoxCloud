@@ -1,11 +1,14 @@
 script_template: inno_setup.iss
-app_id: 728B3532-C74B-4870-9068-BE70FE12A3E6
+# Unique GUID for Flowvy - DO NOT CHANGE or share with other apps!
+app_id: A1A0F088-C4E3-47EF-AF63-F90AD7374332
 app_name: Flowvy
 publisher: chen08209
 publisher_url: https://github.com/this-xkit/Flowvy
 display_name: Flowvy
 executable_name: Flowvy.exe
 output_base_file_name: Flowvy.exe
+# Explicit install directory to avoid conflicts with FlClash/FlClashX
+install_dir_name: "{autopf}\\Flowvy"
 setup_icon_file: ..\windows\runner\resources\app_icon.ico
 locales:
   - lang: zh

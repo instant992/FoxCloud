@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 const appName = "Flowvy";
 const appHelperService = "FlowvyHelperService";
 const coreName = "clash.meta";
-const coreVersion = "1.19.15";
+const coreVersion = "1.19.16";
 const browserUa =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 const packageName = "com.flowvy.app";
