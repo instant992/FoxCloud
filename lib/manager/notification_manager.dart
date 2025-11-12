@@ -323,6 +323,9 @@ Write-Output "Shortcut updated"
           progress: percentage,
           ongoing: true,
           autoCancel: false,
+          onlyAlertOnce: true,
+          playSound: false,
+          enableVibration: false,
         );
         final details = NotificationDetails(android: androidDetails);
         await _notifications.show(
