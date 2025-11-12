@@ -1,7 +1,7 @@
-[![ru](https://img.shields.io/badge/lang-ru-blue)](https://github.com/this-xkit/Flowvy/blob/main/README.md)
-[![en](https://img.shields.io/badge/lang-en-red)](https://github.com/this-xkit/Flowvy/blob/main/README.en.md)
-[![Downloads](https://img.shields.io/github/downloads/this-xkit/Flowvy/total?style=flat-square&logo=github&cacheSeconds=3600)](https://github.com/this-xkit/Flowvy/releases/)
-[![Release](https://img.shields.io/github/v/release/this-xkit/Flowvy?style=flat-square&cacheSeconds=3600)](https://github.com/this-xkit/Flowvy/releases/)
+[![ru](https://badgen.net/badge/lang/ru/blue)](https://github.com/this-xkit/Flowvy/blob/main/README.md)
+[![en](https://badgen.net/badge/lang/en/red)](https://github.com/this-xkit/Flowvy/blob/main/README.en.md)
+[![Downloads](https://badgen.net/github/assets-dl/this-xkit/Flowvy?icon=github&color=green)](https://github.com/this-xkit/Flowvy/releases/)
+[![Release](https://badgen.net/github/release/this-xkit/Flowvy?icon=github)](https://github.com/this-xkit/Flowvy/releases/)
 
 # Flowvy
 
