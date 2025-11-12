@@ -1,6 +1,5 @@
 [![ru](https://badgen.net/badge/lang/ru/blue)](https://github.com/this-xkit/Flowvy/blob/main/README.md)
 [![en](https://badgen.net/badge/lang/en/red)](https://github.com/this-xkit/Flowvy/blob/main/README.en.md)
-[![Downloads](https://badgen.net/github/assets-dl/this-xkit/Flowvy?icon=github&color=green)](https://github.com/this-xkit/Flowvy/releases/)
 [![Release](https://badgen.net/github/release/this-xkit/Flowvy?icon=github)](https://github.com/this-xkit/Flowvy/releases/)
 
 # Flowvy
