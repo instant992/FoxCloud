@@ -109,4 +109,8 @@ jobs:
         with:
           files: ./dist/*
           body_path: './release.md'
+          draft: false
+          prerelease: false
+          make_latest: true
+          fail_on_unmatched_files: true
 
