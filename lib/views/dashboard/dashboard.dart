@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:defer_pointer/defer_pointer.dart';
 import 'package:flowvy/common/common.dart';
 import 'package:flowvy/common/custom_theme.dart';
@@ -27,6 +28,8 @@ class _DashboardViewState extends ConsumerState<DashboardView> with PageMixin {
   final key = GlobalKey<SuperGridState>();
   final _isEditNotifier = ValueNotifier<bool>(false);
   final _addedWidgetsNotifier = ValueNotifier<List<GridItem>>([]);
+  List<GridItem>? _cachedAddedWidgets;
+  List<GridItem>? _lastChildren;
 
   @override
   initState() {
@@ -193,8 +196,13 @@ _handleResetLayout() async {
             (item) => item.widget,
           ),
     ];
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _addedWidgetsNotifier.value = DashboardWidget.values
+
+    // Cache added widgets computation - only recalculate if children changed
+    if (_lastChildren == null ||
+        _lastChildren!.length != children.length ||
+        !const ListEquality().equals(_lastChildren!, children)) {
+      _lastChildren = List.from(children);
+      _cachedAddedWidgets = DashboardWidget.values
           .where(
             (item) =>
                 !children.contains(item.widget) &&
@@ -204,6 +212,12 @@ _handleResetLayout() async {
           )
           .map((item) => item.widget)
           .toList();
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_cachedAddedWidgets != null) {
+        _addedWidgetsNotifier.value = _cachedAddedWidgets!;
+      }
     });
 
     return Stack(

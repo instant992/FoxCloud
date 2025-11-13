@@ -67,7 +67,7 @@ class _ConnectionsViewState extends ConsumerState<ConnectionsView>
             _connectionsStateNotifier.value.copyWith(
           connections: await clashCore.getConnections(),
         );
-        timer = Timer(const Duration(seconds: 1), () async {
+        timer = Timer(const Duration(seconds: 2), () async {
           _updateConnections();
         });
       }

@@ -319,10 +319,12 @@ class _ProxiesListViewState extends State<ProxiesListView> {
                               right: 16,
                               bottom: 8,
                             ),
-                            child: _buildHeader(
-                              ref,
-                              groupName: state.groupNames[index],
-                              currentUnfoldSet: state.currentUnfoldSet,
+                            child: RepaintBoundary(
+                              child: _buildHeader(
+                                ref,
+                                groupName: state.groupNames[index],
+                                currentUnfoldSet: state.currentUnfoldSet,
+                              ),
                             ),
                           ),
                         ),
