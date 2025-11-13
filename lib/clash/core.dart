@@ -135,9 +135,12 @@ class ClashCore {
 
   Future<List<Connection>> getConnections() async {
     final res = await clashInterface.getConnections();
-    final connectionsData = json.decode(res) as Map;
-    final connectionsRaw = connectionsData['connections'] as List? ?? [];
-    return connectionsRaw.map((e) => Connection.fromJson(e)).toList();
+    // Use isolate for JSON parsing to avoid blocking UI thread
+    return Isolate.run<List<Connection>>(() {
+      final connectionsData = json.decode(res) as Map;
+      final connectionsRaw = connectionsData['connections'] as List? ?? [];
+      return connectionsRaw.map((e) => Connection.fromJson(e)).toList();
+    });
   }
 
   closeConnection(String id) {
@@ -212,7 +215,7 @@ class ClashCore {
 
   Future<Delay> getDelay(String url, String proxyName) async {
     final data = await clashInterface.asyncTestDelay(url, proxyName);
-    return Delay.fromJson(json.decode(data));
+    return Isolate.run<Delay>(() => Delay.fromJson(json.decode(data)));
   }
 
   Future<Map<String, dynamic>> getConfig(String id) async {
@@ -230,7 +233,8 @@ class ClashCore {
     if (trafficString.isEmpty) {
       return Traffic();
     }
-    return Traffic.fromMap(json.decode(trafficString));
+    // Use isolate for frequent JSON parsing (called every second)
+    return Isolate.run<Traffic>(() => Traffic.fromMap(json.decode(trafficString)));
   }
 
   Future<IpInfo?> getCountryCode(String ip) async {
@@ -249,7 +253,7 @@ class ClashCore {
     if (totalTrafficString.isEmpty) {
       return Traffic();
     }
-    return Traffic.fromMap(json.decode(totalTrafficString));
+    return Isolate.run<Traffic>(() => Traffic.fromMap(json.decode(totalTrafficString)));
   }
 
   Future<int> getMemory() async {

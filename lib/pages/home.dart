@@ -473,6 +473,8 @@ class AppIconOnly extends StatelessWidget {
       child: Image.asset(
         iconAsset,
         fit: BoxFit.contain,
+        cacheWidth: 96, // 32 * 3 for higher DPI displays
+        cacheHeight: 96,
       ),
     );
   }

@@ -46,9 +46,7 @@ class InfoHeader extends StatelessWidget {
                     info.iconData,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  const SizedBox(
-                    width: 8,
-                  ),
+                  const SizedBox(width: 8),
                 ],
                 Flexible(
                   flex: 1,
@@ -66,9 +64,7 @@ class InfoHeader extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(
-            width: 8,
-          ),
+          const SizedBox(width: 8),
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,

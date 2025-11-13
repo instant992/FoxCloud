@@ -307,7 +307,6 @@ class MetainfoWidget extends ConsumerWidget {
                     ),
                   ],
                   const SizedBox(height: 8),
-
                   if (hasRefillDate) ...[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -352,7 +351,6 @@ class MetainfoWidget extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                   ],
-
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

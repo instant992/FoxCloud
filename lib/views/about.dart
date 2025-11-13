@@ -161,6 +161,8 @@ class _AboutViewState extends State<AboutView> {
                         iconAsset,
                         width: 64,
                         height: 64,
+                        cacheWidth: 192, // 64 * 3 for higher DPI displays
+                        cacheHeight: 192,
                       ),
                     ),
                     Column(
@@ -272,6 +274,8 @@ class Avatar extends StatelessWidget {
               child: Image.asset(
                 contributor.avatar,
                 fit: BoxFit.cover,
+                cacheWidth: 108, // 36 * 3 for higher DPI displays
+                cacheHeight: 108,
               ),
             ),
           ),

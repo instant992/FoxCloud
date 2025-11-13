@@ -40,7 +40,7 @@ final currentGroupsStateProvider = AutoDisposeProvider<GroupsState>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CurrentGroupsStateRef = AutoDisposeProviderRef<GroupsState>;
-String _$navigationsStateHash() => r'802ae70cc8b7d7f5620b340911da89d74960bfbd';
+String _$navigationsStateHash() => r'846fa01a2705cbc8d6e73187a8200d0c548a223b';
 
 /// See also [navigationsState].
 @ProviderFor(navigationsState)
@@ -78,7 +78,7 @@ final currentNavigationsStateProvider =
 // ignore: unused_element
 typedef CurrentNavigationsStateRef
     = AutoDisposeProviderRef<NavigationItemsState>;
-String _$coreStateHash() => r'33f01ee9173525862c89522bf73b3174beb63daa';
+String _$coreStateHash() => r'bf9bdc6eb470b55bd9b63fedb4b7a4f1a399d74a';
 
 /// See also [coreState].
 @ProviderFor(coreState)
@@ -126,7 +126,7 @@ final proxyStateProvider = AutoDisposeProvider<ProxyState>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ProxyStateRef = AutoDisposeProviderRef<ProxyState>;
-String _$trayStateHash() => r'61c99bbae2cb7ed69dc9ee0f2149510eb6a87df4';
+String _$trayStateHash() => r'294691158a33d23c11027b45c5731f22d52dbc57';
 
 /// See also [trayState].
 @ProviderFor(trayState)
@@ -158,7 +158,7 @@ final vpnStateProvider = AutoDisposeProvider<VpnState>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef VpnStateRef = AutoDisposeProviderRef<VpnState>;
-String _$homeStateHash() => r'2829f5d6a8548f8a97253a5437bf5c498b17c9ba';
+String _$homeStateHash() => r'458b2edbe5f090a10fb9df345fca99f0b1b1df37';
 
 /// See also [homeState].
 @ProviderFor(homeState)
@@ -250,8 +250,25 @@ final profilesSelectorStateProvider =
 // ignore: unused_element
 typedef ProfilesSelectorStateRef
     = AutoDisposeProviderRef<ProfilesSelectorState>;
+String _$currentGroupNamesHash() => r'b89c01d96c5645a6d8a3fae8c99622dcd54cdd1b';
+
+/// See also [currentGroupNames].
+@ProviderFor(currentGroupNames)
+final currentGroupNamesProvider = AutoDisposeProvider<List<String>>.internal(
+  currentGroupNames,
+  name: r'currentGroupNamesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentGroupNamesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef CurrentGroupNamesRef = AutoDisposeProviderRef<List<String>>;
 String _$proxiesListSelectorStateHash() =>
-    r'5e6bbe1a0cecbdea6c9c62e6ccf314968deac264';
+    r'026b13cc3df8d361cdc3679ad3297b0980b9ca4a';
 
 /// See also [proxiesListSelectorState].
 @ProviderFor(proxiesListSelectorState)
@@ -271,7 +288,7 @@ final proxiesListSelectorStateProvider =
 typedef ProxiesListSelectorStateRef
     = AutoDisposeProviderRef<ProxiesListSelectorState>;
 String _$proxiesSelectorStateHash() =>
-    r'4b96e83c09efd17de6caede484e71c904273c9f8';
+    r'd95ecf7fb624e715c70a0b62a2a82d106dbd3acc';
 
 /// See also [proxiesSelectorState].
 @ProviderFor(proxiesSelectorState)
@@ -289,7 +306,7 @@ final proxiesSelectorStateProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ProxiesSelectorStateRef = AutoDisposeProviderRef<ProxiesSelectorState>;
-String _$groupNamesStateHash() => r'd4ba8f2fd72a0db7186ab5d96aa1548bd5a7cdcb';
+String _$groupNamesStateHash() => r'a6d51f281a2c5f7c256f64553fb6c69606530348';
 
 /// See also [groupNamesState].
 @ProviderFor(groupNamesState)
@@ -1090,7 +1107,7 @@ class _GetHotKeyActionProviderElement
 }
 
 String _$compiledIconPatternsHash() =>
-    r'9faa83ce2cd91205bb0f5e97244714e5d6e97097';
+    r'0ed9a3b93568eef860d4690221ff5cb07345e4dd';
 
 /// See also [compiledIconPatterns].
 @ProviderFor(compiledIconPatterns)

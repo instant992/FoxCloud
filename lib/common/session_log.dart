@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart';
 
 class SessionLog {
   static SessionLog? _instance;
   File? _logFile;
+  final _logQueue = <String>[];
+  bool _isProcessing = false;
 
   SessionLog._();
 
@@ -40,16 +43,30 @@ class SessionLog {
 
   /// Write message to session log with timestamp
   void write(String message) {
+    if (_logFile == null) return;
+
+    final timestamp = DateTime.now().toIso8601String();
+    _logQueue.add('[$timestamp] $message\n');
+    _processQueue();
+  }
+
+  /// Process log queue asynchronously
+  Future<void> _processQueue() async {
+    if (_isProcessing || _logQueue.isEmpty) return;
+
+    _isProcessing = true;
     try {
-      if (_logFile != null) {
-        final timestamp = DateTime.now().toIso8601String();
-        _logFile!.writeAsStringSync(
-          '[$timestamp] $message\n',
+      while (_logQueue.isNotEmpty) {
+        final message = _logQueue.removeAt(0);
+        await _logFile!.writeAsString(
+          message,
           mode: FileMode.append,
         );
       }
     } catch (e) {
       // Silently fail - logging is not critical
+    } finally {
+      _isProcessing = false;
     }
   }
 }

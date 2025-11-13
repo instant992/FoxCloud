@@ -186,22 +186,7 @@ class _RequestsViewState extends ConsumerState<RequestsView> with PageMixin {
               builder: (_, state, __) {
                 _preLoad();
                 final connections = state.list;
-                final items = connections
-                    .map<Widget>(
-                      (connection) => ConnectionItem(
-                        key: Key(connection.id),
-                        connection: connection,
-                        onClickKeyword: (value) {
-                          context.commonScaffoldState?.addKeyword(value);
-                        },
-                      ),
-                    )
-                    .separated(
-                      const Divider(
-                        height: 0,
-                      ),
-                    )
-                    .toList();
+                final itemCount = connections.isEmpty ? 0 : connections.length * 2 - 1;
                 final content = connections.isEmpty
                     ? NullStatus(
                         label:
@@ -229,9 +214,19 @@ class _RequestsViewState extends ConsumerState<RequestsView> with PageMixin {
                                     connections[index ~/ 2]);
                               },
                               itemBuilder: (_, index) {
-                                return items[index];
+                                if (index.isOdd) {
+                                  return const Divider(height: 0);
+                                }
+                                final connection = connections[index ~/ 2];
+                                return ConnectionItem(
+                                  key: Key(connection.id),
+                                  connection: connection,
+                                  onClickKeyword: (value) {
+                                    context.commonScaffoldState?.addKeyword(value);
+                                  },
+                                );
                               },
-                              itemCount: items.length,
+                              itemCount: itemCount,
                               keyBuilder: (int index) {
                                 if (index.isOdd) {
                                   return "divider";

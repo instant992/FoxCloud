@@ -385,13 +385,14 @@ class PackageListItem extends StatelessWidget {
               future: app?.getPackageIcon(package.packageName),
               builder: (_, snapshot) {
                 if (!snapshot.hasData && snapshot.data == null) {
-                  return Container();
+                  return const SizedBox.shrink();
                 } else {
                   return Image(
                     image: snapshot.data!,
                     gaplessPlayback: true,
                     width: 48,
                     height: 48,
+                    // Note: cacheWidth/cacheHeight not available for Image() with ImageProvider
                   );
                 }
               },

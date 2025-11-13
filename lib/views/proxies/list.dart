@@ -141,9 +141,7 @@ class _ProxiesListViewState extends State<ProxiesListView> {
             _handleChange(currentUnfoldSet, groupName);
           },
         ),
-        const SizedBox(
-          height: 8,
-        ),
+        const SizedBox(height: 8),
       ]);
       if (isExpand) {
         final sortedProxies = globalState.appController.getSortProxies(
@@ -175,25 +173,19 @@ class _ProxiesListViewState extends State<ProxiesListView> {
                 ),
               )
               .separated(
-                const SizedBox(
-                  width: 8,
-                ),
+                const SizedBox(width: 8),
               );
 
           return Row(
             children: children.toList(),
           );
         }).separated(
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
         );
         items.addAll(
           [
             ...rows,
-            const SizedBox(
-              height: 8,
-            ),
+            const SizedBox(height: 8),
           ],
         );
       }
@@ -493,9 +485,7 @@ class _ListHeaderState extends State<ListHeader> {
                           groupName,
                           style: context.textTheme.titleMedium,
                         ),
-                        const SizedBox(
-                          height: 4,
-                        ),
+                        const SizedBox(height: 4),
                         Flexible(
                           flex: 1,
                           child: Row(
@@ -542,9 +532,7 @@ class _ListHeaderState extends State<ListHeader> {
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          width: 4,
-                        ),
+                        const SizedBox(width: 4),
                       ],
                     ),
                   )
@@ -574,13 +562,9 @@ class _ListHeaderState extends State<ListHeader> {
                       color: iconColor,
                     ),
                   ),
-                  const SizedBox(
-                    width: 6,
-                  ),
+                  const SizedBox(width: 6),
                 ] else
-                  const SizedBox(
-                    width: 4,
-                  ),
+                  const SizedBox(width: 4),
                 IconButton(
                   style: buttonStyle,
                   onPressed: () {

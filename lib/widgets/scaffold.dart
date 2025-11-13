@@ -365,7 +365,7 @@ class CommonScaffoldState extends State<CommonScaffold> {
               builder: (_, value, __) {
                 return value == true
                     ? const LinearProgressIndicator()
-                    : Container();
+                    : const SizedBox.shrink();
               },
             ),
           ],

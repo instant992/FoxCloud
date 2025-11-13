@@ -92,7 +92,7 @@ class FadeScaleBox extends StatelessWidget {
           ),
         );
       },
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       child: child,
     );
   }
