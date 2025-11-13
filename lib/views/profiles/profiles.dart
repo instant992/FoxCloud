@@ -74,12 +74,36 @@ class _TimeAgoWidgetState extends State<TimeAgoWidget> {
 }
 
 
+// Cache for formatted byte strings to avoid expensive BigInt operations
+final Map<String, String> _formatBytesCache = {};
+
 String _formatBytes(BigInt bytes, int decimals) {
-  if (bytes <= BigInt.zero) return "0 B";
+  // Create cache key from bytes and decimals
+  final cacheKey = '${bytes.toString()}_$decimals';
+
+  // Return cached value if exists
+  if (_formatBytesCache.containsKey(cacheKey)) {
+    return _formatBytesCache[cacheKey]!;
+  }
+
+  // Calculate formatted value
+  if (bytes <= BigInt.zero) {
+    _formatBytesCache[cacheKey] = "0 B";
+    return "0 B";
+  }
+
   const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   var i = (bytes.bitLength - 1) ~/ 10;
   if (i >= suffixes.length) i = suffixes.length - 1;
-  return '${(bytes.toDouble() / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+
+  final result = '${(bytes.toDouble() / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+
+  // Cache the result (limit cache size to prevent memory issues)
+  if (_formatBytesCache.length < 1000) {
+    _formatBytesCache[cacheKey] = result;
+  }
+
+  return result;
 }
 
 class ProfilesView extends StatefulWidget {

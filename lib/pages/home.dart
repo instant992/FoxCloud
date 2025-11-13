@@ -191,7 +191,7 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
   }
 }
 
-class CommonNavigationBar extends ConsumerWidget {
+class CommonNavigationBar extends ConsumerStatefulWidget {
   final ViewMode viewMode;
   final List<NavigationItem> navigationItems;
   final int currentIndex;
@@ -204,26 +204,72 @@ class CommonNavigationBar extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CommonNavigationBar> createState() => _CommonNavigationBarState();
+}
+
+class _CommonNavigationBarState extends ConsumerState<CommonNavigationBar> {
+  // Cache for navigation destinations to avoid rebuilding on every frame
+  List<NavigationDestination>? _cachedMobileDestinations;
+  List<NavigationRailDestination>? _cachedRailDestinations;
+  List<NavigationItem>? _cachedNavigationItems;
+
+  @override
+  void didUpdateWidget(CommonNavigationBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Invalidate cache if navigation items changed
+    if (oldWidget.navigationItems != widget.navigationItems) {
+      _cachedMobileDestinations = null;
+      _cachedRailDestinations = null;
+      _cachedNavigationItems = null;
+    }
+  }
+
+  List<NavigationDestination> _getMobileDestinations() {
+    if (_cachedMobileDestinations == null || _cachedNavigationItems != widget.navigationItems) {
+      _cachedNavigationItems = widget.navigationItems;
+      _cachedMobileDestinations = widget.navigationItems
+          .map(
+            (e) => NavigationDestination(
+              icon: e.mobileIcon ?? e.icon,
+              label: Intl.message((e.mobileLabel ?? e.label).name),
+              tooltip: '',
+            ),
+          )
+          .toList();
+    }
+    return _cachedMobileDestinations!;
+  }
+
+  List<NavigationRailDestination> _getRailDestinations() {
+    if (_cachedRailDestinations == null || _cachedNavigationItems != widget.navigationItems) {
+      _cachedNavigationItems = widget.navigationItems;
+      _cachedRailDestinations = widget.navigationItems
+          .map(
+            (e) => NavigationRailDestination(
+              icon: e.icon,
+              label: Text(
+                Intl.message(e.label.name),
+              ),
+            ),
+          )
+          .toList();
+    }
+    return _cachedRailDestinations!;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final customTheme = Theme.of(context).extension<CustomTheme>()!;
-    
-    if (viewMode == ViewMode.mobile) {
+
+    if (widget.viewMode == ViewMode.mobile) {
       return NavigationBarTheme(
         data: _NavigationBarDefaultsM3(context),
         child: NavigationBar(
-          destinations: navigationItems
-              .map(
-                (e) => NavigationDestination(
-                  icon: e.mobileIcon ?? e.icon,
-                  label: Intl.message((e.mobileLabel ?? e.label).name),
-                  tooltip: '',
-                ),
-              )
-              .toList(),
+          destinations: _getMobileDestinations(),
           onDestinationSelected: (index) {
-            globalState.appController.toPage(navigationItems[index].label);
+            globalState.appController.toPage(widget.navigationItems[index].label);
           },
-          selectedIndex: currentIndex,
+          selectedIndex: widget.currentIndex,
         ),
       );
     }
@@ -270,22 +316,13 @@ class CommonNavigationBar extends ConsumerWidget {
                       child: Builder(
                         builder: (context) {
                           return NavigationRail(
-                            destinations: navigationItems
-                                .map(
-                                  (e) => NavigationRailDestination(
-                                    icon: e.icon,
-                                    label: Text(
-                                      Intl.message(e.label.name),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
+                            destinations: _getRailDestinations(),
                             onDestinationSelected: (index) {
                               globalState.appController
-                                  .toPage(navigationItems[index].label);
+                                  .toPage(widget.navigationItems[index].label);
                             },
                             extended: false,
-                            selectedIndex: currentIndex,
+                            selectedIndex: widget.currentIndex,
                             labelType: showLabel
                                 ? NavigationRailLabelType.all
                                 : NavigationRailLabelType.none,

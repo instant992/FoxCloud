@@ -458,6 +458,37 @@ HotKeyAction getHotKeyAction(Ref ref, HotAction hotAction) {
   );
 }
 
+// Pre-compiled regex patterns for icon matching to avoid recreating on every build
+@riverpod
+Map<RegExp, String> compiledIconPatterns(Ref ref) {
+  final iconMap = ref.watch(
+    proxiesStyleSettingProvider.select((state) => state.iconMap),
+  );
+
+  final compiledPatterns = <RegExp, String>{};
+  for (var entry in iconMap.entries) {
+    try {
+      compiledPatterns[RegExp(entry.key)] = entry.value;
+    } catch (_) {
+      // Skip invalid regex patterns
+    }
+  }
+  return compiledPatterns;
+}
+
+// Find icon for group name using pre-compiled patterns
+@riverpod
+String? findGroupIcon(Ref ref, String groupName, String fallbackIcon) {
+  final patterns = ref.watch(compiledIconPatternsProvider);
+
+  for (var entry in patterns.entries) {
+    if (entry.key.hasMatch(groupName)) {
+      return entry.value;
+    }
+  }
+  return fallbackIcon;
+}
+
 @riverpod
 Profile? currentProfile(Ref ref) {
   final profileId = ref.watch(currentProfileIdProvider);

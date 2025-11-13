@@ -402,20 +402,8 @@ class _ListHeaderState extends State<ListHeader> {
             (state) => state.iconStyle,
           ),
         );
-        final icon = ref.watch(proxiesStyleSettingProvider.select((state) {
-          final iconMapEntryList = state.iconMap.entries.toList();
-          final index = iconMapEntryList.indexWhere((item) {
-            try {
-              return RegExp(item.key).hasMatch(groupName);
-            } catch (_) {
-              return false;
-            }
-          });
-          if (index != -1) {
-            return iconMapEntryList[index].value;
-          }
-          return this.icon;
-        }));
+        // Use pre-compiled regex patterns from provider for better performance
+        final icon = ref.watch(findGroupIconProvider(groupName, this.icon)) ?? this.icon;
         return switch (iconStyle) {
           ProxiesIconStyle.standard => LayoutBuilder(
               builder: (_, constraints) {

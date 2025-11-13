@@ -1089,6 +1089,172 @@ class _GetHotKeyActionProviderElement
   HotAction get hotAction => (origin as GetHotKeyActionProvider).hotAction;
 }
 
+String _$compiledIconPatternsHash() =>
+    r'9faa83ce2cd91205bb0f5e97244714e5d6e97097';
+
+/// See also [compiledIconPatterns].
+@ProviderFor(compiledIconPatterns)
+final compiledIconPatternsProvider =
+    AutoDisposeProvider<Map<RegExp, String>>.internal(
+  compiledIconPatterns,
+  name: r'compiledIconPatternsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$compiledIconPatternsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef CompiledIconPatternsRef = AutoDisposeProviderRef<Map<RegExp, String>>;
+String _$findGroupIconHash() => r'28bb4053f476cfef83e4f7a9c340edc1c6fb0501';
+
+/// See also [findGroupIcon].
+@ProviderFor(findGroupIcon)
+const findGroupIconProvider = FindGroupIconFamily();
+
+/// See also [findGroupIcon].
+class FindGroupIconFamily extends Family<String?> {
+  /// See also [findGroupIcon].
+  const FindGroupIconFamily();
+
+  /// See also [findGroupIcon].
+  FindGroupIconProvider call(
+    String groupName,
+    String fallbackIcon,
+  ) {
+    return FindGroupIconProvider(
+      groupName,
+      fallbackIcon,
+    );
+  }
+
+  @override
+  FindGroupIconProvider getProviderOverride(
+    covariant FindGroupIconProvider provider,
+  ) {
+    return call(
+      provider.groupName,
+      provider.fallbackIcon,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'findGroupIconProvider';
+}
+
+/// See also [findGroupIcon].
+class FindGroupIconProvider extends AutoDisposeProvider<String?> {
+  /// See also [findGroupIcon].
+  FindGroupIconProvider(
+    String groupName,
+    String fallbackIcon,
+  ) : this._internal(
+          (ref) => findGroupIcon(
+            ref as FindGroupIconRef,
+            groupName,
+            fallbackIcon,
+          ),
+          from: findGroupIconProvider,
+          name: r'findGroupIconProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$findGroupIconHash,
+          dependencies: FindGroupIconFamily._dependencies,
+          allTransitiveDependencies:
+              FindGroupIconFamily._allTransitiveDependencies,
+          groupName: groupName,
+          fallbackIcon: fallbackIcon,
+        );
+
+  FindGroupIconProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.groupName,
+    required this.fallbackIcon,
+  }) : super.internal();
+
+  final String groupName;
+  final String fallbackIcon;
+
+  @override
+  Override overrideWith(
+    String? Function(FindGroupIconRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FindGroupIconProvider._internal(
+        (ref) => create(ref as FindGroupIconRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        groupName: groupName,
+        fallbackIcon: fallbackIcon,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<String?> createElement() {
+    return _FindGroupIconProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FindGroupIconProvider &&
+        other.groupName == groupName &&
+        other.fallbackIcon == fallbackIcon;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, groupName.hashCode);
+    hash = _SystemHash.combine(hash, fallbackIcon.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin FindGroupIconRef on AutoDisposeProviderRef<String?> {
+  /// The parameter `groupName` of this provider.
+  String get groupName;
+
+  /// The parameter `fallbackIcon` of this provider.
+  String get fallbackIcon;
+}
+
+class _FindGroupIconProviderElement extends AutoDisposeProviderElement<String?>
+    with FindGroupIconRef {
+  _FindGroupIconProviderElement(super.provider);
+
+  @override
+  String get groupName => (origin as FindGroupIconProvider).groupName;
+  @override
+  String get fallbackIcon => (origin as FindGroupIconProvider).fallbackIcon;
+}
+
 String _$currentProfileHash() => r'55f3cb9570a0aa6b9e0b83a36693b69d52e753ab';
 
 /// See also [currentProfile].
