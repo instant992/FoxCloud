@@ -63,7 +63,7 @@ GroupsState currentGroupsState(Ref ref) {
 
 @riverpod
 NavigationItemsState navigationsState(Ref ref) {
-  final openLogs = ref.watch(appSettingProvider.select((s) => s.openLogs));
+  final openLogs = ref.watch(appSettingProvider).openLogs;
   final hasProxies = ref.watch(
       currentGroupsStateProvider.select((state) => state.value.isNotEmpty));
   return NavigationItemsState(
@@ -95,7 +95,7 @@ NavigationItemsState currentNavigationsState(Ref ref) {
 CoreState coreState(Ref ref) {
   final vpnProps = ref.watch(vpnSettingProvider);
   final currentProfile = ref.watch(currentProfileProvider);
-  final onlyStatisticsProxy = ref.watch(appSettingProvider.select((s) => s.onlyStatisticsProxy));
+  final onlyStatisticsProxy = ref.watch(appSettingProvider).onlyStatisticsProxy;
   return CoreState(
     vpnProps: vpnProps,
     onlyStatisticsProxy: onlyStatisticsProxy,
@@ -152,24 +152,32 @@ ProxyState proxyState(Ref ref) {
 @riverpod
 TrayState trayState(Ref ref) {
   final isStart = ref.watch(runTimeProvider.select((state) => state != null));
-  final systemProxy = ref.watch(networkSettingProvider.select((s) => s.systemProxy));
-  final mode = ref.watch(patchClashConfigProvider.select((s) => s.mode));
-  final port = ref.watch(patchClashConfigProvider.select((s) => s.mixedPort));
-  final tunEnable = ref.watch(patchClashConfigProvider.select((s) => s.tun.enable));
-  final autoLaunch = ref.watch(appSettingProvider.select((s) => s.autoLaunch));
-  final locale = ref.watch(appSettingProvider.select((s) => s.locale));
-  final groups = ref.watch(currentGroupsStateProvider.select((s) => s.value));
-  final brightness = ref.watch(appBrightnessProvider);
+  final networkProps = ref.watch(networkSettingProvider);
+  final clashConfig = ref.watch(
+    patchClashConfigProvider,
+  );
+  final appSetting = ref.watch(
+    appSettingProvider,
+  );
+  final groups = ref
+      .watch(
+        currentGroupsStateProvider,
+      )
+      .value;
+  final brightness = ref.watch(
+    appBrightnessProvider,
+  );
+
   final selectedMap = ref.watch(selectedMapProvider);
 
   return TrayState(
-    mode: mode,
-    port: port,
-    autoLaunch: autoLaunch,
-    systemProxy: systemProxy,
-    tunEnable: tunEnable,
+    mode: clashConfig.mode,
+    port: clashConfig.mixedPort,
+    autoLaunch: appSetting.autoLaunch,
+    systemProxy: networkProps.systemProxy,
+    tunEnable: clashConfig.tun.enable,
     isStart: isStart,
-    locale: locale,
+    locale: appSetting.locale,
     brightness: brightness,
     groups: groups,
     selectedMap: selectedMap,
@@ -194,7 +202,7 @@ HomeState homeState(Ref ref) {
   final pageLabel = ref.watch(currentPageLabelProvider);
   final navigationItems = ref.watch(currentNavigationsStateProvider).value;
   final viewMode = ref.watch(viewModeProvider);
-  final locale = ref.watch(appSettingProvider.select((s) => s.locale));
+  final locale = ref.watch(appSettingProvider).locale;
   return HomeState(
     pageLabel: pageLabel,
     navigationItems: navigationItems,
@@ -257,19 +265,11 @@ ProfilesSelectorState profilesSelectorState(Ref ref) {
   );
 }
 
-// Extracted group names provider to avoid duplication
-@riverpod
-List<String> currentGroupNames(Ref ref) {
-  return ref.watch(
-    currentGroupsStateProvider.select(
-      (state) => state.value.map((e) => e.name).toList(),
-    ),
-  );
-}
-
 @riverpod
 ProxiesListSelectorState proxiesListSelectorState(Ref ref) {
-  final groupNames = ref.watch(currentGroupNamesProvider);
+  final groupNames = ref.watch(currentGroupsStateProvider.select((state) {
+    return state.value.map((e) => e.name).toList();
+  }));
   final currentUnfoldSet = ref.watch(unfoldSetProvider);
   final proxiesStyle = ref.watch(proxiesStyleSettingProvider);
   final sortNum = ref.watch(sortNumProvider);
@@ -292,7 +292,13 @@ ProxiesListSelectorState proxiesListSelectorState(Ref ref) {
 
 @riverpod
 ProxiesSelectorState proxiesSelectorState(Ref ref) {
-  final groupNames = ref.watch(currentGroupNamesProvider);
+  final groupNames = ref.watch(
+    currentGroupsStateProvider.select(
+      (state) {
+        return state.value.map((e) => e.name).toList();
+      },
+    ),
+  );
   final currentGroupName = ref.watch(currentProfileProvider.select(
     (state) => state?.currentGroupName,
   ));
@@ -305,7 +311,13 @@ ProxiesSelectorState proxiesSelectorState(Ref ref) {
 @riverpod
 GroupNamesState groupNamesState(Ref ref) {
   return GroupNamesState(
-    groupNames: ref.watch(currentGroupNamesProvider),
+    groupNames: ref.watch(
+      currentGroupsStateProvider.select(
+        (state) {
+          return state.value.map((e) => e.name).toList();
+        },
+      ),
+    ),
   );
 }
 
@@ -444,44 +456,6 @@ HotKeyAction getHotKeyAction(Ref ref, HotAction hotAction) {
       },
     ),
   );
-}
-
-// Cache for compiled RegExp objects to avoid recompilation
-final _regexpCache = <String, RegExp>{};
-
-// Pre-compiled regex patterns for icon matching to avoid recreating on every build
-@riverpod
-Map<RegExp, String> compiledIconPatterns(Ref ref) {
-  final iconMap = ref.watch(
-    proxiesStyleSettingProvider.select((state) => state.iconMap),
-  );
-
-  final compiledPatterns = <RegExp, String>{};
-  for (var entry in iconMap.entries) {
-    try {
-      final regexp = _regexpCache.putIfAbsent(
-        entry.key,
-        () => RegExp(entry.key),
-      );
-      compiledPatterns[regexp] = entry.value;
-    } catch (_) {
-      // Skip invalid regex patterns
-    }
-  }
-  return compiledPatterns;
-}
-
-// Find icon for group name using pre-compiled patterns
-@riverpod
-String? findGroupIcon(Ref ref, String groupName, String fallbackIcon) {
-  final patterns = ref.watch(compiledIconPatternsProvider);
-
-  for (var entry in patterns.entries) {
-    if (entry.key.hasMatch(groupName)) {
-      return entry.value;
-    }
-  }
-  return fallbackIcon;
 }
 
 @riverpod

@@ -33,9 +33,6 @@ class TooltipText extends StatelessWidget {
   }
 }
 
-// Cache for parsed emoji text spans to avoid expensive regex operations
-final Map<String, List<TextSpan>> _emojiTextCache = {};
-
 class EmojiText extends StatelessWidget {
   final String text;
   final TextStyle? style;
@@ -51,29 +48,6 @@ class EmojiText extends StatelessWidget {
   });
 
   List<TextSpan> _buildTextSpans(String emojis) {
-    // Create cache key (text only, style is applied later)
-    final cacheKey = text;
-
-    // Check cache first
-    if (_emojiTextCache.containsKey(cacheKey)) {
-      // Return cached spans with current style applied
-      return _emojiTextCache[cacheKey]!.map((span) {
-        if (span.text != null && span.style?.fontFamily == FontFamily.twEmoji.value) {
-          // Emoji span
-          return TextSpan(
-            text: span.text,
-            style: style?.copyWith(
-              fontFamily: FontFamily.twEmoji.value,
-            ),
-          );
-        } else {
-          // Regular text span
-          return TextSpan(text: span.text, style: style);
-        }
-      }).toList();
-    }
-
-    // Parse and create spans
     final List<TextSpan> spans = [];
     final matches = emojiRegex().allMatches(text);
 
@@ -82,13 +56,13 @@ class EmojiText extends StatelessWidget {
       if (match.start > lastMatchEnd) {
         spans.add(
           TextSpan(
-              text: text.substring(lastMatchEnd, match.start), style: null),
+              text: text.substring(lastMatchEnd, match.start), style: style),
         );
       }
       spans.add(
         TextSpan(
           text: match.group(0),
-          style: TextStyle(
+          style: style?.copyWith(
             fontFamily: FontFamily.twEmoji.value,
           ),
         ),
@@ -99,29 +73,12 @@ class EmojiText extends StatelessWidget {
       spans.add(
         TextSpan(
           text: text.substring(lastMatchEnd),
-          style: null,
+          style: style,
         ),
       );
     }
 
-    // Cache the parsed structure (limit cache size)
-    if (_emojiTextCache.length < 500) {
-      _emojiTextCache[cacheKey] = spans;
-    }
-
-    // Return with style applied
-    return spans.map((span) {
-      if (span.text != null && span.style?.fontFamily == FontFamily.twEmoji.value) {
-        return TextSpan(
-          text: span.text,
-          style: style?.copyWith(
-            fontFamily: FontFamily.twEmoji.value,
-          ),
-        );
-      } else {
-        return TextSpan(text: span.text, style: style);
-      }
-    }).toList();
+    return spans;
   }
 
   @override

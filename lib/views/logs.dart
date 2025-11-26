@@ -196,7 +196,22 @@ class _LogsViewState extends ConsumerState<LogsView> with PageMixin {
           builder: (_, state, __) {
             _preLoad();
             final logs = state.list;
-            final itemCount = logs.isEmpty ? 0 : logs.length * 2 - 1;
+            final items = logs
+                .map<Widget>(
+                  (log) => LogItem(
+                    key: Key(log.dateTime),
+                    log: log,
+                    onClick: (value) {
+                      context.commonScaffoldState?.addKeyword(value);
+                    },
+                  ),
+                )
+                .separated(
+                  const Divider(
+                    height: 0,
+                  ),
+                )
+                .toList();
             final content = logs.isEmpty
                 ? NullStatus(
                     label: appLocalizations.emptyStateMessage,
@@ -216,17 +231,7 @@ class _LogsViewState extends ConsumerState<LogsView> with PageMixin {
                           physics: NextClampingScrollPhysics(),
                           controller: _scrollController,
                           itemBuilder: (_, index) {
-                            if (index.isOdd) {
-                              return const Divider(height: 0);
-                            }
-                            final log = logs[index ~/ 2];
-                            return LogItem(
-                              key: Key(log.dateTime),
-                              log: log,
-                              onClick: (value) {
-                                context.commonScaffoldState?.addKeyword(value);
-                              },
-                            );
+                            return items[index];
                           },
                           itemExtentBuilder: (index) {
                             if (index.isOdd) {
@@ -234,7 +239,7 @@ class _LogsViewState extends ConsumerState<LogsView> with PageMixin {
                             }
                             return _getItemHeight(logs[index ~/ 2]);
                           },
-                          itemCount: itemCount,
+                          itemCount: items.length,
                           keyBuilder: (int index) {
                             if (index.isOdd) {
                               return "divider";

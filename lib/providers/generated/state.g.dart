@@ -40,7 +40,7 @@ final currentGroupsStateProvider = AutoDisposeProvider<GroupsState>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CurrentGroupsStateRef = AutoDisposeProviderRef<GroupsState>;
-String _$navigationsStateHash() => r'846fa01a2705cbc8d6e73187a8200d0c548a223b';
+String _$navigationsStateHash() => r'802ae70cc8b7d7f5620b340911da89d74960bfbd';
 
 /// See also [navigationsState].
 @ProviderFor(navigationsState)
@@ -78,7 +78,7 @@ final currentNavigationsStateProvider =
 // ignore: unused_element
 typedef CurrentNavigationsStateRef
     = AutoDisposeProviderRef<NavigationItemsState>;
-String _$coreStateHash() => r'bf9bdc6eb470b55bd9b63fedb4b7a4f1a399d74a';
+String _$coreStateHash() => r'33f01ee9173525862c89522bf73b3174beb63daa';
 
 /// See also [coreState].
 @ProviderFor(coreState)
@@ -126,7 +126,7 @@ final proxyStateProvider = AutoDisposeProvider<ProxyState>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ProxyStateRef = AutoDisposeProviderRef<ProxyState>;
-String _$trayStateHash() => r'294691158a33d23c11027b45c5731f22d52dbc57';
+String _$trayStateHash() => r'61c99bbae2cb7ed69dc9ee0f2149510eb6a87df4';
 
 /// See also [trayState].
 @ProviderFor(trayState)
@@ -158,7 +158,7 @@ final vpnStateProvider = AutoDisposeProvider<VpnState>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef VpnStateRef = AutoDisposeProviderRef<VpnState>;
-String _$homeStateHash() => r'458b2edbe5f090a10fb9df345fca99f0b1b1df37';
+String _$homeStateHash() => r'2829f5d6a8548f8a97253a5437bf5c498b17c9ba';
 
 /// See also [homeState].
 @ProviderFor(homeState)
@@ -250,25 +250,8 @@ final profilesSelectorStateProvider =
 // ignore: unused_element
 typedef ProfilesSelectorStateRef
     = AutoDisposeProviderRef<ProfilesSelectorState>;
-String _$currentGroupNamesHash() => r'b89c01d96c5645a6d8a3fae8c99622dcd54cdd1b';
-
-/// See also [currentGroupNames].
-@ProviderFor(currentGroupNames)
-final currentGroupNamesProvider = AutoDisposeProvider<List<String>>.internal(
-  currentGroupNames,
-  name: r'currentGroupNamesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentGroupNamesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef CurrentGroupNamesRef = AutoDisposeProviderRef<List<String>>;
 String _$proxiesListSelectorStateHash() =>
-    r'026b13cc3df8d361cdc3679ad3297b0980b9ca4a';
+    r'5e6bbe1a0cecbdea6c9c62e6ccf314968deac264';
 
 /// See also [proxiesListSelectorState].
 @ProviderFor(proxiesListSelectorState)
@@ -288,7 +271,7 @@ final proxiesListSelectorStateProvider =
 typedef ProxiesListSelectorStateRef
     = AutoDisposeProviderRef<ProxiesListSelectorState>;
 String _$proxiesSelectorStateHash() =>
-    r'd95ecf7fb624e715c70a0b62a2a82d106dbd3acc';
+    r'4b96e83c09efd17de6caede484e71c904273c9f8';
 
 /// See also [proxiesSelectorState].
 @ProviderFor(proxiesSelectorState)
@@ -306,7 +289,7 @@ final proxiesSelectorStateProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ProxiesSelectorStateRef = AutoDisposeProviderRef<ProxiesSelectorState>;
-String _$groupNamesStateHash() => r'a6d51f281a2c5f7c256f64553fb6c69606530348';
+String _$groupNamesStateHash() => r'd4ba8f2fd72a0db7186ab5d96aa1548bd5a7cdcb';
 
 /// See also [groupNamesState].
 @ProviderFor(groupNamesState)
@@ -1104,172 +1087,6 @@ class _GetHotKeyActionProviderElement
 
   @override
   HotAction get hotAction => (origin as GetHotKeyActionProvider).hotAction;
-}
-
-String _$compiledIconPatternsHash() =>
-    r'0ed9a3b93568eef860d4690221ff5cb07345e4dd';
-
-/// See also [compiledIconPatterns].
-@ProviderFor(compiledIconPatterns)
-final compiledIconPatternsProvider =
-    AutoDisposeProvider<Map<RegExp, String>>.internal(
-  compiledIconPatterns,
-  name: r'compiledIconPatternsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$compiledIconPatternsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef CompiledIconPatternsRef = AutoDisposeProviderRef<Map<RegExp, String>>;
-String _$findGroupIconHash() => r'28bb4053f476cfef83e4f7a9c340edc1c6fb0501';
-
-/// See also [findGroupIcon].
-@ProviderFor(findGroupIcon)
-const findGroupIconProvider = FindGroupIconFamily();
-
-/// See also [findGroupIcon].
-class FindGroupIconFamily extends Family<String?> {
-  /// See also [findGroupIcon].
-  const FindGroupIconFamily();
-
-  /// See also [findGroupIcon].
-  FindGroupIconProvider call(
-    String groupName,
-    String fallbackIcon,
-  ) {
-    return FindGroupIconProvider(
-      groupName,
-      fallbackIcon,
-    );
-  }
-
-  @override
-  FindGroupIconProvider getProviderOverride(
-    covariant FindGroupIconProvider provider,
-  ) {
-    return call(
-      provider.groupName,
-      provider.fallbackIcon,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'findGroupIconProvider';
-}
-
-/// See also [findGroupIcon].
-class FindGroupIconProvider extends AutoDisposeProvider<String?> {
-  /// See also [findGroupIcon].
-  FindGroupIconProvider(
-    String groupName,
-    String fallbackIcon,
-  ) : this._internal(
-          (ref) => findGroupIcon(
-            ref as FindGroupIconRef,
-            groupName,
-            fallbackIcon,
-          ),
-          from: findGroupIconProvider,
-          name: r'findGroupIconProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$findGroupIconHash,
-          dependencies: FindGroupIconFamily._dependencies,
-          allTransitiveDependencies:
-              FindGroupIconFamily._allTransitiveDependencies,
-          groupName: groupName,
-          fallbackIcon: fallbackIcon,
-        );
-
-  FindGroupIconProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.groupName,
-    required this.fallbackIcon,
-  }) : super.internal();
-
-  final String groupName;
-  final String fallbackIcon;
-
-  @override
-  Override overrideWith(
-    String? Function(FindGroupIconRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: FindGroupIconProvider._internal(
-        (ref) => create(ref as FindGroupIconRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        groupName: groupName,
-        fallbackIcon: fallbackIcon,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeProviderElement<String?> createElement() {
-    return _FindGroupIconProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is FindGroupIconProvider &&
-        other.groupName == groupName &&
-        other.fallbackIcon == fallbackIcon;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, groupName.hashCode);
-    hash = _SystemHash.combine(hash, fallbackIcon.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin FindGroupIconRef on AutoDisposeProviderRef<String?> {
-  /// The parameter `groupName` of this provider.
-  String get groupName;
-
-  /// The parameter `fallbackIcon` of this provider.
-  String get fallbackIcon;
-}
-
-class _FindGroupIconProviderElement extends AutoDisposeProviderElement<String?>
-    with FindGroupIconRef {
-  _FindGroupIconProviderElement(super.provider);
-
-  @override
-  String get groupName => (origin as FindGroupIconProvider).groupName;
-  @override
-  String get fallbackIcon => (origin as FindGroupIconProvider).fallbackIcon;
 }
 
 String _$currentProfileHash() => r'55f3cb9570a0aa6b9e0b83a36693b69d52e753ab';

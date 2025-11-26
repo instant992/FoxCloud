@@ -74,36 +74,12 @@ class _TimeAgoWidgetState extends State<TimeAgoWidget> {
 }
 
 
-// Cache for formatted byte strings to avoid expensive BigInt operations
-final Map<String, String> _formatBytesCache = {};
-
 String _formatBytes(BigInt bytes, int decimals) {
-  // Create cache key from bytes and decimals
-  final cacheKey = '${bytes.toString()}_$decimals';
-
-  // Return cached value if exists
-  if (_formatBytesCache.containsKey(cacheKey)) {
-    return _formatBytesCache[cacheKey]!;
-  }
-
-  // Calculate formatted value
-  if (bytes <= BigInt.zero) {
-    _formatBytesCache[cacheKey] = "0 B";
-    return "0 B";
-  }
-
+  if (bytes <= BigInt.zero) return "0 B";
   const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   var i = (bytes.bitLength - 1) ~/ 10;
   if (i >= suffixes.length) i = suffixes.length - 1;
-
-  final result = '${(bytes.toDouble() / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
-
-  // Cache the result (limit cache size to prevent memory issues)
-  if (_formatBytesCache.length < 1000) {
-    _formatBytesCache[cacheKey] = result;
-  }
-
-  return result;
+  return '${(bytes.toDouble() / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
 }
 
 class ProfilesView extends StatefulWidget {
@@ -261,16 +237,14 @@ class _ProfilesViewState extends State<ProfilesView> with PageMixin {
               children: [
                 for (int i = 0; i < profilesSelectorState.profiles.length; i++)
                   GridItem(
-                    child: RepaintBoundary(
-                      child: ProfileItem(
-                        key: Key(profilesSelectorState.profiles[i].id),
-                        profile: profilesSelectorState.profiles[i],
-                        groupValue: profilesSelectorState.currentProfileId,
-                        onChanged: (profileId) {
-                          ref.read(currentProfileIdProvider.notifier).value =
-                              profileId;
-                        },
-                      ),
+                    child: ProfileItem(
+                      key: Key(profilesSelectorState.profiles[i].id),
+                      profile: profilesSelectorState.profiles[i],
+                      groupValue: profilesSelectorState.currentProfileId,
+                      onChanged: (profileId) {
+                        ref.read(currentProfileIdProvider.notifier).value =
+                            profileId;
+                      },
                     ),
                   ),
               ],

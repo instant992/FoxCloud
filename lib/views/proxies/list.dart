@@ -141,7 +141,9 @@ class _ProxiesListViewState extends State<ProxiesListView> {
             _handleChange(currentUnfoldSet, groupName);
           },
         ),
-        const SizedBox(height: 8),
+        const SizedBox(
+          height: 8,
+        ),
       ]);
       if (isExpand) {
         final sortedProxies = globalState.appController.getSortProxies(
@@ -173,19 +175,25 @@ class _ProxiesListViewState extends State<ProxiesListView> {
                 ),
               )
               .separated(
-                const SizedBox(width: 8),
+                const SizedBox(
+                  width: 8,
+                ),
               );
 
           return Row(
             children: children.toList(),
           );
         }).separated(
-          const SizedBox(height: 8),
+          const SizedBox(
+            height: 8,
+          ),
         );
         items.addAll(
           [
             ...rows,
-            const SizedBox(height: 8),
+            const SizedBox(
+              height: 8,
+            ),
           ],
         );
       }
@@ -319,12 +327,10 @@ class _ProxiesListViewState extends State<ProxiesListView> {
                               right: 16,
                               bottom: 8,
                             ),
-                            child: RepaintBoundary(
-                              child: _buildHeader(
-                                ref,
-                                groupName: state.groupNames[index],
-                                currentUnfoldSet: state.currentUnfoldSet,
-                              ),
+                            child: _buildHeader(
+                              ref,
+                              groupName: state.groupNames[index],
+                              currentUnfoldSet: state.currentUnfoldSet,
                             ),
                           ),
                         ),
@@ -396,8 +402,20 @@ class _ListHeaderState extends State<ListHeader> {
             (state) => state.iconStyle,
           ),
         );
-        // Use pre-compiled regex patterns from provider for better performance
-        final icon = ref.watch(findGroupIconProvider(groupName, this.icon)) ?? this.icon;
+        final icon = ref.watch(proxiesStyleSettingProvider.select((state) {
+          final iconMapEntryList = state.iconMap.entries.toList();
+          final index = iconMapEntryList.indexWhere((item) {
+            try {
+              return RegExp(item.key).hasMatch(groupName);
+            } catch (_) {
+              return false;
+            }
+          });
+          if (index != -1) {
+            return iconMapEntryList[index].value;
+          }
+          return this.icon;
+        }));
         return switch (iconStyle) {
           ProxiesIconStyle.standard => LayoutBuilder(
               builder: (_, constraints) {
@@ -487,7 +505,9 @@ class _ListHeaderState extends State<ListHeader> {
                           groupName,
                           style: context.textTheme.titleMedium,
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(
+                          height: 4,
+                        ),
                         Flexible(
                           flex: 1,
                           child: Row(
@@ -534,7 +554,9 @@ class _ListHeaderState extends State<ListHeader> {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(
+                          width: 4,
+                        ),
                       ],
                     ),
                   )
@@ -564,9 +586,13 @@ class _ListHeaderState extends State<ListHeader> {
                       color: iconColor,
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(
+                    width: 6,
+                  ),
                 ] else
-                  const SizedBox(width: 4),
+                  const SizedBox(
+                    width: 4,
+                  ),
                 IconButton(
                   style: buttonStyle,
                   onPressed: () {
