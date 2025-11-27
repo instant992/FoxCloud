@@ -46,14 +46,18 @@
 
 | Заголовок | Описание | Формат |
 |-----------|----------|--------|
-| `expiry-notification-title` | Заголовок уведомления о скором истечении подписки | Обычный текст или `base64:...` |
-| `expiry-notification-body` | Текст уведомления о скором истечении подписки | Обычный текст или `base64:...` |
-| `expiry-notification-title-expired` | Заголовок уведомления об истекшей подписке | Обычный текст или `base64:...` |
-| `renew-url` | URL для продления (добавляет кнопку "Продлить") | URL |
+| `expiry-notification-title` | Заголовок уведомления о скором истечении подписки | **Обязательно** `base64:...` |
+| `expiry-notification-body` | Текст уведомления о скором истечении подписки | **Обязательно** `base64:...` |
+| `expiry-notification-title-expired` | Заголовок уведомления об истекшей подписке | **Обязательно** `base64:...` |
+| `renew-url` | URL для продления (добавляет кнопку "Продлить") | **Обязательно** `base64:...` |
 
-**Пример использования base64:**
+> **Важно:** Все значения должны быть закодированы в base64 с префиксом `base64:` (кириллица в HTTP-заголовках не поддерживается).
+
+**Пример:**
 ```
 expiry-notification-title: base64:0KDQsNGB0YjQuNGA0LXQvdC90YvQuSDQtNC+0YHRgtGD0L8g0LjRgdGC0ZHQug==
+expiry-notification-body: base64:0JLQsNGIINC/0YDQvtCy0LDQudC00LXRgCDQvtGC0LrQu9GO0YfQuNGCINC/0L7QtNC/0LjRgdC60YMg0YfQtdGA0LXQtyAzINC00L3Rjw==
+renew-url: base64:aHR0cHM6Ly9leGFtcGxlLmNvbS9yZW5ldw==
 ```
 
 ### ⚙️ Гибкая настройка

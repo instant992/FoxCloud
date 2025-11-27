@@ -46,14 +46,18 @@ Reminders **7**, **3**, and **1** day before subscription expiration, as well as
 
 | Header | Description | Format |
 |--------|-------------|--------|
-| `expiry-notification-title` | Title for upcoming expiration notification | Plain text or `base64:...` |
-| `expiry-notification-body` | Body for upcoming expiration notification | Plain text or `base64:...` |
-| `expiry-notification-title-expired` | Title for expired subscription notification | Plain text or `base64:...` |
-| `renew-url` | URL for renewal (adds "Renew" button) | URL |
+| `expiry-notification-title` | Title for upcoming expiration notification | **Required** `base64:...` |
+| `expiry-notification-body` | Body for upcoming expiration notification | **Required** `base64:...` |
+| `expiry-notification-title-expired` | Title for expired subscription notification | **Required** `base64:...` |
+| `renew-url` | URL for renewal (adds "Renew" button) | **Required** `base64:...` |
 
-**Example using base64:**
+> **Important:** All values must be base64-encoded with `base64:` prefix (non-ASCII characters are not supported in HTTP headers).
+
+**Example:**
 ```
 expiry-notification-title: base64:0KDQsNGB0YjQuNGA0LXQvdC90YvQuSDQtNC+0YHRgtGD0L8g0LjRgdGC0ZHQug==
+expiry-notification-body: base64:0JLQsNGIINC/0YDQvtCy0LDQudC00LXRgCDQvtGC0LrQu9GO0YfQuNGCINC/0L7QtNC/0LjRgdC60YMg0YfQtdGA0LXQtyAzINC00L3Rjw==
+renew-url: base64:aHR0cHM6Ly9leGFtcGxlLmNvbS9yZW5ldw==
 ```
 
 ### ⚙️ Flexible Configuration
