@@ -27,16 +27,58 @@
 
 ## ✨ Features
 
-* **Enhanced Remnawave integration:** Support for **HWID**, Auto-update interval, Support link, Announce.
-* **Dynamic notifications:** Receive important messages from your provider.
-* Traffic: system notifications at 80%, 90%, and 100% of traffic usage.
-* Subscription: system notifications 7, 3, 1 day before subscription expires. To customize notifications, use headers: expiry-notification-title (notification title), expiry-notification-body (notification body), renew-url (if specified, the notification will have a "Renew" button), expiry-notification-title-expired (title for expired subscription notification).
-* **Smart default settings:** Pre-configured parameters for quick start without extra configuration.
-* **Core settings override from config:** if the config specifies parameters: log-level, keep-alive-interval, ipv6, mixed-port, allow-lan, unified-delay, find-process-mode — the client will use settings from the config, not its own.
-* **Russian localization:** Full translation of the interface and installer to Russian.
-* **Redesign:** Numerous UI/UX changes compared to the original.
-* **New widget on Home screen:** Metainfo widget displays subscription information directly on the home page.
-* **Bug fixes from the original client**
+### 🔗 Enhanced Remnawave Integration
+
+* **HWID Support** — device authentication via unique hardware identifier
+* **Auto-update interval** — automatic profile updates on schedule from panel
+* **Support link** — direct link to provider's support
+* **Announce** — receive important messages from your provider
+
+### 🔔 Notification System
+
+#### Traffic Notifications
+System notifications when reaching **80%**, **90%**, and **100%** of traffic usage with progress indicator.
+
+#### Subscription Notifications
+Reminders **7**, **3**, and **1** day before subscription expiration, as well as when expired.
+
+**Customize notifications via HTTP headers:**
+
+| Header | Description | Format |
+|--------|-------------|--------|
+| `expiry-notification-title` | Title for upcoming expiration notification | Plain text or `base64:...` |
+| `expiry-notification-body` | Body for upcoming expiration notification | Plain text or `base64:...` |
+| `expiry-notification-title-expired` | Title for expired subscription notification | Plain text or `base64:...` |
+| `renew-url` | URL for renewal (adds "Renew" button) | URL |
+
+**Example using base64:**
+```
+expiry-notification-title: base64:0KDQsNGB0YjQuNGA0LXQvdC90YvQuSDQtNC+0YHRgtGD0L8g0LjRgdGC0ZHQug==
+```
+
+### ⚙️ Flexible Configuration
+
+#### Smart Default Settings
+Pre-configured parameters for quick start without complex configuration.
+
+#### Core Settings Override from Config
+The client automatically uses parameters from subscription config when specified:
+
+* `log-level` — logging level
+* `keep-alive-interval` — keep-alive interval
+* `ipv6` — IPv6 support
+* `mixed-port` — mixed proxy port
+* `allow-lan` — LAN access
+* `unified-delay` — unified delay
+* `find-process-mode` — process detection mode
+* `stack` — TUN stack (e.g., `gvisor`)
+
+### 🎨 Improved Interface
+
+* **Russian localization** — complete translation of interface and installer
+* **Metainfo widget** — subscription information display on home page
+* **UI/UX redesign** — numerous improvements compared to original FlClash
+* **Bug fixes** — resolved issues from original client
 
 ---
 
