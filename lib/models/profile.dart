@@ -206,6 +206,25 @@ extension ProfileExtension on Profile {
   Future<Profile> update() async {
     final response = await request.getFileResponseForUrl(url);
 
+      // 🔒 Проверяем, что ответ действительно от Remnawave
+  final headers = response.headers.map;
+
+  if (!headers.containsKey('subscription-userinfo') &&
+      !headers.containsKey('profile-title')) {
+    throw Exception('Неверный источник подписки.');
+  }
+
+  if (!headers.containsKey('support-link') &&
+      !headers.containsKey('support-url')) {
+    throw Exception('Подписка не принадлежит нашему провайдеру.');
+  }
+
+  // ⚠ Remnawave также всегда выдаёт announce-url
+  if (!headers.containsKey('announce-url')) {
+    throw Exception('Подписка не от Remnawave.');
+  }
+
+
     final disposition = response.headers.value("content-disposition");
     final userinfo = response.headers.value('subscription-userinfo');
     final updateIntervalHeader =

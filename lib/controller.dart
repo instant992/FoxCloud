@@ -959,6 +959,11 @@ Future handleClear() async {
   }
 
   addProfileFormURL(String url, {bool navigateToProfiles = true}) async {
+      // 🔒 Ограничение: разрешаем только панель sub.vpnghost.space
+  final uri = Uri.tryParse(url);
+  if (uri == null || uri.host != 'sub.vpnghost.space') {
+    throw Exception('Можно добавить подписку только от нашего VPN.');
+  }
     if (globalState.navigatorKey.currentState?.canPop() ?? false) {
       globalState.navigatorKey.currentState?.popUntil((route) => route.isFirst);
     }

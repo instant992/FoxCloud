@@ -1,7 +1,7 @@
-name: flowvy
-description: A cross-platform proxy client based on the FlClash project — simple, easy to use, open-source, and ad-free
+name: FoxCloud
+description: FoxCloud — клиент VPN на основе Flowvy с интеграцией Remnawave
 publish_to: 'none'
-version: 2.0.3+1
+version: 1.0.0+1
 environment:
   sdk: '>=3.1.0 <4.0.0'
 

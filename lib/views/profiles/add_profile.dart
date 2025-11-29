@@ -3,6 +3,7 @@ import 'package:flowvy/pages/scan.dart';
 import 'package:flowvy/state.dart';
 import 'package:flowvy/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AddProfileView extends StatelessWidget {
   final BuildContext context;
@@ -82,6 +83,16 @@ class AddProfileView extends StatelessWidget {
           title: Text(appLocalizations.url),
           subtitle: Text(appLocalizations.urlDesc),
           onTap: _toAdd,
+        ),
+        ListItem(
+          leading: const Icon(Icons.send_rounded),
+          title: const Text('Нет ссылки? Получи её у бота'),
+          subtitle: const Text('Откроется Telegram‑бот, который выдаст ссылку'),
+          onTap: () {
+            launchUrl(
+              Uri.parse('https://t.me/foxicloudbot'), // 👈 замени на своего бота, если нужно
+            );
+            },
         )
       ],
     );
